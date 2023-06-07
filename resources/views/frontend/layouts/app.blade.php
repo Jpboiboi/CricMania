@@ -52,16 +52,7 @@
     @include('frontend.layouts._header')
   <!-- End Header -->
 
-  <!-- ======= Hero Section ======= -->
-    @include('frontend.layouts._hero-section')
-  <!-- End Hero -->
-
   <main id="main">
-
-    <!-- ======= About Section ======= -->
-    @include('frontend.layouts._about-section')
-
-<!-- End About Section -->
 
     @yield('main-content')
     <!-- ======= Contact Section ======= -->

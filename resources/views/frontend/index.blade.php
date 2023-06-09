@@ -6,5 +6,3 @@
 @include('frontend.layouts._about-section')
 
 @endsection
-=======
->>>>>>> resources/views/frontend/index.blade.php

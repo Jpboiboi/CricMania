@@ -7,7 +7,8 @@
 
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
-          <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+
+          <li><a class="{{Route::currentRouteName()==='frontend.index' ? 'active':""}}" href="{{route('frontend.index')}}">Home</a></li>
           <li><a class="nav-link scrollto" href="#about">About</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
         </ul>
@@ -15,7 +16,33 @@
       </nav>
       <!-- .navbar -->
 
-      <a href="#" class="get-started-btn scrollto">Login/Logout</a>
+
+        @if (auth()->check())
+                {{-- <a href="" class=" dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> {{auth()->user()->name}}
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                  </ul>
+                </a> --}}
+                <div class="btn-group">
+                  <button type="button" class="btn bg-warning dropdown-toggle fa fa-user" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{auth()->user()->name}}
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li>
+                        <form action="{{route('logout')}}" method="POST">
+                            @csrf
+                                <button type="submit" class="btn btn-warning btn-fill">Logout</button>
+                        </form>
+                    </li>
+
+                  </ul>
+                </div>
+
+
+                @else
+                <a href="{{route('login')}}" class="get-started-btn scrollto">Login</a>
+        @endif
+
 
     </div>
   </header>

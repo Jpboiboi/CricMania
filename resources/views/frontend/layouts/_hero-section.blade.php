@@ -28,12 +28,12 @@
         </a>
         </div>
         <div class="col-xl-2 col-md-4">
-        <a href="">
+        <a href="{{route('frontend.players')}}">
           <div class="icon-box">
             <i><span class="material-symbols-outlined">
                 sports_cricket
                 </span></i>
-            <h3>Player</h3>
+            <h3>Players</h3>
 
           </div>
         </a>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\PlayersController;
+use App\Http\Controllers\PlayerStatsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TournamentsController;
 use Illuminate\Support\Facades\Route;
@@ -17,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('frontend.index');
-});
+})->name('frontend.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -30,6 +32,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('tournaments', TournamentsController::class)->only('create', 'store', 'index');
 });
+Route::get('/players/{player}/player-stats',[PlayerStatsController::class,'show'])->name('frontend.player-stats');
+Route::get('/players',[PlayersController::class,'index'])->name('frontend.players');
 
 // Route::get('/', function() {
 //     return view('frontend')

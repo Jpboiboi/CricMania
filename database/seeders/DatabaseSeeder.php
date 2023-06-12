@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\PlayerStat;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,13 +16,20 @@ class DatabaseSeeder extends Seeder
     {
         \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-            //     'name' => 'Test User',
-            //     'email' => 'test@example.com',
-            // ]);
-
         $this->call([
             TournamentTypesSeeder::class
         ]);
-        }
+        
+        // \App\Models\Player::factory(10)->create();
+        // \App\Models\PlayerStat::factory(10)->create();
+        \App\Models\Player::factory(20)->create()->each(function($player){
+                $player->playerstat()->create(
+                    PlayerStat::factory()
+                    ->make()
+                    ->toArray()
+
+                );
+        });
+
+    }
 }

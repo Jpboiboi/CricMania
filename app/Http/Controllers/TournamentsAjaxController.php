@@ -56,8 +56,9 @@ class TournamentsAjaxController extends Controller
             ->addColumn('Organized By', function($tournament) {
                 return $tournament->organizer->name;
             })
-            ->addColumn('action', function ($query) {
-                return "<a href='#' class='btn btn-dark text-warning'>Add Teams</a>";
+            ->addColumn('action', function ($tournament) {
+                $route = route('teams.create', $tournament->id);
+                return "<a href='$route' class='btn btn-dark text-warning'>Add Teams</a>";
             })
             ->rawColumns(['action'])
             ->setFilteredRecords($numberOfFilteredRows)

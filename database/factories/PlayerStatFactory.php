@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Player;
+use App\Models\TournamentType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -50,6 +51,7 @@ class PlayerStatFactory extends Factory
             'five_wicket_hauls'=>rand(0,4),
             'no_of_catches'=>rand(0,500),
             'player_id'=>Player::all()->random()->id,
+            'tournament_type_id'=>TournamentType::all()->random()->id,
 
         ];
     }

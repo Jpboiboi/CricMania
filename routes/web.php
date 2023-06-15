@@ -34,8 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('tournaments', TournamentsController::class)->only('create', 'store', 'index');
     Route::post('/tournaments/ajax', [TournamentsAjaxController::class, 'getData'])->name('frontend.tournaments.index');
 });
-Route::get('/players/{player}/player-stats',[PlayerStatsController::class,'show'])->name('frontend.player-stats');
-Route::get('/players',[PlayersController::class,'index'])->name('frontend.players');
+Route::get('/players/{player}/player-stats',[PlayerStatsController::class,'show'])->name('frontend.players.player-stats');
+
+Route::get('/players',[PlayersController::class,'index'])->name('frontend.players.player-details');
 
 // Route::get('/', function() {
 //     return view('frontend')

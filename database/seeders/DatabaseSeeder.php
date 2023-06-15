@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
         ]);
         Tournament::factory()->create();
 
+
         // \App\Models\Player::factory(10)->create();
         // \App\Models\PlayerStat::factory(10)->create();
         \App\Models\Player::factory(20)->create()->each(function($player){

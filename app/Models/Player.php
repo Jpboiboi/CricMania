@@ -9,8 +9,8 @@ class Player extends Model
 {
     use HasFactory;
     protected $guarded=['id'];
-    public function playerstat()
+    public function playerstats()
     {
-        return $this->hasOne(PlayerStat::class);
+        return $this->hasMany(PlayerStat::class);
     }
 }

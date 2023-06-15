@@ -28,7 +28,7 @@
         </a>
         </div>
         <div class="col-xl-2 col-md-4">
-        <a href="{{route('frontend.players')}}">
+        <a href="{{route('frontend.players.player-details')}}">
           <div class="icon-box">
             <i><span class="material-symbols-outlined">
                 sports_cricket

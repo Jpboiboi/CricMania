@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('player_stats', function (Blueprint $table) {
             $table->id();
-
             $table->string('role');
             $table->integer('no_of_runs_scored')->default(0);
             $table->integer('no_of_matches')->default(0);
@@ -44,11 +43,18 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unsignedBigInteger('player_id');
+            $table->unsignedBigInteger('tournament_type_id');
 
             $table->foreign('player_id')
                   ->references('id')
                   ->on('players')
                   ->onDelete('cascade');
+
+             $table->foreign('tournament_type_id')
+                    ->references('id')
+                    ->on('tournament_types')
+                    ->onDelete('cascade');
+            $table->unique(['id','tournament_type_id']);
         });
     }
 

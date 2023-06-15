@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class TournamentsController extends Controller
 {
+    public function index() {
+        return view('frontend.tournaments.index');
+    }
+
     public function create() {
         return view('frontend.tournaments.create');
     }
@@ -21,6 +25,6 @@ class TournamentsController extends Controller
             'start_date' => $request->start_date,
             'organizer_id' => auth()->id()
         ]);
-        return redirect('/');
+        return redirect()->route('tournaments.index');
     }
 }

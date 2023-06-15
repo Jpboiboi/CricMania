@@ -22,7 +22,7 @@ class CreateTournamentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required | min:5 | max:255 | unique:tournaments',
+            'name' => 'required | min:3 | max:255 | unique:tournaments',
             'tournament_type_id' => 'required',
             'no_of_teams' => 'required',
             'max_players' => 'required',

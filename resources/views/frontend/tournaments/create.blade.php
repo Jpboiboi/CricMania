@@ -51,7 +51,7 @@
                                 value="{{ old('name') }}"
                                 name="name"
                                 placeholder="Enter Tournament Name">
-                            @error('name    ')
+                            @error('name')
                                 <span class="text-danger">
                                     {{ $message }}
                                 </span>

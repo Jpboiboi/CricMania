@@ -3,6 +3,7 @@
 use App\Http\Controllers\PlayersController;
 use App\Http\Controllers\PlayerStatsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TournamentsAjaxController;
 use App\Http\Controllers\TournamentsController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('tournaments', TournamentsController::class)->only('create', 'store', 'index');
+    Route::post('/tournaments/ajax', [TournamentsAjaxController::class, 'getData'])->name('frontend.tournaments.index');
 });
 Route::get('/players/{player}/player-stats',[PlayerStatsController::class,'show'])->name('frontend.player-stats');
 Route::get('/players',[PlayersController::class,'index'])->name('frontend.players');

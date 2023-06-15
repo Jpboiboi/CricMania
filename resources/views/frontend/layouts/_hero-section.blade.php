@@ -10,7 +10,7 @@
 
       <div class="row gy-4 mt-5 justify-content-center" data-aos="zoom-in" data-aos-delay="250">
         <div class="col-xl-2 col-md-4">
-        <a href="">
+        <a href="{{ route('tournaments.create') }}">
           <div class="icon-box">
              <i class="ri-team-fill"></i>
             <h3>Organizer</h3>

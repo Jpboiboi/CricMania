@@ -1,55 +1,91 @@
+@push('styles')
+    <style>
+        .table-black{
+        --bs-border-color: #000000;
+        }
+        .custom-bg{
+            background: #1E263D;
+        }
+        body{
+            font-family: 'Poppins';
+            background: #f4faff;
+        }
+        h1, h2, h3, h4, h5, h6 {
+        font-family: "Poppins";
+        }
+        .font-large{
+            font-size: 3rem;
+        }
+        .font-larger{
+            font-size: 3.3rem;
+        }
+
+    </style>
+
+@endpush
+
 @extends('frontend.layouts.app')
 @section('main-content')
-<div class="container-fluid bg-dark pb-1">
-    <div class="container bg-dark text-warning">
-        <h1 class="mb-5 font-1 text-decoration-underline">Player Stats</h1>
+<div class="container-fluid pb-1">
+    <div class="container">
+        <h1 class="mb-5 text-uppercase font-larger">Player Stats</h1>
         <div class="row">
             <div class="col-md-12 d-flex justify-content-center ">
                 @isset($playerStats->first()->player->photo_path)
-                <img src="{{$playerStats->first()->player->photo_path}}" alt="">
+                <img src="{{$playerStats->first()->player->photo_path}}" alt="" width="250px">
             @else
-                <img src="{{ asset('assets/img/player-avatar.png') }}" class="rounded-circle bg-light" alt="" width="200px">
+                <img src="{{ asset('assets/img/player-avatar.png') }}" class="rounded-circle bg-light border border-dark border-4" alt="" width="250px">
             @endisset
             </div>
         </div>
         <div class="row">
             <div class="col-md-12 d-flex justify-content-center">
-                <h2 class="text-light"> {{ $playerStats->first()->player->first_name }} {{ $playerStats->first()->player->last_name }}</h2>
+                <h2 > {{ $playerStats->first()->player->first_name }} {{ $playerStats->first()->player->last_name }}</h2>
             </div>
         </div>
-
+        <hr>
             @foreach ($playerStats as $playerStat)
-            <h2 class="mt-3 text-decoration-underline">{{ $playerStat->tournament_type->name }} stats</h2>
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-center">
+                    @if ($playerStat->no_of_matches > 0)
+                        <h2 class="mt-3 text-uppercase mb-3 font-large">{{ $playerStat->tournament_type->name }}</h2>
+                    @endif
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-center">
                     <h3 class="font-1">Player overview</h3>
                 </div>
             </div>
-            <div class="row">
+            <div class="row table-black">
                 <div class="col-md-12 d-flex justify-content-center">
-                    <div class="row row-cols-2">
-                        <div class="col border">
-                            <p class="fs-5 text-light fw-bold pt-1">{{ $playerStat->no_of_matches }}</p>
-                            <p class="text-light">Matches</p>
-                        </div>
-                      <div class="col border">
-                                <p class="fs-5 text-light fw-bold">{{ $playerStat->player->fav_playing_spot}} </p>
-                            <p class="text-light">Playing Spot</p>
-                        </div>
-                        <div class="col border">
-                            <p class="fs-5 text-light fw-bold pt-1">{{ $playerStat->player->balling_hand }}</p>
-                            <p class="text-light">Balling Hand</p>
-                        </div>
-                        <div class="col border">
-                            <p class="fs-5 text-light fw-bold pt-1">{{ $playerStat->player->batting_hand }}</p>
-                            <p class="text-light">Batting Hand</p>
-                        </div>
+                    <div>
+                        <div class="row row-cols-2 ">
+                            <div class="col border bg-light">
+                                <p class="fs-5 fw-bold pt-1">{{ $playerStat->no_of_matches }}</p>
+                                <p >Matches</p>
+                            </div>
+                          <div class="col border bg-light">
+                                    <p class="fs-5 fw-bold">{{ $playerStat->player->fav_playing_spot}} </p>
+                                <p>Playing Spot</p>
+                            </div>
+                            <div class="col border bg-light">
+                                <p class="fs-5  fw-bold pt-1">{{ $playerStat->player->balling_hand }}</p>
+                                <p>Balling Hand</p>
+                            </div>
+                            <div class="col border bg-light">
+                                <p class="fs-5  fw-bold pt-1">{{ $playerStat->player->batting_hand }}</p>
+                                <p>Batting Hand</p>
+                            </div>
+                    </div>
 
                     </div>
                 </div>
             </div>
-            <h2 class="mt-3 font-1">Batting Stats</h2>
-        <table class="table table-bordered table-responsive">
+
+            <h2 class="mt-3 font-1 text-uppercase">Batting Stats</h2>
+        <table class="table table-bordered table-responsive table-black custom-bg border-3">
             <thead>
                 <th>Innings</th>
                 <th>NO</th>
@@ -65,12 +101,12 @@
 
             </thead>
             <tbody>
-                <tr>
+                <tr class="table-black">
                     <td>{{ $playerStat->no_of_innings }}</td>
                     <td>{{ $playerStat->no_of_innings - $playerStat->player_out }} </td>
                     <td>{{ $playerStat->no_of_runs_scored }}</td>
-                    <td>{{ round($playerStat->no_of_innings / $playerStat->player_out,2) }}</td>
-                    <td>{{ round(($playerStat->no_of_runs_scored / $playerStat->no_of_balls_faced) * 100 ,2)}}</td>
+                    <td>{{ $playerStat->player_avg }}</td>
+                    <td>{{$playerStat->player_sr}}</td>
                     <td>{{ $playerStat->no_of_hundreds }}</td>
                     <td>{{ $playerStat->no_of_fifties }}</td>
                     <td>{{ $playerStat->no_of_fours }}</td>
@@ -81,8 +117,8 @@
             </tbody>
 
         </table>
-        <h2 class="mt-3 font-1">Balling Stats</h2>
-        <table class="table-bordered table-responsive table ">
+        <h2 class="mt-3 text-uppercase">Balling Stats</h2>
+        <table class="table-bordered table table-responsive table-black">
             <thead>
                 <th>Innings</th>
                 <th>Balls</th>
@@ -106,9 +142,9 @@
                     <td>{{ $playerStat->no_of_balls_bowled }} </td>
                     <td>{{ $playerStat->no_of_runs_conceeded}}</td>
                     <td>{{ $playerStat->no_of_wickets_taken }}</td>
-                    <td>{{ round($playerStat->no_of_runs_conceeded / $playerStat->no_of_wickets_taken,2)  }}</td>
-                    <td>{{ $playerStat->no_of_runs_conceeded / ($playerStat->no_of_runs_conceeded)*6 }}</td>
-                    <td>{{ round(($playerStat->no_of_balls_bowled / $playerStat->no_of_wickets_taken )*100,2) }}</td>
+                    <td>{{ $playerStat->balling_avg  }}</td>
+                    <td>{{ $playerStat->balling_eco }}</td>
+                    <td>{{ $playerStat->balling_sr }}</td>
                     <td>{{ $playerStat->four_wicket_hauls }}</td>
                     <td>{{ $playerStat->five_wicket_hauls }}</td>
                     <td>{{ $playerStat->hattricks }}</td>
@@ -121,9 +157,9 @@
 
         </table>
         <hr class="my-4"
-            style="border:3px solid white"
+            style="border:3px solid rgb(0, 0, 0)"
         >
-    @endforeach
+        @endforeach
      </div>
         </div>
     </div>

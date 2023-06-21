@@ -1,47 +1,103 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('frontend.layouts.auth.app')
+@push('styles')
+    <style>
+        .margin-top-10{
+            margin-top: 50px
+        }
+        body{
+            background: #d3d3d3;
+        }
+        .br-10{
+            border-radius: 15px;
+        }
+        .error{
+            color:#dc3545;
+        }
+        a.register{
+            color:black;
+        }
+        a.register:hover{
+            color:#ffd584;
+        }
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+
+    </style>
+
+@endpush
+@section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js" type="text/javascript"></script>
+
+<script>
+    $(function() {
+        $("#login").validate({
+        rules: {
+            email: {
+                required: true,
+                email:true,
+            },
+            password: {
+                required: true,
+            }
+        },
+    });
+});
+</script>
+@endsection
+@section('main-content')
+    <div class="container">
+        <div class="card margin-top-10 shadow p-3 mb-5 bg-white br-10">
+            <div class="card-body">
+                <div class="row d-flex justify-content-evenly">
+                    <div class="col-md-6 auth-image">
+                        <img src="{{ asset('assets/img/about.jpg') }}" alt="" width="500px" data-tilt>
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-center align-items-center">
+                        <form action="{{route('login')}}" method="POST" id="login">
+                            @csrf
+                            <div class="form-group">
+                              <label for="email" class="mb-2 fw-bold">Email address</label>
+                              <input type="email" class="form-control @error('email') border-danger text-danger @enderror" id="email" aria-describedby="emailHelp" placeholder="Enter email" class="mb-2" value="{{old('email')}}" name="email">
+                              @error('email')
+                                    <span class="text-danger">
+                                        {{$message}}
+                                    </span>
+                              @enderror
+                                <div>
+                                    <small id="emailHelp" class="form-text text-muted mb-3 ">We'll never share your email with anyone else.</small>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="password" class="mb-2 mt-3 fw-bold">Password</label>
+                              <input type="password" class="form-control @error('email') border-danger text-danger @enderror" id="password" placeholder="Password" class="mb-5" name="password">
+                              @error('password')
+                              <span class="text-danger">
+                                  {{$message}}
+                              </span>
+                             @enderror
+                            </div>
+                            <div class="form-check">
+                              <input type="checkbox" class="form-check-input" id="rememberMe" class="mt-2">
+                              <label class="form-check-label" for="rememberMe" class="mt-5">Remember me</label>
+                            </div>
+                            <button type="submit" class="btn btn-warning mt-2">Submit</button>
+                            <div class="mt-2">
+                                <a href="{{route('register')}}" class="register" >Haven't signed up yet? Click here to register</a>
+                            </div>
+
+
+                          </form>
+
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ml-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </div>
+@endsection

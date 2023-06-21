@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('photo_path')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
+            $table->string('slug');
             $table->string('email')->unique();
             $table->date('dob')->nullable();
             $table->string('state')->nullable();

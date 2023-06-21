@@ -9,7 +9,7 @@ class PlayersController extends Controller
 {
     public function index()
     {
-       $players= Player::orderBy('first_name')->paginate(5);
+       $players= Player::latest('updated_at')->paginate(5);
        return view('frontend.players.players-details',compact('players'));
 
     }

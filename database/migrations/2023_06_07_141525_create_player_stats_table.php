@@ -43,7 +43,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unsignedBigInteger('player_id');
-            $table->unsignedBigInteger('tournament_type_id');
+            $table->unsignedBigInteger('tournament_type_id')->nullable();
 
             $table->foreign('player_id')
                   ->references('id')

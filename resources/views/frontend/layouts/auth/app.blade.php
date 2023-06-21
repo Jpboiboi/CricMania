@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Cric Mania</title>
+  <title>@yield('title','Cric Mania | Login')</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -37,28 +37,27 @@
   <!-- Google Icons -->
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <style>
+    ::-webkit-scrollbar {
+       width: 12px;
+     }
+     ::-webkit-scrollbar-track {
+       box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+       border-radius: 15px;
+     }
+     ::-webkit-scrollbar-thumb {
+       background-color: #ffc451;
+       border-radius: 15px;
+     }
+     ::-webkit-scrollbar-thumb:window-inactive {
+       background-color:  #ffc451;;
+     }
 
-
-<style>
- ::-webkit-scrollbar {
-    width: 12px;
-  }
-  ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-    border-radius: 15px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: #ffc451;
-    border-radius: 15px;
-  }
-  ::-webkit-scrollbar-thumb:window-inactive {
-    background-color:  #ffc451;;
-  }
-
-  ::selection {
-    background-color: #ffc451;
-  }
-</style>
+     ::selection {
+       background-color: #ffc451;
+     }
+   </style>
+    @include('frontend.layouts.auth.partials._auth-styles')
   @stack('styles')
 
   <!-- =======================================================
@@ -69,11 +68,35 @@
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
 </head>
+<header id="header" class="sticky-top bg-black ">
+    <div class="container d-flex align-items-center justify-content-lg-between">
+
+     <h1 class="logo me-auto me-lg-0"><a href="index.html">C<span>M</span></a></h1>
+     <!-- Uncomment below if you prefer to use an image logo -->
+     <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+     <nav id="navbar" class="navbar order-last order-lg-0">
+       <ul>
+
+         <li><a class="{{Route::currentRouteName()==='frontend.index' ? 'active':""}}" href="{{route('frontend.index')}}">Home</a></li>
+         <li><a class="nav-link scrollto" href="#about">About</a></li>
+         <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+       </ul>
+       <i class="bi bi-list mobile-nav-toggle"></i>
+     </nav>
+     <!-- .navbar -->
+
+
+
+
+   </div>
+ </header>
+
 
 <body>
 
   <!-- ======= Header ======= -->
-    @include('frontend.layouts._header')
+
   <!-- End Header -->
 
   <main id="main">
@@ -83,7 +106,7 @@
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
-  @include('frontend.layouts._footer')
+
 
 <!-- End Footer -->
 
@@ -98,10 +121,11 @@
   <script src="{{ asset('assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
   <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
   <script src="{{ asset('assets/vendor/php-email-form/validate.js')}}"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js" integrity="sha512-RX/OFugt/bkgwRQg4B22KYE79dQhwaPp2IZaA/YyU3GMo/qY7GrXkiG6Dvvwnds6/DefCfwPTgCXnaC6nAgVYw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
-  @yield("scripts")
+
+  @yield('scripts')
 
 </body>
 

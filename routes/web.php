@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TournamentsAjaxController;
 use App\Http\Controllers\TournamentsController;
+use App\Models\Player;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,8 +37,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('tournaments/{tournament}/teams', TeamsController::class);
     Route::post('/tournaments/ajax', [TournamentsAjaxController::class, 'getData'])->name('frontend.tournaments.index');
 });
-Route::get('/players/{player}/player-stats',[PlayerStatsController::class,'show'])->name('frontend.players.player-stats');
+Route::get('/players/{slug}/player-stats',[PlayerStatsController::class,'show'])->name('frontend.players.player-stats');
 
 Route::get('/players',[PlayersController::class,'index'])->name('frontend.players.player-details');
-
+;
+// Route::get('/', function() {
+//     return view('frontend')
+// })
 require __DIR__.'/auth.php';

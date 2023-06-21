@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\AddPlayersController;
+use App\Http\Controllers\PlayersAjaxController;
 use App\Http\Controllers\PlayersController;
 use App\Http\Controllers\PlayerStatsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TeamPlayersController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TournamentsAjaxController;
 use App\Http\Controllers\TournamentsController;
@@ -46,3 +49,14 @@ Route::get('/players',[PlayersController::class,'index'])->name('frontend.player
 //     return view('frontend')
 // })
 require __DIR__.'/auth.php';
+
+Route::get('/register-via-email',function(){
+    return view('frontend.players.register-email');
+})->name('registration');
+
+Route::resource('players',PlayersController::class)->except('index');
+Route::get('/register-player',[PlayersController::class,'validatePlayer'])->name('invite-player');
+Route::resource('tournaments/{tournament}/teams/{team}/add-players', AddPlayersController::class)->except('show');
+Route::get('tournaments/{tournament}/teams/{team}/add-players/invite-via-email', [AddPlayersController::class, 'inviteViaEmail'])->name('players.invite-via-email');
+Route::post('tournaments/{tournament}/teams/{team}/add-players/players', [AddPlayersController::class, 'sendInvite'])->name('add-player.sendInvite');
+Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');

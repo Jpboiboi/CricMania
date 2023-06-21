@@ -15,6 +15,14 @@ class Tournament extends Model
         return $this->belongsTo(User::class, 'organizer_id');
     }
 
+    public function teams() {
+        return $this->belongsToMany(Team::class, 'player_team');
+    }
+
+    public function players() {
+        return $this->belongsToMany(Player::class, 'player_team');
+    }
+
     // SCOPE FUNCTIONS
     public function scopeSearch($query, $searchParam) {
         if(isset($searchParam)) {

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('player_stats', function (Blueprint $table) {
             $table->id();
-            $table->string('role');
             $table->integer('no_of_runs_scored')->default(0);
             $table->integer('no_of_matches')->default(0);
             $table->integer('no_of_innings')->default(0);
@@ -50,7 +49,7 @@ return new class extends Migration
                   ->on('players')
                   ->onDelete('cascade');
 
-             $table->foreign('tournament_type_id')
+            $table->foreign('tournament_type_id')
                     ->references('id')
                     ->on('tournament_types')
                     ->onDelete('cascade');

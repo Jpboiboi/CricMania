@@ -19,11 +19,8 @@ class PlayerStatFactory extends Factory
      */
     public function definition(): array
     {
-        $roles=['batsman','bowler','all-rounder'];
-
         $matches=rand(2,100);
         return [
-            'role'=>$roles[rand(0,2)],
             'no_of_runs_scored'=>rand(100,1000),
             'no_of_matches'=>$matches,
             'no_of_innings'=>rand(1,$matches),

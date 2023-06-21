@@ -1,7 +1,5 @@
 <header id="header" class="sticky-top bg-black">
     <div class="container d-flex align-items-center justify-content-lg-between ">
-    <div class="container d-flex align-items-center justify-content-lg-between">
-
       <h1 class="logo me-auto me-lg-0"><a href="index.html">C<span>M</span></a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
@@ -12,6 +10,7 @@
           <li><a class="{{Route::currentRouteName()==='frontend.index' ? 'active':""}}" href="{{route('frontend.index')}}">Home</a></li>
           <li><a class="nav-link scrollto" href="#about">About</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+          <li><a class="nav-link {{ Route::currentRouteName() === 'registration' ? 'active' : ''  }}" href="{{route('registration')}}">Register as player</a></li>
           @auth
             <li><a class="nav-link {{Route::currentRouteName()==='tournaments.index' ? 'active':""}}" href="{{route('tournaments.index')}}">My Tournaments</a></li>
           @endauth

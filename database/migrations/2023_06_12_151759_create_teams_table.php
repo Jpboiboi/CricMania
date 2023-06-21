@@ -15,6 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('image_path');
+            $table->unsignedBigInteger('tournament_id');
+            $table->foreign('tournament_id')
+            ->references('id')
+            ->on('tournaments')
+            ->onDelete('cascade');
+
             $table->timestamps();
         });
     }

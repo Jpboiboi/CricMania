@@ -13,9 +13,11 @@ class TeamsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Tournament $tournament)
     {
-        return view('frontend.teams.index');
+        $teams = $tournament->teams;
+
+        return view('frontend.teams.index', compact('teams'));
 
     }
 
@@ -33,14 +35,19 @@ class TeamsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request ,Tournament $tournament)
     {
+        $rules = [
+            'teams.*.name' => 'required|unique:teams,name',
+            'teams.*.image' => 'required|image|mimes:png,jpg,svg|max:1024'
+        ];
+        $this->validate($request , $rules);
         $teams = [];
 
         foreach($request->teams as $team) {
             $image_path = ($team['image'])->store('images');
 
-            $data = ['name'=>$team['name']];
+            $data = ['name'=>$team['name'], 'tournament_id' => $tournament->id];
             $data = array_merge($data, [
                 'image_path'=> $image_path,
             ]);

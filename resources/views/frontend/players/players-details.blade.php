@@ -43,11 +43,7 @@
                             <img src="{{ asset('assets/img/player-avatar.png') }}" class="rounded-circle border border-2 border-dark" alt="{{ $player->first_name }}" width="100px">
                         @endisset
                         </td>
-<<<<<<< HEAD
                         <td><a href="{{route('frontend.players.player-stats',$player->slug)}} " class="player-title"  >{{ $player->first_name }} {{$player->last_name}}</a></td>
-=======
-                        <td><a href="{{route('frontend.players.player-stats',$player->id)}} " class="player-title" >{{ $player->first_name }} {{$player->last_name}}</a></td>
->>>>>>> 883fbfad61590b027c51d8a06fe11fcdb315bc57
                         <td>{{ $player->dob }}</td>
                         <td>{{$player->state}}</td>
                         <td>

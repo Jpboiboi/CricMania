@@ -1,4 +1,5 @@
-<header id="header" class="sticky-top bg-black ">
+<header id="header" class="sticky-top bg-black">
+    <div class="container d-flex align-items-center justify-content-lg-between ">
     <div class="container d-flex align-items-center justify-content-lg-between">
 
       <h1 class="logo me-auto me-lg-0"><a href="index.html">C<span>M</span></a></h1>
@@ -34,10 +35,9 @@
                     <li>
                         <form action="{{route('logout')}}" method="POST">
                             @csrf
-                                <button type="submit" class="btn btn-warning btn-fill">Logout</button>
+                                <button type="submit" class="btn">Logout</button>
                         </form>
                     </li>
-
                   </ul>
                 </div>
 

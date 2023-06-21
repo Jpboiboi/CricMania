@@ -14,4 +14,8 @@ class Team extends Model
         return '/storage/'.$this->attributes['image_path'];
     }
 
+
+    public function tournament(){
+        return $this->belongsTo(Tournament::class, 'tournament_id');
+    }
 }

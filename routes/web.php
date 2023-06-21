@@ -40,7 +40,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/players/{slug}/player-stats',[PlayerStatsController::class,'show'])->name('frontend.players.player-stats');
 
 Route::get('/players',[PlayersController::class,'index'])->name('frontend.players.player-details');
-;
+
+
 // Route::get('/', function() {
 //     return view('frontend')
 // })

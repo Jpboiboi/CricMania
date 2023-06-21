@@ -29,4 +29,8 @@ class Tournament extends Model
         }
         return $query;
     }
+
+    public function teams(){
+        return $this->hasMany(Team::class);
+    }
 }

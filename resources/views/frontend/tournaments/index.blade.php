@@ -27,7 +27,13 @@
 @section('main-content')
 
 <div class="container mb-3">
-    <h1 class="mt-3">Tournaments</h1>
+    <div class="d-flex justify-content-between">
+        <h1 class="mt-3">Tournaments</h1>
+        <div class="d-flex align-self-center me-1">
+            <a class="btn btn-dark text-warning" href="{{route('tournaments.create')}}"><i class="fa fa-plus me-2"></i>Create Tournament</a>
+        </div>
+    </div>
+
     <table class="table table-bordered" id="data-table">
         <thead>
 

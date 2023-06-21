@@ -38,7 +38,7 @@
                     <tr>
                         <td>
                             @isset($player->photo_path)
-                            <img src="{{ssset('/storage/'.$player->photo_path)}}" alt="{{$player->first_name}}" class="rounded-circle border border-2 border-dark" width="100px">
+                            <img src="{{asset('/storage/' . $player->photo_path)}}" class="rounded-circle border border-dark" alt="{{$player->first_name}}" width="100px">
                             @else
                             <img src="{{ asset('assets/img/player-avatar.png') }}" class="rounded-circle border border-2 border-dark" alt="{{ $player->first_name }}" width="100px">
                         @endisset

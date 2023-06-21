@@ -26,12 +26,10 @@ return new class extends Migration
             $table->string('batting_hand')->nullable();
             $table->string('balling_type')->nullable();
             $table->unsignedInteger('jersey_number')->nullable();
-            $table->timestamp('email_verified_at');
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('token')->unique();
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
-
-
         });
     }
 

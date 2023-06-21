@@ -35,7 +35,11 @@ class TeamsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+<<<<<<< HEAD
+    public function store(Request $request, Tournament $tournament)
+=======
     public function store(Request $request ,Tournament $tournament)
+>>>>>>> 079ef1240207c0d65af660494ec602555d6506b1
     {
         $rules = [
             'teams.*.name' => 'required|unique:teams,name',
@@ -55,7 +59,7 @@ class TeamsController extends Controller
             session()->flash('success', 'Team Created Successfully...');
             $teams[]= $team;
         }
-        return view('frontend.teams.index', compact('teams'));
+        return view('frontend.teams.index', compact(['tournament', 'teams']));
     }
 
     /**

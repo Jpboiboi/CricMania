@@ -17,7 +17,7 @@ class TeamsController extends Controller
     {
         $teams = $tournament->teams;
 
-        return view('frontend.teams.index', compact('teams'));
+        return view('frontend.teams.index', compact('teams', 'tournament'));
 
     }
 

@@ -32,8 +32,8 @@
         <div class="row">
             <div class="col-md-12 d-flex justify-content-center ">
                 @isset($playerStats->first()->player->photo_path)
-                <img src="{{$playerStats->first()->player->photo_path}}" alt="" width="250px">
-            @else
+                <img src=" {{asset('/storage/'.$playerStats->first()->player->photo_path)}}" class="rounded-circle bg-light border border-dark border-4" alt="" width="250px">
+                @else
                 <img src="{{ asset('assets/img/player-avatar.png') }}" class="rounded-circle bg-light border border-dark border-4" alt="" width="250px">
             @endisset
             </div>

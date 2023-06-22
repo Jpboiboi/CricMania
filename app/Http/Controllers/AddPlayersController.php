@@ -35,7 +35,7 @@ class AddPlayersController extends Controller
     public function sendInvite(CreatePlayerRequest $request, Tournament $tournament, Team $team) {
         $player = Player::addPlayer($request);
         $team->players()->attach($player->id, ['tournament_id' => $tournament->id]);
-
+        session()->flash('success','Mail sent successfully to player');
         return redirect()->back();
     }
 }

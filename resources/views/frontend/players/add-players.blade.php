@@ -49,7 +49,7 @@
                                     </div>
                                     <div class="d-flex align-self-center">
                                         <div>
-                                            <a class="btn btn-outline-info me-1" href="{{ route('frontend.players.player-stats', $teamPlayer->id) }}"><i class="fa fa-eye"></i></a>
+                                            <a class="btn btn-outline-info me-1" href="{{ route('frontend.players.player-stats', $teamPlayer->slug) }}"><i class="fa fa-eye"></i></a>
                                         </div>
                                         <div>
                                             <form action="{{route('add-players.destroy',[$tournament->id,$team->id,$teamPlayer->id])}}" method="POST">

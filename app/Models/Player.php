@@ -85,6 +85,7 @@ class Player extends Model
         if(isset($searchParam)) {
             $query->where('first_name', 'like', "%$searchParam%");
         }
+        // dd($searchParam);
         return $query;
     }
 
@@ -93,6 +94,10 @@ class Player extends Model
             $query->offset($start)->limit($length);
         }
         return $query;
+    }
+
+    public function scopeNotverified($query){
+        return $query->latest('updated_at')->where('email_verified_at','!=',null);
     }
 
     public function scopeNotparticipated($query, $tournamentId) {

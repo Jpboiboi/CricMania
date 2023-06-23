@@ -16,8 +16,7 @@ class PlayersController extends Controller
 {
     public function index()
     {
-       $players= Player::where('email_verified_at','!=',null)->latest('updated_at')->paginate(5);
-       return view('frontend.players.players-details',compact('players'));
+       return view('frontend.players.players-details');
     }
     public function store(CreatePlayerRequest $request)
     {

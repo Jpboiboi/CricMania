@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddPlayersAjaxController;
 use App\Http\Controllers\AddPlayersController;
 use App\Http\Controllers\PlayersAjaxController;
 use App\Http\Controllers\PlayersController;
@@ -42,7 +43,7 @@ Route::middleware('auth')->group(function () {
 });
 Route::get('/players/{slug}/player-stats',[PlayerStatsController::class,'show'])->name('frontend.players.player-stats');
 
-Route::get('/players',[PlayersController::class,'index'])->name('frontend.players.player-details');
+Route::get('/players',[PlayersController::class,'index'])->name('players.index');
 
 
 // Route::get('/', function() {
@@ -54,9 +55,11 @@ Route::get('/register-via-email',function(){
     return view('frontend.players.register-email');
 })->name('registration');
 
-Route::resource('players',PlayersController::class)->except('index');
+Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.player-details');
+Route::resource('players',PlayersController::class)->except('index', 'show');
 Route::get('/register-player',[PlayersController::class,'validatePlayer'])->name('invite-player');
 Route::resource('tournaments/{tournament}/teams/{team}/add-players', AddPlayersController::class)->except('show');
 Route::get('tournaments/{tournament}/teams/{team}/add-players/invite-via-email', [AddPlayersController::class, 'inviteViaEmail'])->name('players.invite-via-email');
 Route::post('tournaments/{tournament}/teams/{team}/add-players/players', [AddPlayersController::class, 'sendInvite'])->name('add-player.sendInvite');
-Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
+Route::post('/add-players/ajax', [AddPlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
+

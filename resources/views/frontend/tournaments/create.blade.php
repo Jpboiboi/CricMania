@@ -59,6 +59,9 @@
                         required: true,
                         range:[11, 25]
                     },
+                    no_of_overs: {
+                        required: true,
+                    },
                 },
                 // errorElement: 'div',
                 // errorPlacement: function(error, element) {
@@ -172,6 +175,33 @@
 
                         <div class="row">
                             <div class="col-md-6">
+<<<<<<< HEAD
+                                <div class="form-group mb-2">
+                                    <label for="no_of_overs" class="form-label">No Of Overs: </label>
+                                    <select
+                                        name="no_of_overs"
+                                        id="no_of_overs"
+                                        class="form-control select2 @error('no_of_overs') is-invalid @enderror"
+                                        >
+                                        <option></option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20<option>
+                                    </select>
+                                    <label id="no_of_overs-error" class="error" for="no_of_overs"></label>
+                                    @error('no_of_overs')
+                                        <span class="text-danger">
+                                            {{ $message }}
+                                        </span>
+                                    @enderror
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+=======
+>>>>>>> 54f5dc0b49a7dc83066d0e6ffe85dff27dc4d94f
                                 <div class="form-group mb-3">
                                     <label for="start_date" class="form-label @error('start_date') is-invalid @enderror">Enter Start Date</label>
                                     <input

@@ -22,6 +22,7 @@ class TournamentsController extends Controller
             'tournament_type_id' => $request->tournament_type_id,
             'no_of_teams' => $request->no_of_teams,
             'max_players' => $request->max_players,
+            'no_of_overs' => $request->no_of_overs,
             'start_date' => $request->start_date,
             'organizer_id' => auth()->id()
         ]);

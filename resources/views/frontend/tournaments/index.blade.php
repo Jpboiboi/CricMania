@@ -41,6 +41,7 @@
                 <th>No</th>
                 <th>Name</th>
                 <th>No of Teams</th>
+                <th>No of Overs</th>
                 <th>Start Date</th>
                 <th>Organized By</th>
                 <th width="105px">Action</th>

@@ -50,6 +50,9 @@ class TournamentsAjaxController extends Controller
             ->addColumn('no_of_teams', function($tournament) {
                 return $tournament->no_of_teams;
             })
+            ->addColumn('no_of_overs', function($tournament) {
+                return $tournament->no_of_overs;
+            })
             ->addColumn('Start Date', function($tournament) {
                 return $tournament->start_date;
             })

@@ -175,7 +175,6 @@
 
                         <div class="row">
                             <div class="col-md-6">
-<<<<<<< HEAD
                                 <div class="form-group mb-2">
                                     <label for="no_of_overs" class="form-label">No Of Overs: </label>
                                     <select
@@ -200,8 +199,6 @@
 
                             </div>
                             <div class="col-md-6">
-=======
->>>>>>> 54f5dc0b49a7dc83066d0e6ffe85dff27dc4d94f
                                 <div class="form-group mb-3">
                                     <label for="start_date" class="form-label @error('start_date') is-invalid @enderror">Enter Start Date</label>
                                     <input

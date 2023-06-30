@@ -35,6 +35,10 @@
             </div>
             @endforeach
         </div>
+        <form action="{{route('tournaments.schedule.store',$tournament->id)}}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-warning">Schedule Tournament</button>
+        </form>
 
 
         {{-- </div>

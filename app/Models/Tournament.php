@@ -18,7 +18,12 @@ class Tournament extends Model
     public function teams() {
         return $this->belongsToMany(Team::class, 'player_team');
     }
-
+    public function tournament_matches(){
+        return $this->hasMany(TournamentMatch::class);
+    }
+    public function tournament_teams(){
+        return $this->hasMany(Team::class);
+    }
     public function players() {
         return $this->belongsToMany(Player::class, 'player_team');
     }
@@ -38,5 +43,5 @@ class Tournament extends Model
         return $query;
     }
 
-    
+
 }

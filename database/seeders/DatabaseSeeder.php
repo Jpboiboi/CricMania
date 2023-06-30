@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Player;
 use App\Models\User;
 use App\Models\Tournament;
 use App\Models\PlayerStat;
@@ -17,7 +18,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::factory(10)->create();
+
+        \App\Models\User::factory(10)->create()->each(function($user) {
+            $specialization=['batsman','baller','all-rounder'];
+            $hand=['right','left'];
+            $ballingType=['fast','spin','medium-fast'];
+            $player = Player::create([
+                'slug' => strtolower($user->first_name) . "-" . strtolower($user->last_name),
+                'dob'=>fake()->date(),
+                'state'=>fake()->city(),
+                'fav_playing_spot'=>rand(1,11),
+                'specialization'=>$specialization[rand(0,2)],
+                'balling_hand'=>$hand[rand(0,1)],
+                'batting_hand'=>$hand[rand(0,1)],
+                'balling_type'=>$ballingType[rand(0,2)],
+                'jersey_number'=>rand(1,999),
+                'user_id'=>$user->id,
+            ]);
+        });
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
@@ -42,14 +60,16 @@ class DatabaseSeeder extends Seeder
 
         // \App\Models\Player::factory(10)->create();
         // \App\Models\PlayerStat::factory(10)->create();
-        \App\Models\Player::factory(20)->create()->each(function($player){
-                $player->playerstats()->create(
-                    PlayerStat::factory()
-                    ->make()
-                    ->toArray()
+        // \App\Models\Player::factory(20)->create()->each(function($player){
+        //         $player->playerstats()->create(
+        //             PlayerStat::factory()
+        //             ->make()
+        //             ->toArray()
 
-                );
-        });
+        //         );
+        // });
+
+
 
     }
 }

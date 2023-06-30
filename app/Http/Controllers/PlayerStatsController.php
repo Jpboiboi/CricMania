@@ -11,7 +11,8 @@ class PlayerStatsController extends Controller
 {
     public function show(Player $player)
     {
+        $user = $player->user()->first();
         $playerStats=$player->playerstats;
-        return view('frontend.players.player-stats',compact(['playerStats']));
+        return view('frontend.players.player-stats',compact(['playerStats', 'user']));
     }
 }

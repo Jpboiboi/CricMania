@@ -6,13 +6,14 @@ use App\Http\Requests\CreatePlayerRequest;
 use App\Models\Player;
 use App\Models\Team;
 use App\Models\Tournament;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AddPlayersController extends Controller
 {
     public function index(Tournament $tournament, Team $team) {
         $teamPlayers = $team->players()->get();
-        // dd($teamPlayers);
         return view('frontend.players.add-players', compact(['tournament', 'team', 'teamPlayers']));
     }
 
@@ -33,9 +34,37 @@ class AddPlayersController extends Controller
     }
 
     public function sendInvite(CreatePlayerRequest $request, Tournament $tournament, Team $team) {
-        $player = Player::addPlayer($request);
+        $user = User::addUser($request);
+        $player=Player::create([
+            'user_id'=>$user->id
+        ]);
         $team->players()->attach($player->id, ['tournament_id' => $tournament->id]);
         session()->flash('success','Mail sent successfully to player');
-        return redirect()->back();
+        return redirect(route('add-players.index',[$tournament->id, $team->id]));
+    }
+
+    public function update(Request $request, User $user) {
+        $image_path=$request->file('image')->store('players');
+        $password=hash('sha256',$request->password);
+        $user->update([
+            'first_name'=>$request->first_name,
+            'last_name'=>$request->last_name,
+            'photo_path'=>$image_path,
+            'password'=>$password,
+            'email_verified_at'=>Carbon::now()
+        ]);
+
+        Player::updatePlayer($request, $user);
+
+        session()->flash('success','Details saved successfully');
+        return redirect(route('frontend.index'));
+    }
+
+    public function validatePlayer() {
+        $user=User::isValid(request()->t);
+        if($user){
+            return view('frontend.players.invite-user',compact('user'));
+        }
+        abort(401);
     }
 }

@@ -33,11 +33,11 @@
                     <div class="card mb-2 p-2">
                         <div class="card-body added-players">
                             <div class=" d-flex justify-content-between">
-                                @if ($teamPlayer->email_verified_at)
+                                @if ($teamPlayer->user->email_verified_at)
                                     <div>
                                         <div>
                                             <i class="fa fa-check-circle-o text-success"></i>
-                                            {{ $teamPlayer->first_name . " " . $teamPlayer->last_name}}
+                                            {{ $teamPlayer->user->first_name . " " . $teamPlayer->user->last_name}}
                                         </div>
                                         <div class="text-muted">
                                             {{$teamPlayer->specialization}} | Batting Hand: {{ $teamPlayer->batting_hand}} |
@@ -62,7 +62,7 @@
                                 @else
                                 <div>
                                     <div>player email:
-                                        {{$teamPlayer->email}}
+                                        {{$teamPlayer->user->email}}
                                     </div>
                                     <div class="text-muted">
                                         <i class="fa fa-clock-o text-danger"></i>

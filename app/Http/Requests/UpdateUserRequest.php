@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePlayerRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -33,6 +33,7 @@ class UpdatePlayerRequest extends FormRequest
             'balling_type'=>'required',
             'fav_playing_spot'=>'required|numeric|min:1|max:11',
             'image'=>'required|image|mimes:png,jpg,svg|max:1024',
+            'password'=>'required|confirmed',
         ];
     }
 }

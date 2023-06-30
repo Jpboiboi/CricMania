@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Player;
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Yajra\DataTables\DataTables;
@@ -26,7 +27,7 @@ class AddPlayersAjaxController extends Controller
 
     private function getTournaments($search_parameter, $order_by, $start, $length, $tournamentId, $teamId, $token)
     {
-        $query = Player::query();
+        $query = Player::query()->with('user');
         $query->notparticipated($tournamentId);
         $query->search($search_parameter);
         $query->limit_by($start, $length)->get();
@@ -45,7 +46,7 @@ class AddPlayersAjaxController extends Controller
         return DataTables::of($query)
             ->skipPaging()
             ->addColumn('name', function($player) {
-                return $player->first_name . " " . $player->last_name;
+                return $player->user->first_name . " " . $player->user->last_name;
             })
             ->addColumn('Specialization', function($player) {
                 return $player->specialization;

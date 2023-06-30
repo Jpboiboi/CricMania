@@ -59,6 +59,8 @@
             },
             fav_playing_spot: {
                 required: true,
+                min:1,
+                max:11
             },
             specialization: {
                 required: true,
@@ -67,7 +69,9 @@
                 required: true
             },
             jersey_number: {
-                required: true
+                required: true,
+                min:1,
+                max:999
             },
             balling_hand:{
                 required:true
@@ -92,7 +96,7 @@
 <div class="container">
     <h1 class="mt-3">Please fill your correct details</h1>
     @include('frontend.layouts._alert-messages')
-    <form action="{{route('players.update',$player->id)}}" method="POST" enctype="multipart/form-data" id="playerForm">
+    <form action="{{route('users.update',$user->id)}}" method="POST" enctype="multipart/form-data" id="playerForm">
         @csrf
         @method('PUT')
         <div class="card mt-5 mb-5">
@@ -271,6 +275,39 @@
                             @enderror
                         </div>
                     </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" value="{{ old('password') }}" name="password" id="password"
+                                placeholder="Enter password"
+                                class="form-control @error('password') border-danger text-danger @enderror">
+                            <label id="password-error" class="error text-danger"></label>
+                            @error('password')
+                                <span class="text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="password_confirmation" class="form-label">Confirm password</label>
+                            <input type="password" value="{{ old('password_confirmation') }}" name="password_confirmation" id="password_confirmation"
+                                placeholder="confirm password"
+                                class="form-control @error('password_confirmation') border-danger text-danger @enderror">
+                            <label id="password_confirmation-error" class="error text-danger"></label>
+                            @error('password_confirmation')
+                                <span class="text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="row mt-2">

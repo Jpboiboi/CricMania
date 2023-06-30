@@ -44,6 +44,16 @@
                 <div class="d-flex justify-content-center">
                     <div class="col-md-4">
                         <div class="card mt-5 mb-5">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between">
+                                    <div class="align-self-center">
+                                        <h4>Register Player</h4>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#importModal">Import Players</button>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="email" class="form-label">Email</label>
@@ -67,5 +77,44 @@
             </div>
         </form>
 
+    </div>
+
+    <!-- IMPORT PLAYERS MODAL -->
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="importModalLabel">Import Players</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="step-1">
+                    <h4>Step 1:</h4>
+                    <p>Click Below to Download Skeleton file</p>
+                    <a class="btn btn-outline-warning" href="{{ route('export') }}">Download</a>
+                </div>
+                <hr>
+                <div class="step-2">
+                    <h4>Step 2:</h4>
+                    <p>Upload your file:</p>
+                    <form action="{{ route('import') }}"
+                        method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <input type="file" name="file"
+                            class="form-control mb-3">
+                        @error('file')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        <button class="btn btn-outline-warning">
+                            Import User Data
+                        </button>
+                    </form>
+                </div>
+            </div>
+          </div>
+        </div>
     </div>
 @endsection

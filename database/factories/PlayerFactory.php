@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use NunoMaduro\Collision\Adapters\Phpunit\State;
@@ -23,9 +24,6 @@ class PlayerFactory extends Factory
         $hand=['right','left'];
         $ballingType=['fast','spin','medium-fast'];
         return [
-            'first_name'=>fake()->firstName(),
-            'last_name'=>fake()->lastName(),
-            'email'=>fake()->unique()->email(),
             'dob'=>fake()->date(),
             'state'=>fake()->city(),
             'fav_playing_spot'=>rand(1,11),
@@ -34,10 +32,7 @@ class PlayerFactory extends Factory
             'batting_hand'=>$hand[rand(0,1)],
             'balling_type'=>$ballingType[rand(0,2)],
             'jersey_number'=>rand(1,999),
-            'email_verified_at'=>Carbon::now()->format('Y-m-d H:i:s'),
-            'token'=>fake()->text(),
-            'expires_at'=>Carbon::now(),
-
+            'user_id'=>User::all()->random()->id,
         ];
     }
 }

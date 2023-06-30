@@ -60,8 +60,12 @@ class TournamentsAjaxController extends Controller
                 return $tournament->organizer->name;
             })
             ->addColumn('action', function ($tournament) {
+                if($tournament->tournament_teams()->count() > 0) {
+                    $route = route('teams.index', $tournament->id);
+                    return "<a href='$route' class='btn btn-outline-info'><i class='fa fa-eye'></i></a>";
+                }
                 $route = route('teams.create', $tournament->id);
-                return "<a href='$route' class='btn btn-dark text-warning'>Add Teams</a>";
+                return "<a href='$route' class='btn btn-dark text-warning'><i class='fa fa-plus'></i></a>";
             })
             ->rawColumns(['action'])
             ->setFilteredRecords($numberOfFilteredRows)

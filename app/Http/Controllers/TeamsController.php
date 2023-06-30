@@ -42,8 +42,10 @@ class TeamsController extends Controller
             'teams.*.image' => 'required|image|mimes:png,jpg,svg|max:1024'
         ];
         $this->validate($request , $rules);
-        $teams = [];
+        $data = ['name'=>"TBD", 'tournament_id' => $tournament->id, 'image_path' => ""];
+        Team::create($data);
 
+        $teams = [];
         foreach($request->teams as $team) {
             $image_path = ($team['image'])->store('images');
 

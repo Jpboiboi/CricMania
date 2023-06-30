@@ -87,6 +87,7 @@ class User extends Authenticatable
 
         $player=Player::find($playerId);
 
+        sleep(10);
         Notification::route('mail',$player->user->email)->notify(new RegisterPlayers($teamId,$tournamentId));
 
         return 1;
@@ -110,7 +111,7 @@ class User extends Authenticatable
     public function scopeNotverified($query){
         return $query->latest('updated_at')->where('email_verified_at','!=',null);
     }
-    
+
     public function isAdmin() {
         return $this->role === "admin";
     }

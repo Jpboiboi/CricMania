@@ -7,10 +7,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class InvitePlayer extends Notification
+class InviteUser extends Notification
 {
     use Queueable;
     private $token;
+
     /**
      * Create a new notification instance.
      */
@@ -35,9 +36,9 @@ class InvitePlayer extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('CricMania invites you ,please fill further details to register yourself.')
-                    ->action('Click here to register', url("/invite-user?t=$this->token"))
-                    ->line('Thank you for using our application!');
+            ->line('CricMania invites you ,please fill further details to register yourself.')
+            ->action('Click here to register', url("/register-user?t=$this->token"))
+            ->line('Thank you for using our application!');
     }
 
     /**

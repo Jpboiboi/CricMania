@@ -38,7 +38,7 @@
 @section('main-content')
     <div class="container mt-5">
         @include('frontend.layouts._alert-messages')
-        <form action="{{ route('players.store') }}" method="POST" id="emailForm">
+        <form action="{{ route('users.store') }}" method="POST" id="emailForm">
             @csrf
             <div class="row">
                 <div class="d-flex justify-content-center">

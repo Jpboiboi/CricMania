@@ -23,7 +23,9 @@ class PlayerFactory extends Factory
         $specialization=['batsman','baller','all-rounder'];
         $hand=['right','left'];
         $ballingType=['fast','spin','medium-fast'];
+        $user = User::all()->random();
         return [
+            'slug' => strtolower($user->first_name) . "-" . strtolower($user->last_name),
             'dob'=>fake()->date(),
             'state'=>fake()->city(),
             'fav_playing_spot'=>rand(1,11),
@@ -32,7 +34,7 @@ class PlayerFactory extends Factory
             'batting_hand'=>$hand[rand(0,1)],
             'balling_type'=>$ballingType[rand(0,2)],
             'jersey_number'=>rand(1,999),
-            'user_id'=>User::all()->random()->id,
+            'user_id'=>$user->id,
         ];
     }
 }

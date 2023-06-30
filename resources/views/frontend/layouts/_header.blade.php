@@ -28,7 +28,7 @@
                 </a> --}}
                 <div class="btn-group">
                   <button type="button" class="btn bg-warning dropdown-toggle fa fa-user" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{auth()->user()->name}}
+                    {{auth()->user()->first_name.auth()->user()->last_name}}
                   </button>
                   <ul class="dropdown-menu">
                     <li>

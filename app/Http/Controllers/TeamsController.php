@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateTeamRequest;
 use App\Http\Requests\CreateTeamsRequest;
+use App\Models\Player;
 use App\Models\Team;
 use App\Models\Tournament;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TeamsController extends Controller
@@ -37,6 +39,7 @@ class TeamsController extends Controller
      */
     public function store(Request $request ,Tournament $tournament)
     {
+        // dd($request);
         $rules = [
             'teams.*.name' => 'required|unique:teams,name',
             'teams.*.image' => 'required|image|mimes:png,jpg,svg|max:1024'
@@ -53,7 +56,19 @@ class TeamsController extends Controller
             $data = array_merge($data, [
                 'image_path'=> $image_path,
             ]);
+
+            $captainsEmail=$team['email'];
+            $user = User::where('email', $captainsEmail)->first();
+
             $team = Team::create($data);
+            if($user){
+                $user->addCaptain($tournament->id, $team->id, $user->player->id);
+            }else{
+                //$user->registerCaptain($tournament->id, $team->id, $user->player->id);
+            }
+
+
+
             session()->flash('success', 'Team Created Successfully...');
             $teams[]= $team;
         }

@@ -57,7 +57,7 @@ class TournamentsAjaxController extends Controller
                 return $tournament->start_date;
             })
             ->addColumn('Organized By', function($tournament) {
-                return $tournament->organizer->name;
+                return $tournament->organizer->first_name;
             })
             ->addColumn('action', function ($tournament) {
                 if($tournament->tournament_teams()->count() > 0) {

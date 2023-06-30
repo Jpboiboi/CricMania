@@ -31,8 +31,8 @@
         <h1 class="mb-5 text-uppercase font-larger">Player Stats</h1>
         <div class="row">
             <div class="col-md-12 d-flex justify-content-center ">
-                @isset($playerStats->first()->player->photo_path)
-                <img src=" {{asset('/storage/'.$playerStats->first()->player->photo_path)}}" class="rounded-circle bg-light border border-dark border-4" alt="" width="250px">
+                @isset($user->photo_path)
+                <img src=" {{asset('/storage/'.$user->photo_path)}}" class="rounded-circle bg-light border border-dark border-4" alt="" width="250px">
                 @else
                 <img src="{{ asset('assets/img/player-avatar.png') }}" class="rounded-circle bg-light border border-dark border-4" alt="" width="250px">
             @endisset
@@ -40,7 +40,7 @@
         </div>
         <div class="row">
             <div class="col-md-12 d-flex justify-content-center">
-                <h2 > {{ $playerStats->first()->player->first_name }} {{ $playerStats->first()->player->last_name }}</h2>
+                <h2 > {{ $user->first_name }} {{ $user->last_name }}</h2>
             </div>
         </div>
         <hr>

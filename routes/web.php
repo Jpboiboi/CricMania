@@ -59,12 +59,13 @@ Route::get('/players',[PlayersController::class,'index'])->name('players.index')
 require __DIR__.'/auth.php';
 
 Route::get('/register-via-email',function(){
-    return view('frontend.players.register-email');
+    return view('frontend.users.register-email');
 })->name('registration');
 
 Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.player-details');
 Route::resource('players',PlayersController::class)->except('index', 'show');
-Route::get('/register-player',[PlayersController::class,'validatePlayer'])->name('invite-player');
+//Route::get('/register-player',[PlayersController::class,'validatePlayer'])->name('invite-player');
+
 Route::resource('tournaments/{tournament}/teams/{team}/add-players', AddPlayersController::class)->except('show');
 Route::get('tournaments/{tournament}/teams/{team}/add-players/invite-via-email', [AddPlayersController::class, 'inviteViaEmail'])->name('players.invite-via-email');
 Route::post('tournaments/{tournament}/teams/{team}/add-players/players', [AddPlayersController::class, 'sendInvite'])->name('add-player.sendInvite');
@@ -73,4 +74,11 @@ Route::post('/add-players/ajax', [AddPlayersAjaxController::class, 'getData'])->
 Route::get('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'index'] )
 ->name('frontend.tournaments.schedule');
 Route::post('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'store'])->name('tournaments.schedule.store');
+
+Route::resource('users',UsersController::class);
+Route::get('/register-user',[UsersController::class,'validateUser']);
+
+
+Route::get('/invite-user',[AddPlayersController::class,'validatePlayer']);
+Route::put('/add-players/users/{user}',[AddPlayersController::class,'update'])->name('add-players.update');
 

@@ -11,11 +11,11 @@ class Team extends Model
     protected $guarded = [];
 
     public function players() {
-        return $this->belongsToMany(Player::class);
+        return $this->belongsToMany(Player::class, 'player_team');
     }
 
     public function tournaments() {
-        return $this->belongsToMany(Tournament::class);
+        return $this->belongsToMany(Tournament::class, 'player_team');
     }
 
     // public function notInTeam() {

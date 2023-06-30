@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Player;
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Yajra\DataTables\DataTables;
@@ -24,12 +25,12 @@ class PlayersAjaxController extends Controller
 
     private function getPlayers($search_parameter, $order_by, $start, $length,  $token)
     {
-        $query = Player::query();
+        $query = User::where('role', 'player');
         $query->notverified();
         $query->search($search_parameter);
         $query->limit_by($start, $length)->get();
-        $numberOfTotalRows = Player::all()->count();
-        $numberOfFilteredRows = Player::search($search_parameter)->get()->count();
+        $numberOfTotalRows = User::all()->count();
+        $numberOfFilteredRows = User::search($search_parameter)->get()->count();
         $query = $query->get();
         return $this->yajraData($query, $numberOfFilteredRows, $numberOfTotalRows, $token);
     }
@@ -42,35 +43,37 @@ class PlayersAjaxController extends Controller
     ) {
         return DataTables::of($query)
             ->skipPaging()
-            ->addColumn('Profile', function($player) {
-                $hasProfile=$player->photo_path;
-                if($hasProfile){
-                    $imagePath=asset('storage/'.$player->photo_path);
-                    return '<img src="'.$imagePath.'" width="100px" class="rounded-circle bg-light border border-dark border-2" />';
-                }else{
-                   $defaultImg=asset('assets/img/player-avatar.png');
-                   return  '<img src="'.$defaultImg.'" width="100px" class="rounded-circle bg-light border border-dark border-2" />';
-                }
+            ->addColumn('Profile', function($user) {
+                 $hasProfile=$user->photo_path;
+                 if($hasProfile){
+                     $imagePath=asset('storage/'.$user->photo_path);
+                     return '<img src="'.$imagePath.'" width="100px" class="rounded-circle bg-light border border-dark border-2" />';
+                 }
+                 else{
+                    $defaultImg=asset('assets/img/player-avatar.png');
+                    return  '<img src="'.$defaultImg.'" width="100px" class="rounded-circle bg-light border border-dark border-2" />';
+                 }
+                $defaultImg=asset('assets/img/player-avatar.png');
+                return  '<img src="'.$defaultImg.'" width="100px" class="rounded-circle bg-light border border-dark border-2" />';
+            })
+            ->addColumn('name', function($user) {
+                return $user->first_name . " " . $user->last_name;
+            })
+            ->addColumn('Date of birth', function($user) {
+                return $user->player->dob;
+            })
+            ->addColumn('State', function($user) {
+                return $user->player->state;
+            })
+            ->addColumn('Specialization', function($user) {
+                return $user->player->specialization;
+            })
+            ->addColumn('Jersey no', function($user) {
+                return $user->player->jersey_number;
+            })
 
-            })
-            ->addColumn('name', function($player) {
-                return $player->first_name . " " . $player->last_name;
-            })
-            ->addColumn('Date of birth', function($player) {
-                return $player->dob;
-            })
-            ->addColumn('State', function($player) {
-                return $player->state;
-            })
-            ->addColumn('Specialization', function($player) {
-                return $player->specialization;
-            })
-            ->addColumn('Jersey no', function($player) {
-                return $player->jersey_number;
-            })
-
-            ->addColumn('action', function ($player){
-                $route = route('frontend.players.player-stats',$player->slug);
+            ->addColumn('action', function ($user){
+                $route = route('frontend.players.player-stats',$user->player->slug);
                 return "<a href='$route' class='btn btn-outline-info me-1'><i class='fa fa-eye'></i></a> ";
 
             })

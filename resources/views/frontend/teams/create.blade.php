@@ -27,8 +27,8 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-group">
-                                <label for="image_path" class="form-label mt-3">Logo</label>
+                            <div class="form-group mt-3">
+                                <label for="image_path" class="form-label">Logo</label>
                                 <input type="file"
                                     class="form-control @error('image_path') border-design text-danger @enderror"
                                     placeholder="Select Image File"
@@ -40,6 +40,14 @@
                                         </span>
 
                                     @enderror
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="email" class="form-label">Captain's Email-id</label>
+                                <input type="email" class="form-control" name="teams[{{$i}}][email]" placeholder="Enter captains email" value="{{ old('teams[0][email]') }}" class="form-control @error('email') is-invalid @enderror" />
+                                @error('teams.*.email')
+                                    <span class="text-danger">{{ str_replace("teams.$i.email","email",$message)}}
+                                    </span>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -77,7 +85,7 @@
             }
             });
 
-
+            
         teams.filter('input[name$="[image]"]').each(function() {
             $(this).rules("add", {
                 required: true,

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Requests\UpdatePlayerRequest;
 use App\Notifications\InvitePlayer;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,7 +22,7 @@ class Player extends Model
     public static function boot()
     {
         parent::boot();
-        static::updated(function(Player $player){
+        static::created(function(Player $player){
             $playerExist=PlayerStat::where('player_id',$player->id)->first();
 
             if(! $playerExist){
@@ -31,18 +32,6 @@ class Player extends Model
             }
         });
 
-    }
-    public function setFirstNameAttribute(string $first_name){//mutator, assigns the title and slug automatically when we try to assign title a value
-        $this->attributes['first_name']=$first_name;
-        // $this->attributes['last_name']=$last_name;
-        $this->attributes['slug']=Str::slug($first_name);
-
-    }
-
-    public function setLastNameAttribute(string $last_name){//mutator, assigns the title and slug automatically when we try to assign title a value
-        $this->attributes['last_name']=$last_name;
-        // $this->attributes['last_name']=$last_name;
-        $this->attributes['slug'] .= '-' . Str::slug($last_name);
     }
 
     public function playerstats()
@@ -58,6 +47,10 @@ class Player extends Model
         return $this->belongsToMany(Tournament::class, 'player_team');
     }
 
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public static function isValid(string $token)
     {
         $current=date('Y-m-d H:i:s');
@@ -66,26 +59,54 @@ class Player extends Model
                     ->first();
     }
 
-    public static function addPlayer(Request $request) {
-        $token=hash('sha256',"$request->email". round(microtime(true)*1000).strrev("$request->email").rand());
+    public static function addPlayer(Request $request,User $user)
+    {
 
-        $player = Player::create([
-            'email'=>$request->email,
-            'token'=>$token,
-            'expires_at'=>Carbon::now()->addDays(30)
+       Player::create([
+            'slug' => strtolower($user->first_name) . "-" . strtolower($user->last_name),
+            'dob'=>$request->dob,
+            'state'=>$request->state,
+            'specialization'=>$request->specialization,
+            'batting_hand'=>$request->batting_hand,
+            'balling_hand'=>$request->balling_hand,
+            'balling_type'=>$request->balling_type,
+            'jersey_number'=>$request->jersey_number,
+            'fav_playing_spot'=>$request->fav_playing_spot,
+            'user_id'=>$user->id
         ]);
 
-        Notification::route('mail',$request->email)->notify(new InvitePlayer($token));
+        return 1;
 
-        return $player;
     }
+
+    public static function updatePlayer(Request $request,User $user)
+    {
+
+       $user->player->update([
+            'slug' => strtolower($user->first_name) . "-" . strtolower($user->last_name),
+            'dob'=>$request->dob,
+            'state'=>$request->state,
+            'specialization'=>$request->specialization,
+            'batting_hand'=>$request->batting_hand,
+            'balling_hand'=>$request->balling_hand,
+            'balling_type'=>$request->balling_type,
+            'jersey_number'=>$request->jersey_number,
+            'fav_playing_spot'=>$request->fav_playing_spot,
+        ]);
+
+        return 1;
+
+    }
+
+
 
     // SCOPE FUNCTIONS
     public function scopeSearch($query, $searchParam) {
         if(isset($searchParam)) {
-            $query->where('first_name', 'like', "%$searchParam%");
+            $query->whereHas('user', function($q) use($searchParam){
+                $q->where('first_name', 'like', "%$searchParam%");
+            });
         }
-        // dd($searchParam);
         return $query;
     }
 
@@ -94,10 +115,6 @@ class Player extends Model
             $query->offset($start)->limit($length);
         }
         return $query;
-    }
-
-    public function scopeNotverified($query){
-        return $query->latest('updated_at')->where('email_verified_at','!=',null);
     }
 
     public function scopeNotparticipated($query, $tournamentId) {

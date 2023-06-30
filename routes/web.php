@@ -10,6 +10,7 @@ use App\Http\Controllers\TeamPlayersController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TournamentsAjaxController;
 use App\Http\Controllers\TournamentsController;
+use App\Http\Controllers\UsersController;
 use App\Models\Player;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('tournaments', TournamentsController::class)->only('create', 'store', 'index');
     Route::resource('tournaments/{tournament}/teams', TeamsController::class);
     Route::post('/tournaments/ajax', [TournamentsAjaxController::class, 'getData'])->name('frontend.tournaments.index');
+
+    // USERS IMPORT AND EXPORT ROUTES
+    Route::get('/export-skeleton-file',[UsersController::class,'export'])->name('export');
+    Route::post('/import-users',[UsersController::class,'import'])->name('import');
+
 });
 Route::get('/players/{slug}/player-stats',[PlayerStatsController::class,'show'])->name('frontend.players.player-stats');
 
@@ -61,5 +67,6 @@ Route::get('/register-player',[PlayersController::class,'validatePlayer'])->name
 Route::resource('tournaments/{tournament}/teams/{team}/add-players', AddPlayersController::class)->except('show');
 Route::get('tournaments/{tournament}/teams/{team}/add-players/invite-via-email', [AddPlayersController::class, 'inviteViaEmail'])->name('players.invite-via-email');
 Route::post('tournaments/{tournament}/teams/{team}/add-players/players', [AddPlayersController::class, 'sendInvite'])->name('add-player.sendInvite');
+Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
 Route::post('/add-players/ajax', [AddPlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
 

@@ -45,6 +45,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/export-skeleton-file',[UsersController::class,'export'])->name('export');
     Route::post('/import-users',[UsersController::class,'import'])->name('import');
 
+
+    // Add Player Ajax Routes
+    Route::post('/add-players/ajax', [AddPlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
+    // Add Player Routes
+    Route::resource('tournaments/{tournament}/teams/{team}/add-players', AddPlayersController::class)->except(['show', 'update']);
     //Tournament_schedule store and view
     Route::get('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'index'] )
     ->name('frontend.tournaments.schedule');
@@ -61,13 +66,9 @@ Route::get('/players',[PlayersController::class,'index'])->name('players.index')
 // })
 require __DIR__.'/auth.php';
 
-Route::get('/register-via-email',function(){
-    return view('frontend.users.register-email');
-})->name('registration');
 
 Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.player-details');
 Route::resource('players',PlayersController::class)->except('index', 'show');
-//Route::get('/register-player',[PlayersController::class,'validatePlayer'])->name('invite-player');
 
 Route::resource('tournaments/{tournament}/teams/{team}/add-players', AddPlayersController::class)->except(['show', 'update']);
 Route::get('tournaments/{tournament}/teams/{team}/add-players/invite-via-email', [AddPlayersController::class, 'inviteViaEmail'])->name('players.invite-via-email');
@@ -76,10 +77,26 @@ Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('f
 Route::post('/add-players/ajax', [AddPlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
 
 
+// Register user using 'register as player' btn
+Route::get('/register-via-email',function(){
+    return view('frontend.users.register-email');
+})->name('registration');
 Route::resource('users',UsersController::class);
 Route::get('/register-user',[UsersController::class,'validateUser']);
 
+// Invite form to invite captain to teams through email
+Route::get('tournaments/{tournament}/teams/{team}/invite-captain', [AddPlayersController::class, 'validateCaptain']);
+// Storing invited captain details and adding captain to team
+Route::Post('tournaments/{tournament}/teams/{team}/invite-captain/users/{user}', [AddPlayersController::class, 'storeCaptain'])->name('addPlayers.storeCaptain');
 
+// Invite form to invite player to teams through email
 Route::get('/invite-user',[AddPlayersController::class,'validatePlayer']);
+Route::get('tournaments/{tournament}/teams/{team}/add-players/invite-via-email', [AddPlayersController::class, 'inviteViaEmail'])->name('players.invite-via-email');
+
+// Storing invited player details and adding player to team
+Route::post('tournaments/{tournament}/teams/{team}/add-players/players', [AddPlayersController::class, 'sendInvite'])->name('add-player.sendInvite');
 Route::put('/add-players/users/{user}',[AddPlayersController::class,'update'])->name('add-players.update');
 
+
+Route::get('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'index'])->name('frontend.tournaments.schedule');
+Route::post('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'store'])->name('tournaments.schedule.store');

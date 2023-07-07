@@ -7,18 +7,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RegisterPlayers extends Notification
+class InviteCaptain extends Notification
 {
     use Queueable;
-    private $teamId,$tournamentId,$token;
+    private $token,$tournamentId,$teamId;
     /**
      * Create a new notification instance.
      */
-    public function __construct($teamId,$tournamentId,$token)
+    public function __construct($token,$tournamentId,$teamId)
     {
-        $this->teamId=$teamId;
-        $this->tournamentId=$tournamentId;
         $this->token=$token;
+        $this->tournamentId=$tournamentId;
+        $this->teamId=$teamId;
     }
 
     /**
@@ -37,8 +37,8 @@ class RegisterPlayers extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('Your are added as captain by cricmania. Please add rest of the team players by clicking below!')
-                    ->action('Click here to add', url("tournaments/$this->tournamentId/teams/$this->teamId/add-players?t=$this->token"))
+                    ->line('You are added as a captain by CricMania,please fill further details to register yourself and then you can add your team players.')
+                    ->action('Click here to register', url("tournaments/$this->tournamentId/teams/$this->teamId/invite-captain?t=$this->token"))
                     ->line('Thank you for using our application!');
     }
 

@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateImportRequest;
 use App\Imports\UsersImport;
 use App\Notifications\ImportFailureReport;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UsersController extends Controller
@@ -24,6 +25,17 @@ class UsersController extends Controller
         $this->middleware(['validateAdmin'])->only('export', 'import');
     }
 
+    // Register form using 'register as player' btn
+    public function validateUser()
+    {
+        $user=User::isValid(request()->t);
+        if($user){
+            return view('frontend.users.register-user',compact('user'));
+        }
+        abort(401);
+    }
+
+    // Store user email and send form through mail
     public function store(CreateUserRequest $request)
     {
         $token=hash('sha256',"$request->email". round(microtime(true)*1000).strrev("$request->email").rand());
@@ -34,17 +46,19 @@ class UsersController extends Controller
             'invite_token'=>$token,
             'expires_at'=>Carbon::now()->addDays(30)
         ]);
-        // dd($user);
+
         Notification::route('mail',$request->email)->notify(new InviteUser($token));
 
         session()->flash('success','Mail sent successfully ,please check your inbox');
         return redirect()->back();
     }
 
+    // Store user details and add user in player tables
     public function update(UpdateUserRequest $request, User $user)
     {
         $image_path=$request->file('image')->store('players');
-        $password=hash('sha256',$request->password);
+        // $password=hash('sha256',$request->password);
+        $password=Hash::make($request->password);
         $user->update([
             'first_name'=>$request->first_name,
             'last_name'=>$request->last_name,
@@ -59,16 +73,6 @@ class UsersController extends Controller
         return redirect(route('frontend.index'));
     }
 
-    public function validateUser()
-    {
-        // dd(request()->t);
-        // dd(Player::isValid(request()->t));
-        $user=User::isValid(request()->t);
-        if($user){
-            return view('frontend.users.register-user',compact('user'));
-        }
-        abort(401);
-    }
 
     public function export()
     {
@@ -80,11 +84,9 @@ class UsersController extends Controller
         $import = new UsersImport();
         Excel::import($import, $request->file('file')->store('files'));
         if($import->failures()->isNotEmpty()) {;
-            // return Excel::download(new UsersFailureReport($import->failures()), 'failure-report.xlsx');
             $path = "import-failures/failure-report.xlsx";
             $failure_report = Excel::store(new UsersFailureReport($import->failures()), $path);
             Notification::route('mail',auth()->user()->email)->notify(new ImportFailureReport($path));
-            // dd($failure_report);
             return redirect('/')->with('error', 'Your file is Partially imported! Please check your mail for failure report');
 
         }

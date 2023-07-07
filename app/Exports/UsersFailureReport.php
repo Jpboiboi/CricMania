@@ -2,14 +2,13 @@
 
 namespace App\Exports;
 
-use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class UsersFailureReport implements WithHeadings, WithColumnWidths, WithStyles, FromView
@@ -59,9 +58,12 @@ class UsersFailureReport implements WithHeadings, WithColumnWidths, WithStyles, 
 
     public function styles(Worksheet $sheet)
     {
-        return [
-            // 'M'  => ['font' => ['color' => ['argb' => Color::COLOR_RED]]],
+        $alignment = [
+            'alignment' => [
+                'vertical' => Alignment::VERTICAL_TOP, // Set the desired vertical alignment
+            ],
         ];
+        return array_fill_keys(range('A', 'Z'), $alignment);
     }
 
     public function view(): View
@@ -79,9 +81,7 @@ class UsersFailureReport implements WithHeadings, WithColumnWidths, WithStyles, 
             ];
             array_push($failuresArray[$failure->row()]['attribute'], $failure->attribute());
             array_push($failuresArray[$failure->row()]['errors'], $failure->errors()[0]);
-            // var_dump($failuresArray[$failure->row()]['errors']);
         }
-        // dd($failuresArray);
         return view('frontend.exports.users-failure-report', compact('failuresArray'));
     }
 

@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateTeamRequest;
-use App\Http\Requests\CreateTeamsRequest;
-use App\Models\Player;
 use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TeamsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['validateOrganizer'])->only(['index', 'create', 'store']);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -44,33 +47,35 @@ class TeamsController extends Controller
             'teams.*.image' => 'required|image|mimes:png,jpg,svg|max:1024'
         ];
         $this->validate($request , $rules);
-        $data = ['name'=>"TBD", 'tournament_id' => $tournament->id, 'image_path' => ""];
-        Team::create($data);
+        $teams = DB::transaction(function () use ($request, $tournament) {
+            $data = ['name'=>"TBD", 'tournament_id' => $tournament->id, 'image_path' => ""];
+            Team::create($data);
 
-        $teams = [];
-        foreach($request->teams as $team) {
-            $image_path = ($team['image'])->store('images');
+            $teams = [];
+            foreach($request->teams as $team) {
+                $image_path = ($team['image'])->store('images');
 
-            $data = ['name'=>$team['name'], 'tournament_id' => $tournament->id];
-            $data = array_merge($data, [
-                'image_path'=> $image_path,
-            ]);
+                $data = ['name'=>$team['name'], 'tournament_id' => $tournament->id];
+                $data = array_merge($data, [
+                    'image_path'=> $image_path,
+                ]);
 
-            $captainsEmail=$team['email'];
-            $user = User::where('email', $captainsEmail)->first();
+                $captainsEmail=$team['email'];
+                $user = User::where('email', $captainsEmail)->first();
 
-            $team = Team::create($data);
-            if($user){
-                $user->addCaptain($tournament->id, $team->id, $user->player->id);
-            }else{
-                //$user->registerCaptain($tournament->id, $team->id, $user->player->id);
+                $team = Team::create($data);
+                if($user){
+                    $user->addCaptain($tournament->id, $team->id, $user->player->id);
+                }else{
+                    //$user->registerCaptain($tournament->id, $team->id, $user->player->id);
+                }
+
+                $teams[]= $team;
             }
 
-
-
-            session()->flash('success', 'Team Created Successfully...');
-            $teams[]= $team;
-        }
+            return $teams;
+        });
+        session()->flash('success', 'Team Created Successfully...');
         return view('frontend.teams.index', compact(['tournament', 'teams']));
     }
 

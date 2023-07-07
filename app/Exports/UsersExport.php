@@ -4,23 +4,17 @@ namespace App\Exports;
 
 use App\Models\Users;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class UsersExport implements WithHeadings
+class UsersExport implements WithMultipleSheets
 {
-    public function headings(): array
+    public function sheets(): array
     {
         return [
-            'First Name',
-            'Last Name',
-            'Email',
-            'State',
-            'DOB',
-            'Fav Playing Spot',
-            'Specialization',
-            'Batting Hand',
-            'Jersey Number',
-            'Balling Hand',
-            'Balling Type',
+            "WorkSheet" => new MainSheetExport(),
+            "States" => new StatesSheetExport(),
+            "Specialization" => new SpecializationsSheetExport(),
+            "BallingType" => new BallingTypeSheetExport(),
         ];
     }
 }

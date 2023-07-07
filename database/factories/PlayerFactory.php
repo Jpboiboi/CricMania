@@ -3,10 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use NunoMaduro\Collision\Adapters\Phpunit\State;
-use PharIo\Manifest\Email;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Player>

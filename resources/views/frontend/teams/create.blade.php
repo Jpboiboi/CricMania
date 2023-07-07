@@ -67,8 +67,6 @@
         $("#create-team-form").validate();
 
         var teams = $('input[name^="teams"]');
-        console.log(teams);
-        console.log(teams.filter('input[name$="[name]"]'));
         teams.filter('input[name$="[name]"]').each(function() {
             $(this).rules("add", {
             required: true,

@@ -28,9 +28,17 @@
                 </a> --}}
                 <div class="btn-group">
                   <button type="button" class="btn bg-warning dropdown-toggle fa fa-user" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{auth()->user()->name}}
+                    {{auth()->user()->first_name.auth()->user()->last_name}}
                   </button>
                   <ul class="dropdown-menu">
+                    <li>
+                        <a href="{{route('profile.edit')}}" class="btn">Profile</a>
+                    </li>
+                    @if (auth()->user()->role==='player')
+                    <li>
+                        <a href="{{route('players.edit',auth()->user()->player->id)}}" class="btn">Edit Details</a>
+                    </li>
+                    @endif
                     <li>
                         <form action="{{route('logout')}}" method="POST">
                             @csrf

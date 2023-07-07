@@ -29,12 +29,16 @@
                     <div class="card-body">
                     <h5 class="card-title d-flex justify-content-center mb-3">{{$team->name}}</h5>
                     {{-- <p class="card-text d-flex justify-content-center">Some Slogun.</p> --}}
-                    <a href="{{ route('add-players.index', [$tournament->id, $team->id]) }}" class="btn btn-dark text-warning d-flex justify-content-center">Add Players</a>
+                    <a href="{{ route('add-players.index', [$tournament->id, $team->id]) }}" class="btn btn-dark text-warning d-flex justify-content-center">View Players</a>
                     </div>
                 </div>
             </div>
             @endforeach
         </div>
+        <form action="{{route('tournaments.schedule.store',$tournament->id)}}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-warning">Schedule Tournament</button>
+        </form>
 
 
         {{-- </div>

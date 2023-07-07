@@ -13,11 +13,7 @@ return new class extends Migration
     {
         Schema::create('players', function (Blueprint $table) {
             $table->id();
-            $table->string('photo_path')->nullable();
-            $table->string('first_name')->nullable();
-            $table->string('last_name')->nullable();
             $table->string('slug')->nullable();
-            $table->string('email')->unique();
             $table->date('dob')->nullable();
             $table->string('state')->nullable();
             $table->unsignedInteger('fav_playing_spot')->nullable();
@@ -26,10 +22,13 @@ return new class extends Migration
             $table->string('batting_hand')->nullable();
             $table->string('balling_type')->nullable();
             $table->unsignedInteger('jersey_number')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('token')->unique();
-            $table->timestamp('expires_at')->nullable();
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 

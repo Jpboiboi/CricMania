@@ -40,15 +40,21 @@
 
 
 <script>
+    jQuery.validator.addMethod("noSpace", function(value, element) {
+        return /^[A-Za-z0-9].*$/.test(value) && value != "";
+    }, "Please do not enter only spaces");
+
     $(function() {
         $("#playerForm").validate({
         rules: {
             first_name: {
                 required: true,
+                noSpace:true,
                 minlength: 2
             },
             last_name: {
                 required: true,
+                noSpace:true,
                 minlength: 2
             },
             state: {
@@ -59,6 +65,9 @@
             },
             fav_playing_spot: {
                 required: true,
+                noSpace:true,
+                min:1,
+                max:11
             },
             specialization: {
                 required: true,
@@ -67,7 +76,10 @@
                 required: true
             },
             jersey_number: {
-                required: true
+                required: true,
+                noSpace:true,
+                min:1,
+                max:999
             },
             balling_hand:{
                 required:true
@@ -92,7 +104,7 @@
 <div class="container">
     <h1 class="mt-3">Please fill your correct details</h1>
     @include('frontend.layouts._alert-messages')
-    <form action="{{route('players.update',$player->id)}}" method="POST" enctype="multipart/form-data" id="playerForm">
+    <form action="{{route('add-players.update',$user->id)}}" method="POST" enctype="multipart/form-data" id="playerForm">
         @csrf
         @method('PUT')
         <div class="card mt-5 mb-5">
@@ -136,11 +148,9 @@
                             <label for="state" class="form-label">State</label>
                             <select name="state" id="state" class="form-control select2">
                                 <option></option>
-                                <option value="maharastra">Maharashtra</option>
-                                <option value="gujrat">Gujrat</option>
-                                <option value="madhyapradesh">Madhyapradesh</option>
-                                <option value="punjab">Punjab</option>
-                                <option value="tamilnadu">Tamilnadu</option>
+                                @foreach (App\Constants\IndianStateConstants::INDIAN_STATES as $key => $value)
+                                <option value="{{$value}}">{{$key}}</option>
+                            @endforeach
                             </select>
                             <label id="state-error" class="error" for="state"></label>
                             @error('state')
@@ -188,9 +198,9 @@
                             <label for="specialization" class="form-label">Specialization</label>
                             <select name="specialization" id="specialization" class="form-control select2">
                                 <option></option>
-                                <option value="batsman">Batsman</option>
-                                <option value="baller">Baller</option>
-                                <option value="allrounder">All rounder</option>
+                                @foreach (App\Constants\SpecializationConstants::SPECIALIZATION as $key => $value)
+                                    <option value="{{$value}}">{{$key}}</option>
+                                @endforeach
                             </select>
                             <label id="specialization-error" class="error text-danger" for="specialization"></label>
                             @error('specialization')
@@ -208,8 +218,9 @@
                             <label for="batting_hand" class="form-label">Batting hand</label>
                             <select name="batting_hand" id="batting_hand" class="form-control select2">
                                 <option></option>
-                                <option value="right">Right Handed</option>
-                                <option value="left">Left Handed</option>
+                                @foreach (App\Constants\HandConstants::HANDS as $key => $value)
+                                <option value="{{$value}}">{{$key}}</option>
+                                @endforeach
                             </select>
                             <label id="batting_hand-error" class="error text-danger" for="batting_hand"></label>
                             @error('batting_hand')
@@ -243,8 +254,9 @@
                             <label for="balling_hand" class="form-label">Bowling hand</label>
                             <select name="balling_hand" id="balling_hand" class="form-control select2">
                                 <option></option>
-                                <option value="right">Right Handed</option>
-                                <option value="left">Left Handed</option>
+                                @foreach (App\Constants\HandConstants::HANDS as $key => $value)
+                                <option value="{{$value}}">{{$key}}</option>
+                                @endforeach
                             </select>
                             <label id="balling_hand-error" class="error text-danger" for="balling_hand"></label>
                             @error('balling_hand')
@@ -259,9 +271,9 @@
                             <label for="balling_type" class="form-label">Balling type</label>
                             <select name="balling_type" id="balling_type" class="form-control select2">
                                 <option></option>
-                                <option value="fast">Fast</option>
-                                <option value="medium-fast">Medium-Fast</option>
-                                <option value="spin">Spin</option>
+                                @foreach (App\Constants\BallingTypeConstants::BALLING_TYPES as $key => $value)
+                                <option value="{{$value}}">{{$key}}</option>
+                                @endforeach
                             </select>
                             <label id="balling_type-error" class="error text-danger" for="balling_type"></label>
                             @error('balling_type')
@@ -271,6 +283,39 @@
                             @enderror
                         </div>
                     </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" value="{{ old('password') }}" name="password" id="password"
+                                placeholder="Enter password"
+                                class="form-control @error('password') border-danger text-danger @enderror">
+                            <label id="password-error" class="error text-danger"></label>
+                            @error('password')
+                                <span class="text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="password_confirmation" class="form-label">Confirm password</label>
+                            <input type="password" value="{{ old('password_confirmation') }}" name="password_confirmation" id="password_confirmation"
+                                placeholder="confirm password"
+                                class="form-control @error('password_confirmation') border-danger text-danger @enderror">
+                            <label id="password_confirmation-error" class="error text-danger"></label>
+                            @error('password_confirmation')
+                                <span class="text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="row mt-2">

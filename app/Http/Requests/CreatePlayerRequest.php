@@ -22,7 +22,7 @@ class CreatePlayerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'=>'required|unique:players'
+            'email'=>'required|unique:users'
         ];
     }
 }

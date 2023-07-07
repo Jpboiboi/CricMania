@@ -28,10 +28,10 @@ class UpdatePlayerRequest extends FormRequest
             'state'=>'required',
             'dob'=>'required',
             'batting_hand'=>'required',
-            'jersey_number'=>'required',
+            'jersey_number'=>'required|numeric|min:1|max:999',
             'balling_hand'=>'required',
             'balling_type'=>'required',
-            'fav_playing_spot'=>'required',
+            'fav_playing_spot'=>'required|numeric|min:1|max:11',
             'image'=>'required|image|mimes:png,jpg,svg|max:1024',
         ];
     }

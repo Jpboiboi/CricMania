@@ -24,8 +24,11 @@ class TournamentsAjaxController extends Controller
 
     private function getTournaments($draw, $search_parameter, $order_by, $start, $length)
     {
-
-        $query = Tournament::query();
+        if(auth()->user()->isAdmin()) {
+            $query = Tournament::query();
+        } else {
+            $query = Tournament::where('organizer_id', auth()->id());
+        }
         $query->search($search_parameter);
         $query->limit_by($start, $length)->get();
         $numberOfTotalRows = Tournament::all()->count();
@@ -50,15 +53,22 @@ class TournamentsAjaxController extends Controller
             ->addColumn('no_of_teams', function($tournament) {
                 return $tournament->no_of_teams;
             })
+            ->addColumn('no_of_overs', function($tournament) {
+                return $tournament->no_of_overs;
+            })
             ->addColumn('Start Date', function($tournament) {
                 return $tournament->start_date;
             })
             ->addColumn('Organized By', function($tournament) {
-                return $tournament->organizer->name;
+                return $tournament->organizer->first_name;
             })
             ->addColumn('action', function ($tournament) {
+                if($tournament->tournament_teams()->count() > 0) {
+                    $route = route('teams.index', $tournament->id);
+                    return "<a href='$route' class='btn btn-outline-info'><i class='fa fa-eye'></i></a>";
+                }
                 $route = route('teams.create', $tournament->id);
-                return "<a href='$route' class='btn btn-dark text-warning'>Add Teams</a>";
+                return "<a href='$route' class='btn btn-dark text-warning'><i class='fa fa-plus'></i></a>";
             })
             ->rawColumns(['action'])
             ->setFilteredRecords($numberOfFilteredRows)

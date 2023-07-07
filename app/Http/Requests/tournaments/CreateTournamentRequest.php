@@ -25,7 +25,8 @@ class CreateTournamentRequest extends FormRequest
             'name' => 'required | min:3 | max:255 | unique:tournaments',
             'tournament_type_id' => 'required',
             'no_of_teams' => 'required',
-            'max_players' => 'required',
+            'max_players' => 'required|numeric|min:11|max:25',
+            'no_of_overs' => 'required|numeric',
             'start_date' => 'required',
         ];
     }

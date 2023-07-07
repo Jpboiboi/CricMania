@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tournament_type_id');
             $table->integer('no_of_teams');
             $table->integer('max_players');
+            $table->integer('no_of_overs');
             $table->timestamp('start_date');
             $table->timestamps();
 

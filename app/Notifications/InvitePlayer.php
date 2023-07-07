@@ -36,7 +36,7 @@ class InvitePlayer extends Notification
     {
         return (new MailMessage)
                     ->line('CricMania invites you ,please fill further details to register yourself.')
-                    ->action('Click here to register', url("/register-player?t=$this->token"))
+                    ->action('Click here to register', url("/invite-user?t=$this->token"))
                     ->line('Thank you for using our application!');
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Player;
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Yajra\DataTables\DataTables;
@@ -17,61 +18,66 @@ class PlayersAjaxController extends Controller
             $order_by = $request->get('order');
             $start = $request->get('start');
             $length = $request->get('length');
-            $tournamentId = $request['_tournamentId'];
-            $teamId = $request['_teamId'];
             $token = $request['_token'];
-            return $this->getTournaments($search_parameter, $order_by, $start, $length, $tournamentId, $teamId, $token);
+            return $this->getPlayers($search_parameter, $order_by, $start, $length, $token);
         }
     }
 
-    private function getTournaments($search_parameter, $order_by, $start, $length, $tournamentId, $teamId, $token)
+    private function getPlayers($search_parameter, $order_by, $start, $length,  $token)
     {
-        $query = Player::query();
-        $query->notparticipated($tournamentId);
+        $query = User::where('role', 'player');
+        $query->notverified();
         $query->search($search_parameter);
         $query->limit_by($start, $length)->get();
-        $numberOfTotalRows = Player::all()->count();
-        $numberOfFilteredRows = Player::search($search_parameter)->get()->count();
+        $numberOfTotalRows = User::all()->count();
+        $numberOfFilteredRows = User::search($search_parameter)->get()->count();
         $query = $query->get();
-        return $this->yajraData($query, $numberOfFilteredRows, $numberOfTotalRows, $tournamentId, $teamId, $token);
+        return $this->yajraData($query, $numberOfFilteredRows, $numberOfTotalRows, $token);
     }
 
     private function yajraData(
         Collection $query,
         int $numberOfFilteredRows,
         int $numberOfTotalRows,
-        int $tournamentId, int $teamId, $token
+        $token
     ) {
         return DataTables::of($query)
             ->skipPaging()
-            ->addColumn('name', function($player) {
-                return $player->first_name . " " . $player->last_name;
+            ->addColumn('Profile', function($user) {
+                 $hasProfile=$user->photo_path;
+                 if($hasProfile){
+                     $imagePath=asset('storage/'.$user->photo_path);
+                     return '<img src="'.$imagePath.'" width="100px" class="rounded-circle bg-light border border-dark border-2" />';
+                 }
+                 else{
+                    $defaultImg=asset('assets/img/player-avatar.png');
+                    return  '<img src="'.$defaultImg.'" width="100px" class="rounded-circle bg-light border border-dark border-2" />';
+                 }
+                $defaultImg=asset('assets/img/player-avatar.png');
+                return  '<img src="'.$defaultImg.'" width="100px" class="rounded-circle bg-light border border-dark border-2" />';
             })
-            ->addColumn('Specialization', function($player) {
-                return $player->specialization;
+            ->addColumn('name', function($user) {
+                return $user->first_name . " " . $user->last_name;
             })
-            ->addColumn('Batting Hand', function($player) {
-                return $player->batting_hand;
+            ->addColumn('Date of birth', function($user) {
+                return $user->player->dob;
             })
-            ->addColumn('Balling Hand', function($player) {
-                return $player->balling_hand;
+            ->addColumn('State', function($user) {
+                return $user->player->state;
             })
-            ->addColumn('Balling Type', function($player) {
-                return $player->balling_type;
+            ->addColumn('Specialization', function($user) {
+                return $user->player->specialization;
             })
-            ->addColumn('Fav Playing Spot', function($player) {
-                return $player->fav_playing_spot;
+            ->addColumn('Jersey no', function($user) {
+                return $user->player->jersey_number;
             })
-            ->addColumn('action', function ($player) use($tournamentId, $teamId, $token) {
-                $route = route('add-players.store', [$tournamentId, $teamId]);
-                return "
-                <form action='$route' method='POST'>
-                    <input type='hidden' name='_token' value='$token'>
-                    <input type='hidden' value='$player->id' name='player_id'/>
-                    <button type='submit' class='btn btn-dark text-warning'><i class='fa fa-plus'></i></button>
-                </form>";
+
+            ->addColumn('action', function ($user){
+                $route = route('frontend.players.player-stats',$user->player->slug);
+                return "<a href='$route' class='btn btn-outline-info me-1'><i class='fa fa-eye'></i></a> ";
+
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['Profile','action'])
             ->setFilteredRecords($numberOfFilteredRows)
             ->setTotalRecords($numberOfTotalRows)
             ->make(true);

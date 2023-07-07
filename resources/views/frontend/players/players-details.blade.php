@@ -1,6 +1,10 @@
 
 @extends('frontend.layouts.app')
 @push('styles')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
         td a.player-title{
             color:black;
@@ -18,13 +22,20 @@
         .custom-bg{
             --bs-table-bg:#f0f8ff;
         }
+        .page-link{
+            color:black
+        }
+        .page-item.active .page-link {
+            background-color:#ffd584;
+            color:black
+        }
     </style>
 @endpush
 @section('main-content')
   <div class="container-fluid">
     <div class="container">
         <h1 class="font mb-5 player text-uppercase">Players</h1>
-        <table class="table-responsive table custom-bg">
+        <table class="table-responsive table custom-bg" id="data-table">
             <thead>
                 <th> </th>
                 <th>Name</th>
@@ -32,13 +43,14 @@
                 <th>State</th>
                 <th>Specialization</th>
                 <th>Jersey No</th>
+                <th width="105px">View Stats</th>
             </thead>
             @foreach ($players as $player )
                 <tbody>
                     <tr>
                         <td>
                             @isset($player->photo_path)
-                            <img src="{{asset('/storage/' . $player->photo_path)}}" class="rounded-circle border border-dark" alt="{{$player->first_name}}" width="100px">
+                            <img src="{{asset('/storage/'.$player->photo_path)}}" alt="{{$player->first_name}}" class="rounded-circle border border-2 border-dark" width="100px">
                             @else
                             <img src="{{ asset('assets/img/player-avatar.png') }}" class="rounded-circle border border-2 border-dark" alt="{{ $player->first_name }}" width="100px">
                         @endisset
@@ -61,9 +73,22 @@
             @endforeach
 
         </table>
-        {{$players->links('pagination::bootstrap-5')}}
     </div>
   </div>
+
+@endsection
+
+@section('scripts')
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+    <script src="{{ asset('assets/js/players.ajax.js') }}"></script>
+    <script type="text/javascript">
+        PlayersAjaxRoute("{{ route('frontend.players.player-details') }}", "{{csrf_token()}}");
+    </script>
 
 @endsection
 

@@ -1,6 +1,6 @@
 @extends('frontend.layouts.auth.app')
 @section('title')
-    cric Mania | Register
+    cric Mania | Register as Organizer
 @endsection
 
 @section('scripts')

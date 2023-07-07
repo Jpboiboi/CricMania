@@ -45,6 +45,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/export-skeleton-file',[UsersController::class,'export'])->name('export');
     Route::post('/import-users',[UsersController::class,'import'])->name('import');
 
+    //Tournament_schedule store and view
+    Route::get('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'index'] )
+    ->name('frontend.tournaments.schedule');
+    Route::post('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'store'])->name('tournaments.schedule.store');
+
 });
 Route::get('/players/{slug}/player-stats',[PlayerStatsController::class,'show'])->name('frontend.players.player-stats');
 
@@ -69,9 +74,7 @@ Route::get('tournaments/{tournament}/teams/{team}/add-players/invite-via-email',
 Route::post('tournaments/{tournament}/teams/{team}/add-players/players', [AddPlayersController::class, 'sendInvite'])->name('add-player.sendInvite');
 Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
 Route::post('/add-players/ajax', [AddPlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
-Route::get('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'index'] )
-->name('frontend.tournaments.schedule');
-Route::post('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'store'])->name('tournaments.schedule.store');
+
 
 Route::resource('users',UsersController::class);
 Route::get('/register-user',[UsersController::class,'validateUser']);

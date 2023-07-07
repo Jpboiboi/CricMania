@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tournament_matches', function (Blueprint $table) {
             $table->id();
             $table->timestamp('match_date');
-            $table->unsignedInteger('no_of_overs')->default(10);
+            $table->unsignedInteger('no_of_overs');
             $table->timestamp('match_state')->nullable();
             $table->timestamps();
 

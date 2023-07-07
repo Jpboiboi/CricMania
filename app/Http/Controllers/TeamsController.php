@@ -15,7 +15,7 @@ class TeamsController extends Controller
      */
     public function index(Tournament $tournament)
     {
-        $teams = $tournament->teams;
+        $teams = $tournament->tournament_teams;
 
         return view('frontend.teams.index', compact('teams', 'tournament'));
 
@@ -38,7 +38,7 @@ class TeamsController extends Controller
     public function store(Request $request ,Tournament $tournament)
     {
         $rules = [
-            'teams.*.name' => 'required|unique:teams,name',
+            'teams.*.name' => 'required|unique:teams,name,NULL,id,tournament_id,' . $tournament->id,
             'teams.*.image' => 'required|image|mimes:png,jpg,svg|max:1024'
         ];
         $this->validate($request , $rules);

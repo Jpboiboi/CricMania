@@ -5,6 +5,7 @@ use App\Http\Controllers\PlayersAjaxController;
 use App\Http\Controllers\PlayersController;
 use App\Http\Controllers\PlayerStatsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ScorersController;
 use App\Http\Controllers\TeamPlayersController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TournamentsAjaxController;
@@ -38,6 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('tournaments', TournamentsController::class)->only('create', 'store', 'index');
     Route::resource('tournaments/{tournament}/teams', TeamsController::class);
+
+    Route::resource('scorer', ScorersController::class);
+    // Route::resource('scorer/matches/matchid', ScorersController::class);
+
     Route::post('/tournaments/ajax', [TournamentsAjaxController::class, 'getData'])->name('frontend.tournaments.index');
 });
 Route::get('/players/{slug}/player-stats',[PlayerStatsController::class,'show'])->name('frontend.players.player-stats');

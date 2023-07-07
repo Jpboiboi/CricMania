@@ -32,6 +32,14 @@
                   </button>
                   <ul class="dropdown-menu">
                     <li>
+                        <a href="{{route('profile.edit')}}" class="btn">Profile</a>
+                    </li>
+                    @if (auth()->user()->role==='player')
+                    <li>
+                        <a href="{{route('players.edit',auth()->user()->player->id)}}" class="btn">Edit Details</a>
+                    </li>
+                    @endif
+                    <li>
                         <form action="{{route('logout')}}" method="POST">
                             @csrf
                                 <button type="submit" class="btn">Logout</button>

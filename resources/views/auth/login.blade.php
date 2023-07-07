@@ -84,7 +84,7 @@
                             </div>
                             <button type="submit" class="btn btn-warning mt-2">Submit</button>
                             <div class="mt-2">
-                                <a href="{{route('register')}}" class="register" >Haven't signed up yet? Click here to register</a>
+                                <a href="{{route('register')}}" class="register" >Haven't signed up yet? Click here to register as organizer.</a>
                             </div>
 
 

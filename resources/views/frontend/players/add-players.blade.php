@@ -25,6 +25,7 @@
 
 @section('main-content')
     <div class="container mt-5">
+        <h1>Add Players</h1>
         @include('frontend.layouts._alert-messages')
             <div class="text-muted">Required</div>
             <div class="card mt-2 mb-3 border border-danger">
@@ -109,6 +110,7 @@
                 </div>
             </div>
 
+            @if ($tournament->max_players>11)
             <div class="text-muted">optional</div>
             <div class="card mt-2 mb-3">
                 <div class="card-body">
@@ -136,16 +138,8 @@
                     @endfor
                 </div>
             </div>
+            @endif
 
-            <div class="row mt-2 mb-4 mt-3">
-                <div class="col-md-6">
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group float-end">
-                        <button type="submit" class="btn btn-dark text-warning" name="">Submit</button>
-                    </div>
-                </div>
-            </div>
     </div>
 
     <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
@@ -178,15 +172,13 @@
 @endsection
 
 @section('scripts')
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> --}}
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
     <script src="{{ asset('assets/js/add-players.ajax.js') }}"></script>
     <script type="text/javascript">
-    console.log({{$team->id}});
         AddPlayersAjaxRoute("{{ route('frontend.players.add-player') }}", "{{csrf_token()}}", "{{ $tournament->id }}", "{{ $team->id }}");
     </script>
 

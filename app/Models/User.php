@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Notifications\InviteCaptain;
 use App\Notifications\InvitePlayer;
 use App\Notifications\RegisterPlayers;
 use Carbon\Carbon;
@@ -78,15 +79,40 @@ class User extends Authenticatable
         return $user;
     }
 
+    public static function registerCaptain($captainsEmail,int $tournamentId, int $teamId)
+    {
+        $token=hash('sha256',"$captainsEmail". round(microtime(true)*1000).strrev("$captainsEmail").rand());
+
+        $user =User::create([
+            'email'=>$captainsEmail,
+            'role'=>'player',
+            'invite_token'=>$token,
+            'expires_at'=>Carbon::now()->addDays(30)
+        ]);
+        // dd($user);
+
+        Notification::route('mail',$captainsEmail)->notify(new InviteCaptain($token,$tournamentId,$teamId));
+
+        return $user;
+    }
+
     public function addCaptain(int $tournamentId, int $teamId, int $playerId) {
         // dd($request);
+
         $team = Team::find($teamId);
         $team->players()->attach($playerId, ['tournament_id' => $tournamentId]);
 
         $player=Player::find($playerId);
+        $captainsEmail=$player->user->email;
+        $token=hash('sha256',"$captainsEmail". round(microtime(true)*1000).strrev("$captainsEmail").rand());
+
+        $player->user->update([
+            'invite_token'=>$token,
+            'expires_at'=>Carbon::now()->addDays(30)
+        ]);
 
         sleep(10);
-        Notification::route('mail',$player->user->email)->notify(new RegisterPlayers($teamId,$tournamentId));
+        Notification::route('mail',$captainsEmail)->notify(new RegisterPlayers($teamId,$tournamentId,$token));
 
         return 1;
     }

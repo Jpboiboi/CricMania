@@ -1,5 +1,5 @@
 @if (session('success'))
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
+<div class="toast-container position-fixed bottom-0 end-0 p-3 w-25">
     <div id="toast" class="bg-light text-success p-3 rounded border border-3 border-success" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header pb-2">
         <strong class="me-auto">Cric Mania</strong>

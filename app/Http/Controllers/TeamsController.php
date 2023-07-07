@@ -43,8 +43,10 @@ class TeamsController extends Controller
     {
         // dd($request);
         $rules = [
-            'teams.*.name' => 'required|unique:teams,name',
-            'teams.*.image' => 'required|image|mimes:png,jpg,svg|max:1024'
+            'teams.*.name' => 'required|unique:teams,name,NULL,id,tournament_id,'.$tournament->id,
+            'teams.*.image' => 'required|image|mimes:png,jpg,svg|max:1024',
+            'teams.*.email' => 'required|distinct'
+
         ];
         $this->validate($request , $rules);
         $teams = DB::transaction(function () use ($request, $tournament) {
@@ -67,7 +69,7 @@ class TeamsController extends Controller
                 if($user){
                     $user->addCaptain($tournament->id, $team->id, $user->player->id);
                 }else{
-                    //$user->registerCaptain($tournament->id, $team->id, $user->player->id);
+                    User::registerCaptain($captainsEmail,$tournament->id, $team->id);
                 }
 
                 $teams[]= $team;

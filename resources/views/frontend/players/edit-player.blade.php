@@ -47,16 +47,6 @@
     $(function() {
         $("#playerForm").validate({
         rules: {
-            first_name: {
-                required: true,
-                noSpace:true,
-                minlength: 2
-            },
-            last_name: {
-                required: true,
-                noSpace:true,
-                minlength: 2
-            },
             state: {
                 required: true,
             },
@@ -86,9 +76,6 @@
             },
             balling_type:{
                 required:true
-            },
-            image:{
-                required:true,
             }
         }
     });
@@ -102,9 +89,9 @@
 
 @section('main-content')
 <div class="container">
-    <h1 class="mt-3">Please fill your correct details</h1>
+    <h1 class="mt-3">Edit details</h1>
     @include('frontend.layouts._alert-messages')
-    <form action="{{route('add-players.update',$user->id)}}" method="POST" enctype="multipart/form-data" id="playerForm">
+    <form action="{{route('players.update',$player->id)}}" method="POST" enctype="multipart/form-data" id="playerForm">
         @csrf
         @method('PUT')
         <div class="card mt-5 mb-5">
@@ -112,45 +99,12 @@
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="first_name" class="form-label">First name</label>
-                            <input type="text" value="{{ old('first_name') }}" name="first_name" id="first_name"
-                                placeholder="Enter first name"
-                                class="form-control @error('first_name') border-danger text-danger @enderror">
-                            <label id="first_name-error" class="error text-danger"></label>
-                            @error('first_name')
-                                <span class="text-danger">
-                                    {{ $message }}
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="last_name" class="form-label">Last name</label>
-                            <input type="text" value="{{ old('last_name') }}" name="last_name" id="last_name"
-                                placeholder="Enter last name"
-                                class="form-control @error('last_name') border-danger text-danger @enderror">
-                            <label id="last_name-error" class="error text-danger"></label>
-                            @error('last_name')
-                                <span class="text-danger">
-                                    {{ $message }}
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="row mt-2">
-                    <div class="col-md-6">
-                        <div class="form-group">
                             <label for="state" class="form-label">State</label>
-                            <select name="state" id="state" class="form-control select2">
+                            <select name="state" id="state" class="form-control select2" value="{{ old('state',$player->state) }}">
                                 <option></option>
                                 @foreach (App\Constants\IndianStateConstants::INDIAN_STATES as $key => $value)
-                                <option value="{{$value}}">{{$key}}</option>
-                            @endforeach
+                                    <option @if ($player->state===$value) selected @endif value="{{$value}}">{{$key}}</option>
+                                @endforeach
                             </select>
                             <label id="state-error" class="error" for="state"></label>
                             @error('state')
@@ -164,7 +118,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="dob" class="form-label">DOB</label>
-                            <input type="date" value="{{ old('dob') }}" name="dob" id="dob"
+                            <input type="date" value="{{ old('dob',$player->dob) }}" name="dob" id="dob"
                                 placeholder="Enter DOB"
                                 class="form-control @error('dob') border-danger text-danger @enderror" required >
                                 <label id="dob-error" class="error text-danger" for="dob"></label>
@@ -181,7 +135,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="fav_playing_spot" class="form-label">Fav Playing Spot</label>
-                            <input type="text" value="{{ old('fav_playing_spot') }}" name="fav_playing_spot" id="fav_playing_spot"
+                            <input type="text" value="{{ old('fav_playing_spot',$player->fav_playing_spot) }}" name="fav_playing_spot" id="fav_playing_spot"
                                 placeholder="Enter your fav playing spot"
                                 class="form-control @error('fav_playing_spot') border-danger text-danger @enderror">
                             <label id="fav_playing_spot-error" class="error text-danger" for="fav_playing_spot"></label>
@@ -199,7 +153,7 @@
                             <select name="specialization" id="specialization" class="form-control select2">
                                 <option></option>
                                 @foreach (App\Constants\SpecializationConstants::SPECIALIZATION as $key => $value)
-                                    <option value="{{$value}}">{{$key}}</option>
+                                    <option @if ($player->specialization===$value) selected @endif value="{{$value}}">{{$key}}</option>
                                 @endforeach
                             </select>
                             <label id="specialization-error" class="error text-danger" for="specialization"></label>
@@ -219,7 +173,7 @@
                             <select name="batting_hand" id="batting_hand" class="form-control select2">
                                 <option></option>
                                 @foreach (App\Constants\HandConstants::HANDS as $key => $value)
-                                <option value="{{$value}}">{{$key}}</option>
+                                <option @if ($player->batting_hand===$value) selected @endif value="{{$value}}">{{$key}}</option>
                                 @endforeach
                             </select>
                             <label id="batting_hand-error" class="error text-danger" for="batting_hand"></label>
@@ -234,7 +188,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="jersey_number" class="form-label">Jersey Number</label>
-                            <input type="text" value="{{ old('jersey_number') }}" name="jersey_number" id="jersey_number"
+                            <input type="text" value="{{ old('jersey_number',$player->jersey_number) }}" name="jersey_number" id="jersey_number"
                                 placeholder="Enter your jersey no"
                                 class="form-control @error('jersey_number') border-danger text-danger @enderror">
                             <label id="jersey_number-error" class="error text-danger" for="jersey_number"></label>
@@ -255,7 +209,7 @@
                             <select name="balling_hand" id="balling_hand" class="form-control select2">
                                 <option></option>
                                 @foreach (App\Constants\HandConstants::HANDS as $key => $value)
-                                <option value="{{$value}}">{{$key}}</option>
+                                <option @if ($player->balling_hand===$value) selected @endif value="{{$value}}">{{$key}}</option>
                                 @endforeach
                             </select>
                             <label id="balling_hand-error" class="error text-danger" for="balling_hand"></label>
@@ -272,7 +226,7 @@
                             <select name="balling_type" id="balling_type" class="form-control select2">
                                 <option></option>
                                 @foreach (App\Constants\BallingTypeConstants::BALLING_TYPES as $key => $value)
-                                <option value="{{$value}}">{{$key}}</option>
+                                <option @if ($player->balling_type===$value) selected @endif value="{{$value}}">{{$key}}</option>
                                 @endforeach
                             </select>
                             <label id="balling_type-error" class="error text-danger" for="balling_type"></label>
@@ -282,56 +236,6 @@
                                 </span>
                             @enderror
                         </div>
-                    </div>
-                </div>
-
-                <div class="row mt-2">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" value="{{ old('password') }}" name="password" id="password"
-                                placeholder="Enter password"
-                                class="form-control @error('password') border-danger text-danger @enderror">
-                            <label id="password-error" class="error text-danger"></label>
-                            @error('password')
-                                <span class="text-danger">
-                                    {{ $message }}
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="password_confirmation" class="form-label">Confirm password</label>
-                            <input type="password" value="{{ old('password_confirmation') }}" name="password_confirmation" id="password_confirmation"
-                                placeholder="confirm password"
-                                class="form-control @error('password_confirmation') border-danger text-danger @enderror">
-                            <label id="password_confirmation-error" class="error text-danger"></label>
-                            @error('password_confirmation')
-                                <span class="text-danger">
-                                    {{ $message }}
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="row mt-2">
-                    <div class="form-group">
-                            <label for="image" class="form-label">Image</label>
-                            <input type="file"
-                                    name="image"
-                                    id="image"
-                                    placeholder="Select Image File"
-                                    class="form-control @error('image') border-danger text-danger @enderror">
-                                <label id="image-error" class="error text-danger" for="image"></label>
-                            @error('image')
-                                <span class="text-danger">
-                                    {{ $message }}
-                                </span>
-                            @enderror
                     </div>
                 </div>
 

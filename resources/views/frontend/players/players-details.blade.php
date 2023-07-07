@@ -46,7 +46,6 @@
                 <th width="105px">View Stats</th>
             </thead>
             <tbody></tbody>
-
         </table>
     </div>
   </div>

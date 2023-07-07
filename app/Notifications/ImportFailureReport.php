@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -37,8 +36,8 @@ class ImportFailureReport extends Notification
     {
         return (new MailMessage)
                     ->line('Your import was partially successful!')
-                    ->line('Failure report is given below')
-                    ->attach("D:\\Dipesh\\Study Link Projects\\cric-mania\\storage\\app\\public\\import-failures\\failure-report.xlsx")
+                    ->line('Failure report is attached to the mail.')
+                    ->attach(public_path('/storage/' . $this->path))
                     ->line('Thank you for using our application!');
     }
 

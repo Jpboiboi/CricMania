@@ -24,8 +24,11 @@ class TournamentsAjaxController extends Controller
 
     private function getTournaments($draw, $search_parameter, $order_by, $start, $length)
     {
-
-        $query = Tournament::query();
+        if(auth()->user()->isAdmin()) {
+            $query = Tournament::query();
+        } else {
+            $query = Tournament::where('organizer_id', auth()->id());
+        }
         $query->search($search_parameter);
         $query->limit_by($start, $length)->get();
         $numberOfTotalRows = Tournament::all()->count();

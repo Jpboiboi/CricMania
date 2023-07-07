@@ -13,13 +13,16 @@ use Illuminate\Http\Request;
 class AddPlayersController extends Controller
 {
     public function index(Tournament $tournament, Team $team) {
-        $teamPlayers = $team->players()->get();
+        if($team->tournament_id !== $tournament->id) {
+            abort(404);
+        }
+        $teamPlayers = $team->players;
         return view('frontend.players.add-players', compact(['tournament', 'team', 'teamPlayers']));
     }
 
     public function store(Request $request,Tournament $tournament, Team $team) {
-        // dd($request);
         $team->players()->attach($request->player_id, ['tournament_id' => $tournament->id]);
+
         return redirect()->back();
     }
 
@@ -61,7 +64,7 @@ class AddPlayersController extends Controller
     }
 
     public function validatePlayer() {
-        $user=User::isValid(request()->t);
+        $user = User::isValid(request()->t);
         if($user){
             return view('frontend.players.invite-user',compact('user'));
         }

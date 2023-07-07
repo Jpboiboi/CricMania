@@ -11,9 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Redis;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -115,4 +113,9 @@ class User extends Authenticatable
     public function isAdmin() {
         return $this->role === "admin";
     }
+
+    public function isOwner(Tournament $tournament) {
+        return $this->id === $tournament->organizer_id;
+    }
+
 }

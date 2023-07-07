@@ -6,13 +6,11 @@ use App\Http\Controllers\PlayersAjaxController;
 use App\Http\Controllers\PlayersController;
 use App\Http\Controllers\PlayerStatsController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TeamPlayersController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TorunamentMatchesController;
 use App\Http\Controllers\TournamentsAjaxController;
 use App\Http\Controllers\TournamentsController;
 use App\Http\Controllers\UsersController;
-use App\Models\Player;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -69,7 +67,7 @@ Route::resource('players',PlayersController::class)->except('index', 'show');
 Route::resource('tournaments/{tournament}/teams/{team}/add-players', AddPlayersController::class)->except(['show', 'update']);
 Route::get('tournaments/{tournament}/teams/{team}/add-players/invite-via-email', [AddPlayersController::class, 'inviteViaEmail'])->name('players.invite-via-email');
 Route::post('tournaments/{tournament}/teams/{team}/add-players/players', [AddPlayersController::class, 'sendInvite'])->name('add-player.sendInvite');
-// Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
+Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
 Route::post('/add-players/ajax', [AddPlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
 Route::get('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'index'] )
 ->name('frontend.tournaments.schedule');

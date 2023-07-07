@@ -19,7 +19,7 @@
 
         </div>
         <div class="col-xl-2 col-md-4">
-        <a href="">
+        <a href="{{ route('scorer.create') }}">
             <div class="icon-box">
             <i class="ri-bar-chart-box-line fa fa-bat"></i>
             <h3>Scorer</h3>

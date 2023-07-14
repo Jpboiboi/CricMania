@@ -14,9 +14,12 @@ use App\Exports\UsersFailureReport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateImportRequest;
 use App\Imports\UsersImport;
+use App\Jobs\ProcessVerifyEmail;
 use App\Jobs\ProcessEmail;
 use App\Jobs\ProcessInviteUserEmail;
 use App\Notifications\ImportFailureReport;
+use App\Notifications\VerifyEmailNotification;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -90,6 +93,28 @@ class UsersController extends Controller
             return redirect('/')->with('error', 'Your file is Partially imported! Please check your mail for failure report');
         }
         return redirect('/')->with('success', 'All good!');
+    }
+    public function verify(string $token)
+    {
+        $user=User::where('verification_token',$token)->firstOrFail();
+        $user->email_verified_at=Carbon::now();
+        $user->verification_token=null;
+        $user->save();
+        session()->flash('success', 'Email verified successfully');
+        return redirect(RouteServiceProvider::HOME);
+    }
+    public function resendVerification(User $user)
+    {
+        if(now() > $user->expires_at){
+            $verificationToken= User::generateVerificationToken();
+            $user->verification_token=$verificationToken;
+            $user->expires_at=Carbon::now()->addDays(30);
+            $user->save();
+        }
+
+        dispatch(new ProcessVerifyEmail($user))->onQueue('emails');
+        session()->flash('success', 'Email sent successfully');
+        return redirect(RouteServiceProvider::HOME);
     }
 
 }

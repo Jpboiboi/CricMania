@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('max_players');
             $table->integer('no_of_overs');
             $table->timestamp('start_date');
+            $table->boolean('is_single_day')->default(false);
             $table->timestamps();
 
             $table->foreign('organizer_id')

@@ -30,7 +30,11 @@
 
     $("#register").validate({
         rules: {
-            name:{
+            first_name:{
+                required:true,
+                minlength:2,
+            },
+            last_name:{
                 required:true,
                 minlength:2,
             },
@@ -59,6 +63,7 @@
 @endsection
 @section('main-content')
     <div class="container">
+        @include('frontend.layouts._alert-messages')
         <div class="card margin-top-10 shadow p-3 mb-5 bg-white br-10">
             <div class="card-body">
                 <div class="row d-flex justify-content-evenly">
@@ -69,13 +74,22 @@
                         <form action="{{route('register')}}" method="POST" id="register">
                             @csrf
                             <div class="form-group">
-                                <label for="name" class="mb-2 fw-bold">Name</label>
-                                <input type="text" class="form-control @error('name') border-danger text-danger @enderror" id="name"  placeholder="Name" class="mb-2" value="{{old('name')}}" name="name">
-                                @error('name')
+                                <label for="first_name" class="mb-2 fw-bold">First Name</label>
+                                <input type="text" class="form-control @error('first_name') border-danger text-danger @enderror" id="first_name"  placeholder="First name" class="mb-2" value="{{old('first_name')}}" name="first_name">
+                                @error('first_name')
                                       <span class="text-danger">
                                           {{$message}}
                                       </span>
                                 @enderror
+
+                                <div class="form-group">
+                                    <label for="last_name" class="mb-2 fw-bold">Last Name</label>
+                                    <input type="text" class="form-control @error('last_name') border-danger text-danger @enderror" id="last_name"  placeholder="Last name" class="mb-2" value="{{old('last_name')}}" name="last_name">
+                                    @error('last_name')
+                                          <span class="text-danger">
+                                              {{$message}}
+                                          </span>
+                                    @enderror
 
                               </div>
                             <div class="form-group">

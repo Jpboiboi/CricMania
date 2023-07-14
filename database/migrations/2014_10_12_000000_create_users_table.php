@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('photo_path')->nullable();
             $table->string('invite_token')->unique()->nullable();
             $table->timestamp('expires_at')->nullable();
+            $table->string('verification_token')->nullable();
             $table->timestamps();
         });
     }

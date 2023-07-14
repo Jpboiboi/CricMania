@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -40,8 +41,19 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
+        // $isVerifiedUser=function(User $user){
+        //     if(!$user->hasVerifiedEmail()){
+        //         // session()->flash('verify-email','Heyy');
+        //         throw ValidationException::withMessages([
+        //             'email'=>'You are not verified. Please Verify your email to login!'
+        //         ]);
+        //     }
+        //     return true;
+        // };
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if (! Auth::attempt($this->only('email', 'password'), //attemptWhen
+            // $isVerifiedUser,
+         $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

@@ -207,7 +207,12 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <input class="form-check-input border border-black" type="checkbox" value="single_day" name="single_day" id="single_day">
+                            <label class="form-label" for="single_day">
+                              Single Day
+                            </label>
+                        </div>
                         <div class="form-group d-flex justify-content-end">
                             <button type="submit" class="btn btn-dark text-warning" name="addBlog">Submit</button>
                         </div>

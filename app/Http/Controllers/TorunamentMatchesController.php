@@ -12,6 +12,7 @@ class TorunamentMatchesController extends Controller
     public function index(Tournament $tournament)
     {
         $teams=$tournament->tournament_matches()->with('team1')->with('team2')->get();
+        // dd($tournament->organizer);
         return view('frontend.tournaments.schedule', compact('teams', 'tournament'));
 
     }
@@ -32,8 +33,9 @@ class TorunamentMatchesController extends Controller
                 'match_date'=>$date,
                 'no_of_overs'=>$tournament->no_of_overs,
             ]);
-            $date= Carbon::createFromFormat('Y-m-d H:i:s', $date)->addDays(1)->format('Y-m-d H:i:s');
-
+            if($tournament->is_single_day === 0){
+                $date= Carbon::createFromFormat('Y-m-d H:i:s', $date)->addDays(1)->format('Y-m-d H:i:s');
+            }
         }
         $teamsCount=intval(round($teamsCount/2,0,PHP_ROUND_HALF_DOWN));
 
@@ -45,7 +47,9 @@ class TorunamentMatchesController extends Controller
                 'match_date'=>$date,
                 'no_of_overs'=>$tournament->no_of_overs
             ]);
-            $date= Carbon::createFromFormat('Y-m-d H:i:s', $date)->addDays(1)->format('Y-m-d H:i:s');
+            if($tournament->is_single_day === 0){
+                $date= Carbon::createFromFormat('Y-m-d H:i:s', $date)->addDays(1)->format('Y-m-d H:i:s');
+            }
             $teamsCount=intval(round($teamsCount/2,0,PHP_ROUND_HALF_DOWN));
         }
 
@@ -57,7 +61,10 @@ class TorunamentMatchesController extends Controller
                 'match_date'=>$date,
                 'no_of_overs'=>$tournament->no_of_overs
             ]);
-            $date= Carbon::createFromFormat('Y-m-d H:i:s', $date)->addDays(1)->format('Y-m-d H:i:s');
+            if($tournament->is_single_day === 0){
+                $date= Carbon::createFromFormat('Y-m-d H:i:s', $date)->addDays(1)->format('Y-m-d H:i:s');
+            }
+
         }
         if($count === 10){
             for($i=0;$i<2;$i++){
@@ -68,7 +75,9 @@ class TorunamentMatchesController extends Controller
                     'match_date'=>$date,
                     'no_of_overs'=>$tournament->no_of_overs
                 ]);
-                $date= Carbon::createFromFormat('Y-m-d H:i:s', $date)->addDays(1)->format('Y-m-d H:i:s');
+                if($tournament->is_single_day === 0){
+                    $date= Carbon::createFromFormat('Y-m-d H:i:s', $date)->addDays(1)->format('Y-m-d H:i:s');
+                }
             }
 
         }

@@ -28,7 +28,7 @@
                 </a> --}}
                 <div class="btn-group">
                   <button type="button" class="btn bg-warning dropdown-toggle fa fa-user" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{auth()->user()->first_name.auth()->user()->last_name}}
+                    {{auth()->user()->first_name." ".auth()->user()->last_name}}
                   </button>
                   <ul class="dropdown-menu">
                     <li>
@@ -38,6 +38,11 @@
                     <li>
                         <a href="{{route('players.edit',auth()->user()->player->id)}}" class="btn">Edit Details</a>
                     </li>
+                    @endif
+                    @if (auth()->user()->email_verified_at === null)
+                        <a href="{{route('resend-verification',auth()->user()->id)}}" class="btn">Resend Verification Email</a>
+                    @else
+                        <a href="" class="btn">Email: Verified</a>
                     @endif
                     <li>
                         <form action="{{route('logout')}}" method="POST">

@@ -21,16 +21,16 @@ class AddPlayersController extends Controller
         if (request()->t) {
             $user = User::isValid(request()->t);
             if ($user) {
-                if (auth()->user()->id === $user->id) {
+                if (auth()->user() && auth()->user()->id === $user->id) {
                     $teamPlayers = $team->players()->get();
                     return view('frontend.players.add-players', compact(['tournament', 'team', 'teamPlayers']));
                 }
             }
-        }else if(auth()->user()->role==='admin'){
+        }else if(auth()->user()->isAdmin()){
             $teamPlayers = $team->players()->get();
             return view('frontend.players.add-players', compact(['tournament', 'team', 'teamPlayers']));
         }
-        abort(401);
+        abort(403);
     }
 
     public function store(Request $request, Tournament $tournament, Team $team)
@@ -58,7 +58,7 @@ class AddPlayersController extends Controller
             'user_id' => $user->id
         ]);
         $team->players()->attach($player->id, ['tournament_id' => $tournament->id]);
-        session()->flash('success', 'Mail sent successfully to player');
+        session()->flash('success', 'Mail processed');
         return redirect(route('add-players.index', [$tournament->id, $team->id]));
     }
 

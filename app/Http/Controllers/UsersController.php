@@ -13,10 +13,18 @@ use App\Exports\UsersExport;
 use App\Exports\UsersFailureReport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateImportRequest;
+use App\Imports\MainSheetImport;
 use App\Imports\UsersImport;
+use App\Jobs\ProcessVerifyEmail;
+use App\Jobs\ProcessEmail;
+use App\Jobs\ProcessInviteUserEmail;
 use App\Notifications\ImportFailureReport;
+use App\Notifications\VerifyEmailNotification;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
+
+use function PHPUnit\Framework\isEmpty;
 
 class UsersController extends Controller
 {
@@ -47,9 +55,8 @@ class UsersController extends Controller
             'expires_at'=>Carbon::now()->addDays(30)
         ]);
 
-        Notification::route('mail',$request->email)->notify(new InviteUser($token));
-
-        session()->flash('success','Mail sent successfully ,please check your inbox');
+        dispatch(new ProcessInviteUserEmail($user))->onQueue('emails');
+        session()->flash('success','Mail processed ,please check your inbox in sometime');
         return redirect()->back();
     }
 
@@ -82,15 +89,37 @@ class UsersController extends Controller
     public function import(CreateImportRequest $request)
     {
         $import = new UsersImport();
-        Excel::import($import, $request->file('file')->store('files'));
-        if($import->failures()->isNotEmpty()) {;
-            $path = "import-failures/failure-report.xlsx";
-            $failure_report = Excel::store(new UsersFailureReport($import->failures()), $path);
-            Notification::route('mail',auth()->user()->email)->notify(new ImportFailureReport($path));
-            return redirect('/')->with('error', 'Your file is Partially imported! Please check your mail for failure report');
+        $import->onlySheets('Worksheet');
+        Excel::import($import, $request->file('file'));
+        if(isEmpty($import->failures())) {;
+            return Excel::download(new UsersFailureReport($import->failures()['Worksheet']), 'failure-report.xlsx');
+            // return redirect('/')->with('error', 'Your file is Partially imported! Please check your mail for failure report');
 
         }
         return redirect('/')->with('success', 'All good!');
+    }
+    
+    public function verify(string $token)
+    {
+        $user=User::where('verification_token',$token)->firstOrFail();
+        $user->email_verified_at=Carbon::now();
+        $user->verification_token=null;
+        $user->save();
+        session()->flash('success', 'Email verified successfully');
+        return redirect(RouteServiceProvider::HOME);
+    }
+    public function resendVerification(User $user)
+    {
+        if(now() > $user->expires_at){
+            $verificationToken= User::generateVerificationToken();
+            $user->verification_token=$verificationToken;
+            $user->expires_at=Carbon::now()->addDays(30);
+            $user->save();
+        }
+
+        dispatch(new ProcessVerifyEmail($user))->onQueue('emails');
+        session()->flash('success', 'Email sent successfully');
+        return redirect(RouteServiceProvider::HOME);
     }
 
 }

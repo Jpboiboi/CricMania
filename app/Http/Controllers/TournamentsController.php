@@ -17,6 +17,12 @@ class TournamentsController extends Controller
     }
 
     public function store(CreateTournamentRequest $request) {
+
+        if($request->single_day === 'single_day'){
+            $single_day=true;
+        }else{
+            $single_day=false;
+        }
         Tournament::create([
             'name' => $request->name,
             'tournament_type_id' => $request->tournament_type_id,
@@ -24,7 +30,9 @@ class TournamentsController extends Controller
             'max_players' => $request->max_players,
             'no_of_overs' => $request->no_of_overs,
             'start_date' => $request->start_date,
-            'organizer_id' => auth()->id()
+            'organizer_id' => auth()->id(),
+            'is_single_day'=>$single_day,
+
         ]);
         return redirect()->route('tournaments.index');
     }

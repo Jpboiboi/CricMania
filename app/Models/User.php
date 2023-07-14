@@ -4,9 +4,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Jobs\ProcessInviteCaptainEmail;
+use App\Jobs\ProcessInvitePlayerEmail;
+use App\Jobs\ProcessRegisterPlayersEmail;
 use App\Notifications\InviteCaptain;
 use App\Notifications\InvitePlayer;
 use App\Notifications\RegisterPlayers;
+use App\Providers\RouteServiceProvider;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -74,8 +79,7 @@ class User extends Authenticatable
             'expires_at'=>Carbon::now()->addDays(30)
         ]);
         // dd($user);
-        Notification::route('mail',$request->email)->notify(new InvitePlayer($token));
-
+        dispatch(new ProcessInvitePlayerEmail($user))->onQueue('emails');
         return $user;
     }
 
@@ -91,10 +95,10 @@ class User extends Authenticatable
         ]);
         // dd($user);
 
-        Notification::route('mail',$captainsEmail)->notify(new InviteCaptain($token,$tournamentId,$teamId));
-
+        dispatch(new ProcessInviteCaptainEmail($user,$tournamentId,$teamId))->onQueue('emails');
         return $user;
     }
+
 
     public function addCaptain(int $tournamentId, int $teamId, int $playerId) {
         // dd($request);
@@ -112,8 +116,7 @@ class User extends Authenticatable
         ]);
 
         sleep(10);
-        Notification::route('mail',$captainsEmail)->notify(new RegisterPlayers($teamId,$tournamentId,$token));
-
+        dispatch(new ProcessRegisterPlayersEmail($teamId,$tournamentId,$token,$captainsEmail))->onQueue('emails');
         return 1;
     }
 
@@ -144,4 +147,8 @@ class User extends Authenticatable
         return $this->id === $tournament->organizer_id;
     }
 
+    public static function generateVerificationToken(): string
+    {
+        return Str::random(40);
+    }
 }

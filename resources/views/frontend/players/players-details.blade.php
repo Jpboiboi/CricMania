@@ -45,32 +45,9 @@
                 <th>Jersey No</th>
                 <th width="105px">View Stats</th>
             </thead>
-            @foreach ($players as $player )
-                <tbody>
-                    <tr>
-                        <td>
-                            @isset($player->photo_path)
-                            <img src="{{asset('/storage/'.$player->photo_path)}}" alt="{{$player->first_name}}" class="rounded-circle border border-2 border-dark" width="100px">
-                            @else
-                            <img src="{{ asset('assets/img/player-avatar.png') }}" class="rounded-circle border border-2 border-dark" alt="{{ $player->first_name }}" width="100px">
-                        @endisset
-                        </td>
-                        <td><a href="{{route('frontend.players.player-stats',$player->slug)}} " class="player-title"  >{{ $player->first_name }} {{$player->last_name}}</a></td>
-                        <td>{{ $player->dob }}</td>
-                        <td>{{$player->state}}</td>
-                        <td>
-                            @if($player->specialization === 'baller')
-                            {{ $player->balling_type }} {{ $player->specialization }}
-                           @else
-                            {{ $player->specialization }}
-                           @endif
-                        </td>
-                        <td>{{$player->jersey_number}}</td>
+            <tbody>
 
-
-                    </tr>
-                </tbody>
-            @endforeach
+            </tbody>
 
         </table>
     </div>

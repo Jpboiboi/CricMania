@@ -83,10 +83,15 @@
                               <label class="form-check-label" for="rememberMe" class="mt-5">Remember me</label>
                             </div>
                             <button type="submit" class="btn btn-warning mt-2">Submit</button>
-                            <div class="mt-2">
-                                <a href="{{route('register')}}" class="register" >Haven't signed up yet? Click here to register as organizer.</a>
-                            </div>
-
+                            {{-- @if(session('verify-email'))
+                                <div class="mt-2">
+                                    <a href='' class="register" >Haven't received verification mail yet? Click here to resend.</a>
+                                </div>
+                            @else --}}
+                                <div class="mt-2">
+                                    <a href="{{route('register')}}" class="register" >Haven't signed up yet? Click here to register as organizer.</a>
+                                </div>
+                            {{-- @endif --}}
 
                           </form>
 

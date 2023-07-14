@@ -21,9 +21,8 @@
 <div class="container">
     <!-- MultiStep Form -->
     <div class="row d-flex justify-content-center">
-    {{-- <div class="row"> --}}
         <div class="col-md-9 height">
-            <form id="msform" method="POST" >
+            <form id="msform" method="POST">
                 @csrf
                 <fieldset>
                     <div class="row">
@@ -92,10 +91,11 @@
 
                     <div class="row">
                         <div class="col-md-12 d-flex justify-content-center">
+
                             <div class="card mt-1 mb-3" style="width: 100%;">
                                 <div class="card-body row">
+
                                         <div class="col-md-3">
-                                            {{-- <a href="">0</a> --}}
                                             <div id="0" class="btn btn-score" style="border: solid 1px #d3d3d3">0</div>
                                         </div>
                                         <div class="col-md-3">
@@ -110,7 +110,6 @@
                                 </div>
                                 <div class="card-body row">
                                     <div class="col-md-3">
-                                        {{-- <a href="">0</a> --}}
                                         <div id="3" class="btn btn-score" style="border: solid 1px #d3d3d3">3</div>
                                     </div>
                                     <div class="col-md-3">
@@ -119,22 +118,21 @@
                                     <div class="col-md-3">
                                         <div id="6" class="btn btn-score" style="border: solid 1px #d3d3d3">6</div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3" id="outBtn" data-bs-toggle="modal" data-bs-target="#selectOutTypeModal">
                                         <div id="w" class="btn btn-score" style="border: solid 1px red">OUT</div>
                                     </div>
                                 </div>
                                 <div class="card-body row">
                                     <div class="col-md-3">
-                                        {{-- <a href="">0</a> --}}
                                         <div id="wide" class="btn btn-score" style="border: solid 1px #d3d3d3">WD</div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3" id="nbBtn" data-bs-toggle="modal" data-bs-target="#selectNBModal">
                                         <div id="nb" class="btn btn-score" style="border: solid 1px #d3d3d3">NB</div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3" id="byeBtn" data-bs-toggle="modal" data-bs-target="#selectByesModal">
                                         <div id="bye" class="btn btn-score" style="border: solid 1px #d3d3d3">BYE</div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3" id="lbBtn" data-bs-toggle="modal" data-bs-target="#selectLegByesModal">
                                         <div id="lb" class="btn btn-score" style="border: solid 1px #d3d3d3">LB</div>
                                     </div>
                                 </div>
@@ -186,6 +184,244 @@
         </form>
     </div>
 </div>
+
+<div class="modal fade" id="selectOutTypeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form method="POST" action="" id="selectOutTypeForm">
+            @csrf
+            {{-- @method('DELETE') --}}
+            {{-- @method('POST') --}}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Out How</h5>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="card-body row">
+                        <div class="col-md-4">
+                            {{-- <a href="">0</a> --}}
+                            <div id="0" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Bowled</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="1" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Caught</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="2" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Stumped</div>
+                        </div>
+
+                    </div>
+
+                    <div class="card-body row">
+                        <div class="col-md-4">
+                            {{-- <a href="">0</a> --}}
+                            <div id="0" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">LBW</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="1" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Hit Wicket</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="2" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Retired Out</div>
+                        </div>
+                        {{-- <div class="col-md-3">
+                            <div id="undo" class="btn btn-score" style="border: solid 1px green">Undo</div>
+                        </div> --}}
+                    </div>
+                    <div class="card-body row">
+                        <div class="col-md-4">
+                            {{-- <a href="">0</a> --}}
+                            <div id="0" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Run Out</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="1" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Mankaded</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="filedObstruction" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Field Obstruction</div>
+                        </div>
+                        {{-- <div class="col-md-3">
+                            <div id="undo" class="btn btn-score" style="border: solid 1px green">Undo</div>
+                        </div> --}}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="selectLegByesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form method="POST" action="" id="selectLegByesForm">
+            @csrf
+            {{-- @method('DELETE') --}}
+            {{-- @method('POST') --}}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">How many runs did they run??</h5>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="card-body row">
+                        <div class="col-md-4">
+                            {{-- <a href="">0</a> --}}
+                            <div id="lby1" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">1</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="lby2" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">2</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="lby3" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">3</div>
+                        </div>
+
+                    </div>
+
+                    <div class="card-body row">
+                        <div class="col-md-4">
+                            {{-- <a href="">0</a> --}}
+                            <div id="lby4" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">4</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="lby5" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">5</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="lby6" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">6</div>
+                        </div>
+                        {{-- <div class="col-md-3">
+                            <div id="undo" class="btn btn-score" style="border: solid 1px green">Undo</div>
+                        </div> --}}
+                    </div>
+                    {{--  --}}
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="modal fade" id="selectByesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form method="POST" action="" id="selectByesForm">
+            @csrf
+            {{-- @method('DELETE') --}}
+            {{-- @method('POST') --}}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title sm-6" id="exampleModalLabel">How many runs did they run??</h5>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="card-body row">
+                        <div class="col-md-4">
+                            {{-- <a href="">0</a> --}}
+                            <div id="bye1" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">1</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="bye2" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">2</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="bye3" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">3</div>
+                        </div>
+
+                    </div>
+
+                    <div class="card-body row">
+                        <div class="col-md-4">
+                            {{-- <a href="">0</a> --}}
+                            <div id="bye4" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">4</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="bye5" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">5</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="bye6" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">6</div>
+                        </div>
+                        {{-- <div class="col-md-3">
+                            <div id="undo" class="btn btn-score" style="border: solid 1px green">Undo</div>
+                        </div> --}}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="selectNBModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form method="POST" action="" id="selectNBForm">
+            @csrf
+            {{-- @method('DELETE') --}}
+            {{-- @method('POST') --}}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title sm-6" id="exampleModalLabel">How many runs did they score on a NO BALL??</h5>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="card-body row">
+                        <div class="col-md-4">
+                            {{-- <a href="">0</a> --}}
+                            <div id="0" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">1</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="1" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">2</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="2" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">3</div>
+                        </div>
+
+                    </div>
+
+                    <div class="card-body row">
+                        <div class="col-md-4">
+                            {{-- <a href="">0</a> --}}
+                            <div id="0" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">4</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="1" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">5</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="2" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">6</div>
+                        </div>
+                        {{-- <div class="col-md-3">
+                            <div id="undo" class="btn btn-score" style="border: solid 1px green">Undo</div>
+                        </div> --}}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
 <script src="{{asset('assets/js/scorer.js')}}"></script>
@@ -196,6 +432,39 @@
     })
     function selectBowlerModalHelper(e){
     }
+
+    $('#outBtn').click(function(e) {
+        e.preventDefault();
+        document.getElementById("selectOutTypeForm").setAttribute("action");
+    })
+
+
+    $('#lbBtn').click(function(e) {
+        e.preventDefault();
+        document.getElementById("selectLegByesForm").setAttribute("action");
+    })
+
+
+    $('#byeBtn').click(function(e) {
+        e.preventDefault();
+        // console.log(e.target);
+        // var byes = document.getElementById("selectOutTypeForm");
+        // console.log(byes);
+    })
+
+
+    $('#outBtn').click(function(e) {
+        e.preventDefault();
+        document.getElementById("selectByesForm").setAttribute("action");
+    })
+
+    $('#nbBtn').click(function(e) {
+        e.preventDefault();
+        document.getElementById("selectNBForm").setAttribute("action");
+    })
+
+
+
 </script>
 
 @endsection

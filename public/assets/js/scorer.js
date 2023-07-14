@@ -76,22 +76,47 @@ $(".previous").click(function(){
 	});
 });
 
-document.getElementById("0").addEventListener('click', updateScore);
-document.getElementById("1").addEventListener('click', updateScore);
-document.getElementById("2").addEventListener('click', updateScore);
-document.getElementById("3").addEventListener('click', updateScore);
-document.getElementById("4").addEventListener('click', updateScore);
-document.getElementById("6").addEventListener('click', updateScore);
-document.getElementById("w").addEventListener('click', updateScore);
-document.getElementById("bye").addEventListener('click', updateScore);
-document.getElementById("lb").addEventListener('click', updateScore);
-document.getElementById("wide").addEventListener('click', updateScore);
+// $('#scorer').on('shown.bs.modal', function () {
+//     $('#myInput').trigger('focus')
+//   });
+
+document.getElementById("0").addEventListener('click', event);
+document.getElementById("1").addEventListener('click', event);
+document.getElementById("2").addEventListener('click', event);
+document.getElementById("3").addEventListener('click', event);
+document.getElementById("4").addEventListener('click', event);
+document.getElementById("6").addEventListener('click', event);
+document.getElementById("w").addEventListener('click', event);
+document.getElementById("bye").addEventListener('click', event);
+document.getElementById("lb").addEventListener('click', event);
+document.getElementById("wide").addEventListener('click', event);
 
 
 
-document.getElementById("nb").addEventListener('click', updateScore);
-document.getElementById("wide").addEventListener('click', updateScore);
-document.getElementById("undo").addEventListener('click', updateScore);
+document.getElementById("nb").addEventListener('click', event);
+document.getElementById("wide").addEventListener('click', event);
+document.getElementById("undo").addEventListener('click', event);
+
+
+document.getElementById("bye1").addEventListener('click',updateBye);
+document.getElementById("bye2").addEventListener('click',updateBye);
+document.getElementById("bye3").addEventListener('click',updateBye);
+document.getElementById("bye4").addEventListener('click',updateBye);
+document.getElementById("bye5").addEventListener('click',updateBye);
+document.getElementById("bye6").addEventListener('click',updateBye);
+
+
+
+document.getElementById("lby1").addEventListener('click',updateBye);
+document.getElementById("lby2").addEventListener('click',updateBye);
+document.getElementById("lby3").addEventListener('click',updateBye);
+document.getElementById("lby4").addEventListener('click',updateBye);
+document.getElementById("lby5").addEventListener('click',updateBye);
+document.getElementById("lby6").addEventListener('click',updateBye);
+
+// var byes = document.getElementById("selectByesModal").addEventListener('click', updateScore);
+
+
 
 
 
@@ -110,18 +135,35 @@ var totalNumbeOfovers = 5;
 
 // console.log(liveScore);
 
+function updateBye(e){
+    // e.preventDefault();
+    console.log(e.target);
+    var byeRuns= parseInt(e.target.id.substr(3,4));
+    // currentRuns = parseInt(byeRuns) + parseInt(currentRuns);
+    // console.log(currentRuns);
+    updateScore(parseInt(byeRuns));
+    byeRuns = 0;
+    console.log(byeRuns);
+}
 
-function updateScore(e){
-    let currentBowl = e.target.id;
+function event(e){
+    updateScore(e.target.id);
+}
 
-    if(isFairDelivery(currentBowl)){
+function updateScore(score){
+// console.log('hey');
+    let currentBowl = score;
+    // console.log(currentBowl);
+
+    if(isFairDelivery(currentBowl))
+    {
         if(isWicket(currentBowl)){
             currentWicketsFallen = parseInt(currentWicketsFallen) + 1;
 
         }
 
         if(Number.isInteger(parseInt(currentBowl))){
-            currentRuns = parseInt(e.target.id) + parseInt(currentRuns);
+            currentRuns = parseInt(score) + parseInt(currentRuns);
         }
 
         if(currentOverBowl == 5){
@@ -133,18 +175,27 @@ function updateScore(e){
         // if(currentBowl == 'undo'){
 
         // }
+        if(currentBowl == 'bye'){
+            return;
+        }
+
+        if(currentBowl == 'lb'){
+            return;
+        }
         else {
             currentOverBowl = currentOverBowl + 1;
             // var bowlsix = 6;
         }
 
-
     }
-    else {
+    else
+    {
         currentRuns = 1 + parseInt(currentRuns);
     }
+    // console.log(currentRuns);
     var currentMatchBowl = currentMatchOver + '.' + currentOverBowl
     var liveScore = currentRuns + '/' + currentWicketsFallen + '(' + currentMatchBowl + '/' + totalNumbeOfovers + ')';
+    console.log(currentRuns)
     let scoreholder = document.getElementById('score');
     scoreholder.innerHTML = `<h4>${currentRuns + '/' + currentWicketsFallen}</h4>
                             <h6 class="ms-2 mt-2">
@@ -171,11 +222,10 @@ function updateScore(e){
 
     }
 
-    on
-    jquery
     if(currentOverBowl == 2){
         bowl2.innerHTML = `<h6 id="bowltwo">${currentBowl}</h6>`;
         // console.log(currentBowlwithoutno);
+
 
         if(currentBowl =='nb'){
             // bowl2.innerHTML=`<h6>${currentBowlwithoutno}Nb</h6>`;
@@ -212,24 +262,19 @@ function updateScore(e){
         bowl6.innerHTML = `<h6>${currentBowl}</h6>`;
     }
 
-
-
-}
-
-
-
-function isWicket(currentBowl){
-    if(currentBowl == 'w'){
-        return true;
-    }
-    return false;
-}
-
-function isFairDelivery(currentBowl){
-    // console.log(currentBowl);
-    if(currentBowl == 'wide' || currentBowl == 'nb'){
+    function isWicket(currentBowl){
+        if(currentBowl == 'w'){
+            return true;
+        }
         return false;
     }
-    return true;
+
+    function isFairDelivery(currentBowl){
+        // console.log(currentBowl);
+        if(currentBowl == 'wide' || currentBowl == 'nb'){
+            return false;
+        }
+        return true;
+    }
 }
 

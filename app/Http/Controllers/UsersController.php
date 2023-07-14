@@ -13,6 +13,7 @@ use App\Exports\UsersExport;
 use App\Exports\UsersFailureReport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateImportRequest;
+use App\Imports\MainSheetImport;
 use App\Imports\UsersImport;
 use App\Jobs\ProcessVerifyEmail;
 use App\Jobs\ProcessEmail;
@@ -22,6 +23,8 @@ use App\Notifications\VerifyEmailNotification;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
+
+use function PHPUnit\Framework\isEmpty;
 
 class UsersController extends Controller
 {
@@ -86,14 +89,16 @@ class UsersController extends Controller
     public function import(CreateImportRequest $request)
     {
         $import = new UsersImport();
-        Excel::import($import, $request->file('file')->store('files'));
-        if($import->failures()->isNotEmpty()) {;
-            $path = "import-failures/failure-report.xlsx";
-            $failure_report = Excel::store(new UsersFailureReport($import->failures()), $path);
-            return redirect('/')->with('error', 'Your file is Partially imported! Please check your mail for failure report');
+        $import->onlySheets('Worksheet');
+        Excel::import($import, $request->file('file'));
+        if(isEmpty($import->failures())) {;
+            return Excel::download(new UsersFailureReport($import->failures()['Worksheet']), 'failure-report.xlsx');
+            // return redirect('/')->with('error', 'Your file is Partially imported! Please check your mail for failure report');
+
         }
         return redirect('/')->with('success', 'All good!');
     }
+    
     public function verify(string $token)
     {
         $user=User::where('verification_token',$token)->firstOrFail();

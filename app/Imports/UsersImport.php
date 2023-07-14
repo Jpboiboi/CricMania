@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Jobs\ProcessImportExportRequest;
 use App\Models\Player;
 use App\Models\User;
 use App\Notifications\ImportUser;
@@ -59,8 +60,7 @@ class UsersImport implements ToCollection, WithHeadingRow, SkipsEmptyRows, WithV
                     'balling_type' => $row['balling_type'],
                     'user_id' => $user->id
                 ]);
-
-                Notification::route('mail',$row['email'])->notify(new ImportUser($row['email'], $password));
+                dispatch(new ProcessImportExportRequest($row['email'], $password))->onQueue('emails');
             }
         });
 

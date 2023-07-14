@@ -4,6 +4,9 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Jobs\ProcessInviteCaptainEmail;
+use App\Jobs\ProcessInvitePlayerEmail;
+use App\Jobs\ProcessRegisterPlayersEmail;
 use App\Notifications\InviteCaptain;
 use App\Notifications\InvitePlayer;
 use App\Notifications\RegisterPlayers;
@@ -74,8 +77,7 @@ class User extends Authenticatable
             'expires_at'=>Carbon::now()->addDays(30)
         ]);
         // dd($user);
-        Notification::route('mail',$request->email)->notify(new InvitePlayer($token));
-
+        dispatch(new ProcessInvitePlayerEmail($user))->onQueue('emails');
         return $user;
     }
 
@@ -91,10 +93,10 @@ class User extends Authenticatable
         ]);
         // dd($user);
 
-        Notification::route('mail',$captainsEmail)->notify(new InviteCaptain($token,$tournamentId,$teamId));
-
+        dispatch(new ProcessInviteCaptainEmail($user,$tournamentId,$teamId))->onQueue('emails');
         return $user;
     }
+
 
     public function addCaptain(int $tournamentId, int $teamId, int $playerId) {
         // dd($request);
@@ -112,8 +114,7 @@ class User extends Authenticatable
         ]);
 
         sleep(10);
-        Notification::route('mail',$captainsEmail)->notify(new RegisterPlayers($teamId,$tournamentId,$token));
-
+        dispatch(new ProcessRegisterPlayersEmail($teamId,$tournamentId,$token,$captainsEmail))->onQueue('emails');
         return 1;
     }
 

@@ -14,6 +14,8 @@ use App\Exports\UsersFailureReport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateImportRequest;
 use App\Imports\UsersImport;
+use App\Jobs\ProcessEmail;
+use App\Jobs\ProcessInviteUserEmail;
 use App\Notifications\ImportFailureReport;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
@@ -47,9 +49,8 @@ class UsersController extends Controller
             'expires_at'=>Carbon::now()->addDays(30)
         ]);
 
-        Notification::route('mail',$request->email)->notify(new InviteUser($token));
-
-        session()->flash('success','Mail sent successfully ,please check your inbox');
+        dispatch(new ProcessInviteUserEmail($user))->onQueue('emails');
+        session()->flash('success','Mail processed ,please check your inbox in sometime');
         return redirect()->back();
     }
 
@@ -86,9 +87,7 @@ class UsersController extends Controller
         if($import->failures()->isNotEmpty()) {;
             $path = "import-failures/failure-report.xlsx";
             $failure_report = Excel::store(new UsersFailureReport($import->failures()), $path);
-            Notification::route('mail',auth()->user()->email)->notify(new ImportFailureReport($path));
             return redirect('/')->with('error', 'Your file is Partially imported! Please check your mail for failure report');
-
         }
         return redirect('/')->with('success', 'All good!');
     }

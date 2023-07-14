@@ -69,11 +69,9 @@ require __DIR__.'/auth.php';
 
 Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.player-details');
 Route::resource('players',PlayersController::class)->except('index', 'show');
-
-Route::resource('tournaments/{tournament}/teams/{team}/add-players', AddPlayersController::class)->except(['show', 'update']);
 Route::get('tournaments/{tournament}/teams/{team}/add-players/invite-via-email', [AddPlayersController::class, 'inviteViaEmail'])->name('players.invite-via-email');
 Route::post('tournaments/{tournament}/teams/{team}/add-players/players', [AddPlayersController::class, 'sendInvite'])->name('add-player.sendInvite');
-Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
+// Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
 Route::post('/add-players/ajax', [AddPlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
 
 
@@ -87,7 +85,7 @@ Route::get('/register-user',[UsersController::class,'validateUser']);
 // Invite form to invite captain to teams through email
 Route::get('tournaments/{tournament}/teams/{team}/invite-captain', [AddPlayersController::class, 'validateCaptain']);
 // Storing invited captain details and adding captain to team
-Route::Post('tournaments/{tournament}/teams/{team}/invite-captain/users/{user}', [AddPlayersController::class, 'storeCaptain'])->name('addPlayers.storeCaptain');
+Route::post('tournaments/{tournament}/teams/{team}/invite-captain/users/{user}', [AddPlayersController::class, 'storeCaptain'])->name('addPlayers.storeCaptain');
 
 // Invite form to invite player to teams through email
 Route::get('/invite-user',[AddPlayersController::class,'validatePlayer']);

@@ -5,13 +5,14 @@ namespace App\Exports;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class UsersFailureReport implements WithHeadings, WithColumnWidths, WithStyles, FromView
+class UsersFailureReport implements WithHeadings, WithColumnWidths, WithStyles, FromView, ShouldAutoSize
 {
     private $failures;
     public function __construct(Collection $failures)

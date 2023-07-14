@@ -4,9 +4,11 @@ namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class StatesSheetExport implements WithHeadings, FromArray, WithColumnWidths
+class StatesSheetExport implements WithHeadings, FromArray, WithColumnWidths, WithEvents
 {
     public function headings(): array
     {
@@ -38,6 +40,16 @@ class StatesSheetExport implements WithHeadings, FromArray, WithColumnWidths
         //     [0 => "1", 1 => "Maharashtra"]
         // ];
         return $formattedStates;
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class    => function(AfterSheet $event) {
+                $event->sheet->protectCells('', 'PASSWORD');
+                $event->sheet->getDelegate()->getProtection()->setSheet(true);
+            },
+        ];
     }
 
 }

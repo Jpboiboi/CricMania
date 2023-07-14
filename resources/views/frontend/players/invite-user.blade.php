@@ -34,7 +34,8 @@
             altInput: true,
             altFormat: "F j,Y H:i",
             dateFormat: "Y-m-d H:i",
-            maxDate: "today"
+            maxDate: "today",
+            enableTime: false,
         });
     </script>
 

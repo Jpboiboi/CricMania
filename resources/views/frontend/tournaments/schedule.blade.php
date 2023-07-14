@@ -17,7 +17,7 @@
    @endphp
     <div class="container">
         <h1>Scheduling tournament : {{$tournament->name}}</h1>
-        <h4 class="ms-3 text-muted">~ Organized by: {{$tournament->organizer->name}}</h4>
+        <h4 class="ms-3 text-muted">~ Organized by: {{$tournament->organizer->first_name." ".$tournament->organizer->last_name}}</h4>
         <hr>
             <h2>STAGE 1</h2>
             <?php

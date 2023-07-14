@@ -74,7 +74,6 @@ Route::post('tournaments/{tournament}/teams/{team}/add-players/players', [AddPla
 // Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
 Route::post('/add-players/ajax', [AddPlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
 
-
 // Register user using 'register as player' btn
 Route::get('/register-via-email',function(){
     return view('frontend.users.register-email');
@@ -98,3 +97,6 @@ Route::put('/add-players/users/{user}',[AddPlayersController::class,'update'])->
 
 Route::get('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'index'])->name('frontend.tournaments.schedule');
 Route::post('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'store'])->name('tournaments.schedule.store');
+
+Route::get('users/verify/{token}',[UsersController::class,'verify'])->name('verify');
+Route::get('users/{user}/resend-verification',[Userscontroller::class,'resendVerification'])->name('resend-verification');

@@ -20,6 +20,25 @@ a{
     width: 50px;
 }
 
+/* #msform{
+    ;
+} */
+
+.overs-card{
+    margin-top: 180px;
+}
+
+.overBtn {
+    display: inline-block;
+    padding-left: 10px;
+    /* margin-bottom: 50px; */
+    padding-top: 3px;
+    margin-left: 20px;
+    width: 30px;
+    margin: 20px 10px;
+    height: 30px;
+    border: solid 1px #000;
+}
 html {
     height: 100%;
 background: #000;
@@ -36,9 +55,14 @@ body {
 #msform {
     text-align: center;
     position: relative;
+    /* margin-left: 50px; */
     margin-top: 30px;
+    padding-left: 50px;
 }
 
+#filedObstruction {
+    padding: 0px;
+}
 #msform fieldset {
     background: white;
     border: 0 none;
@@ -47,7 +71,7 @@ body {
     padding: 20px 30px;
     box-sizing: border-box;
     width: 80%;
-    margin: 0 10%;
+    margin: 0 5%;
 
     /*stacking fieldsets above each other*/
     position: relative;

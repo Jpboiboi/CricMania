@@ -27,52 +27,28 @@
                 @csrf
                 {{-- action="{{route('scorer/matchid/score')}}" --}}
                 <!-- progressbar -->
-                <ul id="progressbar">
-                    <li class="active">Select Match</li>
-                    <li>Toss</li>
-                    <li>Start Innings</li>
-                </ul>
+                <div class="progressbar justify-content-center">
+                    <ul id="progressbar">
+                        <li class="active">Toss & Elect</li>
+                        <li>Select Playing XI</li>
+                        <li>Start Innings</li>
+                    </ul>
+                </div>
                 <!-- fieldsets -->
-                <fieldset>
-                    <h2 class="fs-title">Active Matches</h2>
-                    <h3 class="fs-subtitle">Select the match you want to score.</h3>
-                    {{-- <input type="text" name="fname" placeholder="First Name"/> --}}
-                    {{-- <input type="text" name="lname" placeholder="Last Name"/> --}}
-                    {{-- <input type="text" name="phone" placeholder="Phone"/> --}}
-                    @for ( $i = 0; $i < 2; $i++ )
-                    <div class="card-body d-flex justify-content-start mt-2">
-                        Team vs Team
-
-                    </div>
-                    {{-- <div class="card mt-3 mb-3" style="width: 28rem;"> --}}
-                        {{-- <img src="{{ asset($team->image_path)}}" class="card-img-top object-fit " width="100px" height="200px "alt="{{ $team->name}}"> --}}
-                        {{-- <div class="card-body row" name="card[{{$i}}]"> --}}
-                        {{-- <h5 class="card-title d-flex justify-content-center mb-3">{{$team->name}}</h5> --}}
-                            {{-- <h5 class="card-title d-flex justify-content-start mt-2">Team vs Team</h5> --}}
-                        {{-- <a href="{{ route('add-players.index', [$tournament->id, $team->id]) }}" class="btn btn-dark text-warning d-flex justify-content-center">Add Players</a> --}}
-                        {{-- </div> --}}
-                    {{-- </div> --}}
-                    @endfor
-                    <input type="button" name="next" class="next action-button col-md-4" value="Next"/>
-
-                {{-- </div> --}}
-
-
-                </fieldset>
                 <fieldset>
                     <h2 class="fs-title">Toss</h2>
                     <h3 class="fs-subtitle">Who won the toss?</h3>
                     <div class="row">
                         <div class="col-md-6 d-flex justify-content-start" >
                             <div class="card mt-3 mb-3" style="width: 7rem;">
-                                <div class="card-body">
+                                <div class="card-body btn toss-team1">
                                     <h5 class="card-title mt-2">MI</h5>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 d-flex justify-content-end">
                             <div class="card mt-3 mb-3" style="width: 7rem;">
-                                <div class="card-body ">
+                                <div class="card-body btn toss-team2">
                                     <h5 class="card-title mt-2">CSK</h5>
                                 </div>
                             </div>
@@ -83,16 +59,41 @@
                     <div class="row">
                         <div class="col-md-6 d-flex justify-content-start" >
                             <div class="card mt-3 mb-3" style="width: 7rem;">
-                                <div class="card-body">
+                                <div class="card-body btn toss-bat">
                                     <h5 class="card-title mt-2">Bat</h5>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 d-flex justify-content-end">
                             <div class="card mt-3 mb-3" style="width: 7rem;">
-                                <div class="card-body ">
+                                <div class="card-body btn toss-bowl ">
                                     <h5 class="card-title mt-2">Bowl</h5>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
+                    <input type="button" name="next" class="next action-button" value="Next"/>
+                </fieldset>
+                <fieldset>
+                    <h2 class="fs-title">Select Playing XI</h2>
+                    <div class="row">
+                        <div class="col-md-6 d-flex justify-content-start" >
+                            <div class="card mt-3 mb-3" style="width: 7rem;">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#team1Modal">
+                                    <div class="card-body">
+                                        <h5 class="card-title mt-2">MI</h5>
+                                    </div>
+                                  </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-end">
+                            <div class="card mt-3 mb-3" style="width: 7rem;">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#team2Modal">
+                                    <div class="card-body">
+                                        <h5 class="card-title mt-2">CSK</h5>
+                                    </div>
+                                  </button>
                             </div>
                         </div>
                     </div>
@@ -105,16 +106,20 @@
                     <div class="row">
                         <div class="col-md-6 d-flex justify-content-start" >
                             <div class="card mb-3" style="width: 15rem;">
-                                <div class="card-body">
-                                    <h6 class="card-title mt-2">Select Stricker</h6>
-                                </div>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#strikerModal">
+                                    <div class="card-body">
+                                        <h5 class="card-title mt-2">Select Striker</h5>
+                                    </div>
+                                  </button>
                             </div>
                         </div>
                         <div class="col-md-6 d-flex justify-content-end">
                             <div class="card mb-3" style="width: 15rem;">
-                                <div class="card-body ">
-                                    <h6 class="card-title mt-2">Select Non-Stricker</h6>
-                                </div>
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#bowlerModal">
+                                    <div class="card-body">
+                                        <h5 class="card-title mt-2">Select Non-striker</h5>
+                                    </div>
+                                  </button>
                             </div>
                         </div>
                     </div>
@@ -122,20 +127,16 @@
                     <div class="row">
                         <div class="col-md-12 d-flex justify-content-center" >
                             <div class="card mb-3" style="width: 15rem;">
-                                <div class="card-body">
-                                    {{-- <h6 class="card-title mt-2">Select Bowler</h6> --}}
-                                    <button class="btn" id="bowlerBtn" data-bs-toggle="modal" data-bs-target="#selectBowlerModal">
-                                    <h6 class="card-title mt-2">Select Bowler</h6>
-
-                                        {{-- <i class="fa fa-trash"></i> --}}
-                                    </button>
-                                </div>
+                                  <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#bowlerModal">
+                                    <div class="card-body">
+                                        <h5 class="card-title mt-2">Select Bowler</h5>
+                                    </div>
+                                  </button>
                             </div>
                         </div>
                     </div>
                     <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
-                    <input type="submit" name="submit" class="submit action-button" value="Submit"/>
-                    {{-- <a href="{{ route('') }}" type="submit" name="submit" class="submit action-button" value="Submit" class="btn btn-dark text-warning d-flex justify-content-center">Submit</a> --}}
+                    <input type="submit" name="submit" class="submit action-button" value="Start scoring"/>
                 </fieldset>
 
             </form>
@@ -154,44 +155,138 @@
 {{-- <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js" type="text/javascript"></script> --}}
 
-<div class="modal fade" id="selectBowlerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <form method="POST" action="" id="selectBowlerForm">
-            @csrf
-            {{-- @method('DELETE') --}}
-            {{-- @method('POST') --}}
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Select Bowler</h5>
-                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    {{-- @foreach ( as ) --}}
 
-                    {{-- @endforeach --}}
-                    <button class="btn btn-warning" type="submit">player1</button>
+ <!--Team1 Modal-->
+ <div class="modal fade" id="team1Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Select A Player</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="card mt-3 mb-3">
+                <div class="card-body">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Player1
+                        </label>
+                      </div>
                 </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </form>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-warning">Save changes</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+    <!--Team2 Modal-->
+<div class="modal fade" id="team2Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Select A Player</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="card mt-3 mb-3">
+                <div class="card-body">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Player1
+                        </label>
+                      </div>
+                </div>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-warning">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!--Striker Modal-->
+<div class="modal fade" id="strikerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Select A Player</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1">
+                  Player1
+                </label>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-warning">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Non Striker Modal-->
+<div class="modal fade" id="nonStrikerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Select A Player</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1">
+                  Player1
+                </label>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-warning">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!--Bowler Modal-->
+<div class="modal fade" id="bowlerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Select A Player</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1">
+                  Player1
+                </label>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-warning">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
 <script src="{{asset('assets/js/scorer.js')}}"></script>
+<script src="{{asset('assets/js/scorer-ui.js')}}"></script>
 <script>
-    $('#bowlerBtn').click(function(e) {
-        e.preventDefault();
-        document.getElementById("selectBowlerForm").setAttribute("action");
-    })
-    function selectBowlerModalHelper(e){
-    }
+
+
 </script>
 
 @endsection

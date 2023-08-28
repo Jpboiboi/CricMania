@@ -42,9 +42,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('tournaments', TournamentsController::class)->only('create', 'store', 'index');
     Route::resource('tournaments/{tournament}/teams', TeamsController::class);
 
-    Route::resource('scorer', ScorersController::class);
-    // Route::resource('scorer/matches/matchid', ScorersController::class);
-
     Route::post('/tournaments/ajax', [TournamentsAjaxController::class, 'getData'])->name('frontend.tournaments.index');
 
     // USERS IMPORT AND EXPORT ROUTES
@@ -68,9 +65,9 @@ Route::get('/players',[PlayersController::class,'index'])->name('players.index')
 
 
 // Route::get('/', function() {
-//     return view('frontend')
-// })
-require __DIR__.'/auth.php';
+    //     return view('frontend')
+    // })
+    require __DIR__.'/auth.php';
 
 
 Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.player-details');
@@ -104,5 +101,10 @@ Route::put('/add-players/users/{user}',[AddPlayersController::class,'update'])->
 Route::get('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'index'])->name('frontend.tournaments.schedule');
 Route::post('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'store'])->name('tournaments.schedule.store');
 
+
+Route::resource('scorer', ScorersController::class);
+// Route::resource('scorer/matches/matchid', ScorersController::class);
+
 Route::get('users/verify/{token}',[UsersController::class,'verify'])->name('verify');
 Route::get('users/{user}/resend-verification',[Userscontroller::class,'resendVerification'])->name('resend-verification');
+

@@ -24,7 +24,9 @@ return new class extends Migration
             $table->unsignedBigInteger('captain2_id')->nullable();
             $table->unsignedBigInteger('tournament_id');
             $table->unsignedBigInteger('toss')->nullable();
+            $table->unsignedBigInteger('currently_batting')->nullable();
             $table->unsignedBigInteger('result')->nullable();
+            $table->unsignedBigInteger('scored_by')->nullable();
 
             $table->foreign('team1_id')
             ->references('id')
@@ -56,9 +58,19 @@ return new class extends Migration
             ->on('teams')
             ->onDelete('cascade');
 
+            $table->foreign('currently_batting')
+            ->references('id')
+            ->on('teams')
+            ->onDelete('cascade');
+
             $table->foreign('result')
             ->references('id')
             ->on('teams')
+            ->onDelete('cascade');
+
+            $table->foreign('scored_by')
+            ->references('id')
+            ->on('users')
             ->onDelete('cascade');
          });
     }

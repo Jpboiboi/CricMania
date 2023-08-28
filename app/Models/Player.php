@@ -23,13 +23,23 @@ class Player extends Model
     {
         parent::boot();
         static::created(function(Player $player){
-            $playerExist=PlayerStat::where('player_id',$player->id)->first();
 
-            if(! $playerExist){
+            $playerSeasonStatExist=PlayerStat::where('player_id',$player->id)->where('tournament_type_id', TournamentType::SEASON_TYPE)->first();
+            if(! $playerSeasonStatExist){
                 PlayerStat::create([
                     'player_id'=>$player->id,
+                    'tournament_type_id'=>TournamentType::SEASON_TYPE
                 ]);
             }
+
+            $playerTennisStatExist=PlayerStat::where('player_id',$player->id)->where('tournament_type_id', TournamentType::TENNIS_TYPE)->first();
+            if(! $playerTennisStatExist){
+                PlayerStat::create([
+                    'player_id'=>$player->id,
+                    'tournament_type_id'=>TournamentType::TENNIS_TYPE
+                ]);
+            }
+
         });
 
     }
@@ -49,6 +59,21 @@ class Player extends Model
 
     public function user(){
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function batsman()
+    {
+        return $this->belongsTo(Batsman::class, 'id', 'player_id');
+    }
+
+    public function bowler()
+    {
+        return $this->belongsTo(Bowler::class, 'id', 'player_id');
+    }
+
+    public function tournamentMatches()
+    {
+        return $this->belongsToMany(TournamentMatch::class, 'batsmen');
     }
 
     public static function isValid(string $token)
@@ -123,5 +148,13 @@ class Player extends Model
             return $teamsQuery->whereNotIn('player_id', $playersInThisTournament);
         })->orWhereDoesntHave('teams');
 
+    }
+
+    public function scopePlaying($query) {
+        return $query->where('is_in_playing_eleven', true);
+    }
+
+    public function scopeNotout($query) {
+        return $query->where('is_out', false);
     }
 }

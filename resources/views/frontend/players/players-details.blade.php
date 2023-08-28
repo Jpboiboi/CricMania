@@ -45,9 +45,7 @@
                 <th>Jersey No</th>
                 <th width="105px">View Stats</th>
             </thead>
-            <tbody>
-
-            </tbody>
+            <tbody></tbody>
 
         </table>
     </div>

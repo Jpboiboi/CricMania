@@ -57,9 +57,9 @@ Route::middleware('auth')->group(function () {
     // Add Player Routes
     Route::resource('tournaments/{tournament}/teams/{team}/add-players', AddPlayersController::class)->except(['show', 'update']);
     //Tournament_schedule store and view
-    Route::get('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'index'] )
+    Route::get('tournaments/{tournament}/tournament_matches',[TorunamentMatchesController::class,'index'] )
     ->name('frontend.tournaments.schedule');
-    Route::post('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'store'])->name('tournaments.schedule.store');
+    Route::post('tournaments/{tournament}/tournament_matches/schedule',[TorunamentMatchesController::class,'store'])->name('tournaments.schedule.store');
 
 });
 Route::get('/players/{slug}/player-stats',[PlayerStatsController::class,'show'])->name('frontend.players.player-stats');

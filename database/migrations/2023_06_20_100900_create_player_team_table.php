@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('player_id');
             $table->unsignedBigInteger('team_id');
             $table->unsignedBigInteger('tournament_id');
+            $table->boolean('is_in_playing_eleven')->default(false);
+            $table->boolean('is_out')->default(false);
 
             $table->timestamps();
 

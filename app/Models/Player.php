@@ -157,4 +157,8 @@ class Player extends Model
     public function scopeNotout($query) {
         return $query->where('is_out', false);
     }
+
+    public function scopeOut($query) {
+        return $query->where('is_out', true);
+    }
 }

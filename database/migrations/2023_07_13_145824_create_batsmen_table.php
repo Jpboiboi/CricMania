@@ -25,7 +25,7 @@ return new class extends Migration
             $table->unsignedInteger('no_of_sixes')->default(0);
             $table->unsignedInteger('no_of_dots')->default(0);
             $table->string('how_out')->nullable();
-            $table->unsignedBigInteger('out_by')->default(null);
+            $table->unsignedBigInteger('out_by')->nullable();
             $table->boolean('has_scored_fifty')->default(0);
             $table->boolean('has_scored_hundred')->default(0);
             $table->timestamps();

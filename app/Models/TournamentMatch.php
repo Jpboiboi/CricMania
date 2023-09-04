@@ -43,7 +43,7 @@ class TournamentMatch extends Model
     {
         return $this->belongsToMany(Player::class, 'batsmen');
     }
-    
+
     public function bowlers()
     {
         return $this->belongsToMany(Player::class, 'bowlers');
@@ -79,7 +79,7 @@ class TournamentMatch extends Model
         if($this->currently_batting == null) {
             if($electedTo === 'bat') {
                 $this->currently_batting = $this->toss;
-            } else if($electedTo === 'ball'){
+            } else if($electedTo === 'bowl'){
                 $this->currently_batting = $this->toss === $this->team1->id ? $this->team2->id : $this->team1->id;
             }
             $this->save();
@@ -87,5 +87,23 @@ class TournamentMatch extends Model
             return 1;
         }
         return 0;
+    }
+
+    public function isTossAndElectionUpdated():bool
+    {
+        return $this->toss && $this->currently_batting;
+    }
+
+    public function isPlayingElevenSelected():bool
+    {
+        $playingElevenTeam1Players = $this->team1->players()->playing()->count();
+        $playingElevenTeam2Players = $this->team2->players()->playing()->count();
+
+        return $playingElevenTeam1Players == 11 && $playingElevenTeam2Players == 11;
+    }
+
+    public function isMatchScorecardCreated(string $inning):MatchScorecard | null
+    {
+        return $this->matchScorecards()->where('inning', $inning)->first();
     }
 }

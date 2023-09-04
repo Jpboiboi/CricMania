@@ -25,22 +25,31 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::put('tournament/{tournament}/tournament_matches/{tournament_match}/update',[ TorunamentMatchesController::class, 'update']);
 
 // Get all players of team 1 of a match
-Route::get('tournament/{tournament}/tournament_matches/{tournament_match}/team1_players',[ TorunamentMatchesController::class, 'getTeam1Players']);
-// Set playing eleven players of team 1 of a match
-Route::put('tournament/{tournament}/tournament_matches/{tournament_match}/team1_players',[ TorunamentMatchesController::class, 'setPlayingElevenOfTeam1']);
-
+Route::get('tournament/{tournament}/tournament_matches/{tournament_match}/team1-players',[ TorunamentMatchesController::class, 'getTeam1Players']);
 // Get all players of team 2 of a match
-Route::get('tournament/{tournament}/tournament_matches/{tournament_match}/team2_players',[ TorunamentMatchesController::class, 'getTeam2Players']);
-// Set playing eleven players of team 2 of a match
-Route::put('tournament/{tournament}/tournament_matches/{tournament_match}/team2_players',[ TorunamentMatchesController::class, 'setPlayingElevenOfTeam2']);
+Route::get('tournament/{tournament}/tournament_matches/{tournament_match}/team2-players',[ TorunamentMatchesController::class, 'getTeam2Players']);
+// Set playing eleven players of both the teams of a match
+Route::put('tournament/{tournament}/tournament_matches/{tournament_match}/set-playing-eleven-players',[ TorunamentMatchesController::class, 'setPlayingElevenPlayers']);
+
+// Get players of currently batting team of a match
+Route::get('tournament/{tournament}/tournament_matches/{tournament_match}/batting-team-players',[ TorunamentMatchesController::class, 'getBattingTeamPlayers']);
+// Get players of currently bowling team of a match
+Route::get('tournament/{tournament}/tournament_matches/{tournament_match}/bowling-team-players',[ TorunamentMatchesController::class, 'getBowlingTeamPlayers']);
+
+// Get request to check if toss and election is updated or not
+Route::get('tournament/{tournament}/tournament_matches/{tournament_match}/check-toss-and-election-status',[ TorunamentMatchesController::class, 'checkTossAndElectionStatus']);
+// Get request to check if players are selected as playing eleven or not
+Route::get('tournament/{tournament}/tournament_matches/{tournament_match}/check-playing-eleven-selection-status',[ TorunamentMatchesController::class, 'checkPlayingElevenSelectionStatus']);
+// Get request to check if match scorecard of current inning is created or not
+Route::get('tournament/{tournament}/tournament_matches/{tournament_match}/check-match-scorcard-status',[ TorunamentMatchesController::class, 'checkMatchScorcardStatus']);
 
 // Get a match scorecard
 Route::get('tournament/{tournament}/tournament_matches/{tournament_match}/match-scorecard',[MatchScorecardsController::class, 'index']);
 // Create a match scorecard
-Route::post('tournament/{tournament}/tournament_matches/{tournament_match}/match-scorecard',[MatchScorecardsController::class, 'store']);
-Route::put('tournament/{tournament}/tournament_matches/{tournament_match}/match-scorecard/{match_scorecard}/change-strike-batsman',[MatchScorecardsController::class, 'changeStrikeBatsman']);
-Route::put('tournament/{tournament}/tournament_matches/{tournament_match}/match-scorecard/{match_scorecard}/change-non-strike-batsman',[MatchScorecardsController::class, 'changeNonStrikeBatsman']);
-Route::put('tournament/{tournament}/tournament_matches/{tournament_match}/match-scorecard/{match_scorecard}/change-bowler',[MatchScorecardsController::class, 'changeBowler']);
+Route::post('tournament/{tournament}/tournament_matches/{tournament_match}/match_scorecard',[MatchScorecardsController::class, 'store']);
+Route::put('tournament/{tournament}/tournament_matches/{tournament_match}/match_scorecard/{match_scorecard}/change-strike-batsman',[MatchScorecardsController::class, 'changeStrikeBatsman']);
+Route::put('tournament/{tournament}/tournament_matches/{tournament_match}/match_scorecard/{match_scorecard}/change-non-strike-batsman',[MatchScorecardsController::class, 'changeNonStrikeBatsman']);
+Route::put('tournament/{tournament}/tournament_matches/{tournament_match}/match_scorecard/{match_scorecard}/change-bowler',[MatchScorecardsController::class, 'changeBowler']);
 
 // Create a match detail scorecard
-Route::post('tournament/{tournament}/tournament_matches/{tournament_match}/match-scorecard/{match_scorecard}/match_detail_scorecards',[ MatchDetailScorecardsController::class, 'store']);
+Route::post('tournament/{tournament}/tournament_matches/{tournament_match}/match_scorecard/{match_scorecard}/match_detail_scorecards',[ MatchDetailScorecardsController::class, 'store']);

@@ -106,7 +106,7 @@ class TorunamentMatchesController extends AjaxController
             if($tournamentMatch->updateToss($request->toss) && $tournamentMatch->updateCurrentlyBatting($request->elected_to)) {
                 return $this->showOne($tournamentMatch);
             } else {
-                return $this->errorResponse("Toss and Election of batting or balling can be updated only once", 409);
+                return $this->errorResponse("Toss and Election of batting or bowling can be updated only once", 409);
             }
         }
 
@@ -116,43 +116,63 @@ class TorunamentMatchesController extends AjaxController
     public function getTeam1Players(Tournament $tournament, TournamentMatch $tournamentMatch)
     {
         if(request()->has('playing_eleven') && request()['playing_eleven'] === 'true') {
-            $team1Players = $tournamentMatch->team1->players()->playing()->get();
+            $team1Players = $tournamentMatch->team1->players()->playing()->with('user')->get();
 
             return $this->showAll($team1Players);
         }
-        $team1Players = $tournamentMatch->team1->players;
+        $team1Players = $tournamentMatch->team1->players()->with('user')->get();
 
         return $this->showAll($team1Players);
     }
 
-    public function setPlayingElevenOfTeam1(Request $request, Tournament $tournament, TournamentMatch $tournamentMatch)
+    public function getTeam2Players(Tournament $tournament, TournamentMatch $tournamentMatch)
+    {
+        if(request()->has('playing_eleven') && request()['playing_eleven'] === 'true') {
+            $team2Players = $tournamentMatch->team2->players()->playing()->with('user')->get();
+
+            return $this->showAll($team2Players);
+        }
+        $team2Players = $tournamentMatch->team2->players()->with('user')->get();
+
+        return $this->showAll($team2Players);
+    }
+
+    public function setPlayingElevenPlayers(Request $request, Tournament $tournament, TournamentMatch $tournamentMatch)
     {
         $rules = [
-            'playing_eleven' => 'required|string'
+            'team1_playing_eleven' => 'required|string',
+            'team2_playing_eleven' => 'required|string',
         ];
 
         $this->validate($request, $rules);
 
-        $playersId = array_map('intval', explode(',', $request->playing_eleven));
+        $team1PlayersId = array_map('intval', explode(',', $request->team1_playing_eleven));
+        $team2PlayersId = array_map('intval', explode(',', $request->team2_playing_eleven));
 
-        if(sizeof($playersId) != 11) {
-            return $this->errorResponse("11 players must be selected as playing eleven", 409);
+        if(sizeof($team1PlayersId) != 11 || sizeof($team2PlayersId) != 11) {
+            return $this->errorResponse("11 players must be selected as playing eleven on both the teams", 409);
         }
 
-        $playingElevenTeam1Players = $tournamentMatch->team1->players()->playing()->count();
-        if($playingElevenTeam1Players == 11) {
+        if($tournamentMatch->isPlayingElevenSelected()) {
             return $this->errorResponse("Playing eleven can be selected only once", 409);
         }
 
         $team1Players = $tournamentMatch->team1->players()->pluck('player_id')->toArray();
-        foreach ($playersId as $playerId) {
+        foreach ($team1PlayersId as $playerId) {
             if(!in_array($playerId, $team1Players)) {
                 return $this->errorResponse("Player must be a part of team to get selected as a playing eleven", 409);
             }
         }
 
-        DB::transaction(function () use($tournament, $tournamentMatch, $playersId){
-            foreach ($playersId as $playerId) {
+        $team2Players = $tournamentMatch->team2->players()->pluck('player_id')->toArray();
+        foreach ($team2PlayersId as $playerId) {
+            if(!in_array($playerId, $team2Players)) {
+                return $this->errorResponse("Player must be a part of team to get selected as a playing eleven", 409);
+            }
+        }
+
+        DB::transaction(function () use($tournament, $tournamentMatch, $team1PlayersId, $team2PlayersId){
+            foreach ($team1PlayersId as $playerId) {
                 $tournamentMatch->team1->players()->updateExistingPivot($playerId, ['is_in_playing_eleven' => true]);
                 $tournamentMatch->batsmen()->attach($playerId);
                 $tournamentMatch->bowlers()->attach($playerId);
@@ -163,51 +183,7 @@ class TorunamentMatchesController extends AjaxController
                 $playerStat->no_of_matches++;
                 $playerStat->save();
             }
-        });
-
-        return $this->showAll($tournamentMatch->team1->players);
-    }
-
-    public function getTeam2Players(Tournament $tournament, TournamentMatch $tournamentMatch)
-    {
-        if(request()->has('playing_eleven') && request()['playing_eleven'] === 'true') {
-            $team2Players = $tournamentMatch->team2->players()->playing()->get();
-
-            return $this->showAll($team2Players);
-        }
-        $team2Players = $tournamentMatch->team2->players;
-
-        return $this->showAll($team2Players);
-    }
-
-    public function setPlayingElevenOfTeam2(Request $request, Tournament $tournament, TournamentMatch $tournamentMatch)
-    {
-        $rules = [
-            'playing_eleven' => 'required|string'
-        ];
-
-        $this->validate($request, $rules);
-
-        $playersId = array_map('intval', explode(',', $request->playing_eleven));
-
-        if(sizeof($playersId) != 11) {
-            return $this->errorResponse("11 players must be selected as playing eleven", 409);
-        }
-
-        $playingElevenTeam1Players = $tournamentMatch->team2->players()->playing()->count();
-        if($playingElevenTeam1Players == 11) {
-            return $this->errorResponse("Playing eleven can be selected only once", 409);
-        }
-
-        $team2Players = $tournamentMatch->team2->players()->pluck('player_id')->toArray();
-        foreach ($playersId as $playerId) {
-            if(!in_array($playerId, $team2Players)) {
-                return $this->errorResponse("Player must be a part of team to get selected as a playing eleven", 409);
-            }
-        }
-
-        DB::transaction(function () use($tournament, $tournamentMatch, $playersId){
-            foreach ($playersId as $playerId) {
+            foreach ($team2PlayersId as $playerId) {
                 $tournamentMatch->team2->players()->updateExistingPivot($playerId, ['is_in_playing_eleven' => true]);
                 $tournamentMatch->batsmen()->attach($playerId);
                 $tournamentMatch->bowlers()->attach($playerId);
@@ -219,7 +195,52 @@ class TorunamentMatchesController extends AjaxController
             }
         });
 
-        return $this->showAll($tournamentMatch->team2->players);
+        return $this->showAll($tournamentMatch->team1->players);
+    }
+
+    public function getBattingTeamPlayers(Tournament $tournament, TournamentMatch $tournamentMatch)
+    {
+        if(request()->has('is_out') && request()['is_out'] == "true") {
+            $battingTeamPlayers = $tournamentMatch->currently_batting_team->players()->playing()->out()->with('user')->get();
+        } else {
+            $battingTeamPlayers = $tournamentMatch->currently_batting_team->players()->playing()->notout()->with('user')->get();
+        }
+        return $this->showAll($battingTeamPlayers);
+    }
+
+    public function getBowlingTeamPlayers(Tournament $tournament, TournamentMatch $tournamentMatch)
+    {
+        $bowlingTeamPlayers = $tournamentMatch->currently_bowling_team->players()->with('user')->get();
+
+        return $this->showAll($bowlingTeamPlayers);
+    }
+
+    public function checkTossAndElectionStatus(Tournament $tournament, TournamentMatch $tournamentMatch)
+    {
+        if($tournamentMatch->isTossAndElectionUpdated()) {
+           return $this->errorResponse("Toss and Election is already done", 409);
+        }
+        return $this->showMessage("You can update Toss and Election Field");
+    }
+
+    public function checkPlayingElevenSelectionStatus(Tournament $tournament, TournamentMatch $tournamentMatch)
+    {
+        if($tournamentMatch->isPlayingElevenSelected()) {
+            return $this->errorResponse("Playing eleven can be selected only once", 409);
+        }
+        return $this->showMessage("You can select players as playing eleven");
+    }
+
+    public function checkMatchScorcardStatus(Tournament $tournament, TournamentMatch $tournamentMatch)
+    {
+        if(request()->has('inning')) {
+            $matchScorecard = $tournamentMatch->isMatchScorecardCreated(request()['inning']);
+            if($matchScorecard) {
+                return $this->errorResponse(request()['inning'] . "inning is already started", 409);
+            }
+            return $this->showMessage("You can start ". request()['inning'] . " inning");
+        }
+        return $this->showMessage("Invalid url", 422);
     }
 
     private function verifyTournamentMatch(Tournament $tournament, TournamentMatch $tournamentMatch)
@@ -234,6 +255,6 @@ class TorunamentMatchesController extends AjaxController
 
     private function verifyElectionValue(string $electedTo)
     {
-        return $electedTo === "bat" || $electedTo === "ball";
+        return $electedTo === "bat" || $electedTo === "bowl";
     }
 }

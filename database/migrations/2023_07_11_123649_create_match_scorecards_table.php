@@ -26,6 +26,7 @@ return new class extends Migration
             $table->unsignedInteger('total_runs_scored')->default(0);
             $table->unsignedInteger('wickets_taken')->default(0);
             $table->enum('inning', MatchScorecard::INNINGS);
+            $table->timestamp('is_completed')->nullable();
             $table->timestamps();
 
             $table->foreign('tournament_match_id')

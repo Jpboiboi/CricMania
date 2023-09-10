@@ -37,7 +37,7 @@ class CreateMatchDetailScorecardRequest extends FormRequest
             'extra_runs' => 'numeric|digits_between:1,3',
             'ball_type' => 'string|in:' . implode(',', MatchScorecard::BALL_TYPE),
             'wicket_type' => 'string|required_with:out_by,dismissed_batsman|in:' . implode(',', MatchScorecard::WICKET_TYPE),
-            'dismissed_batsman' => 'integer|required_with:out_by,wicket_type|in:' . $matchScorecard->strike_batsman_id . ", " . $matchScorecard->non_strike_batsman_id,
+            'dismissed_batsman' => 'integer|required_with:out_by,wicket_type|in:' . $matchScorecard->strike_batsman_id . "," . $matchScorecard->non_strike_batsman_id,
             'out_by' => 'integer|required_with:dismissed_batsman,wicket_type|in:' . implode(',', $bowlingTeamPlayers),
         ];
     }

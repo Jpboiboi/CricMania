@@ -14,13 +14,28 @@ class MatchScorecardsController extends AjaxController
 {
     public function index(Tournament $tournament, TournamentMatch $tournamentMatch)
     {
-        $matchScorecard = $tournamentMatch->matchScorecards;
+        $matchScorecard = $tournamentMatch->matchScorecards()->where('inning', request()->inning)
+                    ->with('tournamentMatch.tournament')
+                    ->with('battingTeam')
+                    ->with('strikeBatsman.player.user')
+                    ->with('nonStrikeBatsman.player.user')
+                    ->with('bowler.player.user')
+                    ->first();
 
-        return $this->showAll($matchScorecard);
+        if($matchScorecard) {
+            return $this->showOne($matchScorecard);
+        }
+        return $this->errorResponse(ucfirst(request()->inning) . " inning is not started yet", 404);
     }
 
     public function store(CreateMatchScorecardRequest $request, Tournament $tournament, TournamentMatch $tournamentMatch)
     {
+        if($request->inning == 'second') {
+            if(!$tournamentMatch->isFirstInningCompleted()) {
+                return $this->errorResponse("First inning is still going on! You cannot start second inning", 409);
+            }
+        }
+
         if(!$this->verifyBatsman($tournamentMatch, $request->strike_batsman_id)) {
             return $this->errorResponse("Strike Batsman can only selected from currently batting team!!", 409);
         }
@@ -62,7 +77,7 @@ class MatchScorecardsController extends AjaxController
     public function changeStrikeBatsman(Request $request, Tournament $tournament, TournamentMatch $tournamentMatch, MatchScorecard $matchScorecard)
     {
         $rules = [
-            'strike_batsman_id' => 'required|notIn:' . $matchScorecard->strike_batsman_id . ", " . $matchScorecard->non_strike_batsman_id,
+            'strike_batsman_id' => 'required|notIn:' . $matchScorecard->strike_batsman_id . "," . $matchScorecard->non_strike_batsman_id,
         ];
         $this->validate($request, $rules);
 
@@ -90,7 +105,7 @@ class MatchScorecardsController extends AjaxController
     public function changeNonStrikeBatsman(Request $request, Tournament $tournament, TournamentMatch $tournamentMatch, MatchScorecard $matchScorecard)
     {
         $rules = [
-            'non_strike_batsman_id' => 'required|notIn:' . $matchScorecard->strike_batsman_id . ", " . $matchScorecard->non_strike_batsman_id,
+            'non_strike_batsman_id' => 'required|notIn:' . $matchScorecard->strike_batsman_id . "," . $matchScorecard->non_strike_batsman_id,
         ];
         $this->validate($request, $rules);
 

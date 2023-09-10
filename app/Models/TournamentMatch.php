@@ -106,4 +106,16 @@ class TournamentMatch extends Model
     {
         return $this->matchScorecards()->where('inning', $inning)->first();
     }
+
+    public function isFirstInningCompleted()
+    {
+        $matchScorecard = $this->matchScorecards()->where('inning', 'first')->first();
+        return $matchScorecard->is_completed ? true : false;
+    }
+
+    public function isSecondInningCompleted()
+    {
+        $matchScorecard = $this->matchScorecards()->where('inning', 'second')->first();
+        return $matchScorecard->is_completed ? true : false;
+    }
 }

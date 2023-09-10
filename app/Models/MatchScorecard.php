@@ -33,6 +33,11 @@ class MatchScorecard extends Model
         return $this->belongsTo(Team::class);
     }
 
+    public function battingTeam()
+    {
+        return $this->belongsTo(Team::class, 'team_id');
+    }
+
     public function strikeBatsman()
     {
         return $this->belongsTo(Batsman::class, 'strike_batsman_id', 'player_id');

@@ -110,9 +110,18 @@ class MatchDetailScorecardsController extends AjaxController
         $bowler->updateBowlerStats($request, $matchScorecard);
 
         // TODO : Updating Batsman and Bowler Overall PLayer Stats
-        $striker->updatePlayerBattingStatistics($request, $matchScorecard);
-        $bowler->updatePlayerBowlingStatistics($request, $matchScorecard);
+        $striker->player->playerstats[0]->updatePlayerBattingStatistics($request, $matchScorecard);
+        $bowler->player->playerstats[0]->updatePlayerBowlingStatistics($request, $matchScorecard);
 
-        return $this->showOne($matchDetailScorecard, 201);
+        $matchScorecard = $matchScorecard->query()
+                            ->where('id', $matchScorecard->id)
+                            ->with('tournamentMatch.tournament')
+                            ->with('battingTeam')
+                            ->with('strikeBatsman.player.user')
+                            ->with('nonStrikeBatsman.player.user')
+                            ->with('bowler.player.user')
+                            ->first();
+
+        return $this->showOne($matchScorecard, 201);
     }
 }

@@ -142,6 +142,8 @@ class TorunamentMatchesController extends AjaxController
         $rules = [
             'team1_playing_eleven' => 'required|string',
             'team2_playing_eleven' => 'required|string',
+            'team1_captain_id' => 'required|string',
+            'team2_captain_id' => 'required|string',
         ];
 
         $this->validate($request, $rules);
@@ -158,6 +160,9 @@ class TorunamentMatchesController extends AjaxController
         }
 
         $team1Players = $tournamentMatch->team1->players()->pluck('player_id')->toArray();
+        if(!in_array($request->team1_captain_id, $team1Players)) {
+            return $this->errorResponse("Player must be a part of team to get selected as a Captain", 409);
+        }
         foreach ($team1PlayersId as $playerId) {
             if(!in_array($playerId, $team1Players)) {
                 return $this->errorResponse("Player must be a part of team to get selected as a playing eleven", 409);
@@ -165,13 +170,16 @@ class TorunamentMatchesController extends AjaxController
         }
 
         $team2Players = $tournamentMatch->team2->players()->pluck('player_id')->toArray();
+        if(!in_array($request->team2_captain_id, $team2Players)) {
+            return $this->errorResponse("Player must be a part of team to get selected as a Captain", 409);
+        }
         foreach ($team2PlayersId as $playerId) {
             if(!in_array($playerId, $team2Players)) {
                 return $this->errorResponse("Player must be a part of team to get selected as a playing eleven", 409);
             }
         }
 
-        DB::transaction(function () use($tournament, $tournamentMatch, $team1PlayersId, $team2PlayersId){
+        DB::transaction(function () use($request, $tournament, $tournamentMatch, $team1PlayersId, $team2PlayersId){
             foreach ($team1PlayersId as $playerId) {
                 $tournamentMatch->team1->players()->updateExistingPivot($playerId, ['is_in_playing_eleven' => true]);
                 $tournamentMatch->batsmen()->attach($playerId);
@@ -193,6 +201,9 @@ class TorunamentMatchesController extends AjaxController
                 $playerStat->no_of_matches++;
                 $playerStat->save();
             }
+            $tournamentMatch->captain1_id = $request->team1_captain_id;
+            $tournamentMatch->captain2_id = $request->team2_captain_id;
+            $tournamentMatch->save();
         });
 
         return $this->showAll($tournamentMatch->team1->players);

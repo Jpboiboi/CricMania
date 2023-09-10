@@ -26,7 +26,7 @@ class CreateMatchScorecardRequest extends FormRequest
             'strike_batsman_id' => 'required',
             'non_strike_batsman_id' => 'required',
             'bowler_id' => 'required',
-            'inning' => 'required|string|in:' . MatchScorecard::FIRST_INNING . ", " . MatchScorecard::SECOND_INNING,
+            'inning' => 'required|string|in:' . MatchScorecard::FIRST_INNING . "," . MatchScorecard::SECOND_INNING,
         ];
     }
 }

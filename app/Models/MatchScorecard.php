@@ -52,4 +52,9 @@ class MatchScorecard extends Model
     {
         return $this->belongsTo(Bowler::class, 'bowler_id', 'player_id');
     }
+
+    public function getLegalDeliveriesCountAttribute()
+    {
+        return $this->matchDetailScorecards()->legalDeliveries()->count();
+    }
 }

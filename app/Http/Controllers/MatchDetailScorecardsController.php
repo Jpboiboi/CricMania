@@ -31,6 +31,10 @@ class MatchDetailScorecardsController extends AjaxController
          *
          */
 
+        if($matchScorecard->legal_deliveries_count == $tournamentMatch->no_of_overs*6 || $matchScorecard->wickets_taken != 10) {
+            return $this->errorResponse(ucfirst($matchScorecard->inning) . " inning is completed! you cannot proceed with this request", 422);
+        }
+
         $data = [];
         $ballNumber = $matchScorecard->ball_number;
         $currentTotalRunsScored = $matchScorecard->total_runs_scored;
@@ -103,6 +107,11 @@ class MatchDetailScorecardsController extends AjaxController
         $matchScorecard->extra_runs += $currentExtraRuns;
         $matchScorecard->total_runs_scored = $currentTotalRunsScored;
         $matchScorecard->wickets_taken = $currentWicketsTaken;
+        if($currentRunsByBat == 1 || $currentRunsByBat == 3 || $currentRunsByBat == 5) {
+            $temp = $matchScorecard->strike_batsman_id;
+            $matchScorecard->strike_batsman_id = $matchScorecard->non_strike_batsman_id;
+            $matchScorecard->non_strike_batsman_id = $temp;
+        }
         $matchScorecard->save();
 
         // Updating Batsman and Bowler Stats of this match

@@ -206,7 +206,40 @@ class TorunamentMatchesController extends AjaxController
             $tournamentMatch->save();
         });
 
-        return $this->showAll($tournamentMatch->team1->players);
+        return $this->showMessage("Players are successfully selected as playing eleven");
+    }
+
+    public function setPlayersRoles(Request $request, Tournament $tournament, TournamentMatch $tournamentMatch)
+    {
+        $rules = [
+            'team1_captain_id' => 'required|string',
+            'team2_captain_id' => 'required|string',
+            'team1_vice_captain_id' => 'required|string',
+            'team2_vice_captain_id' => 'required|string',
+            'team1_wicket_keeper_id' => 'required|string',
+            'team2_wicket_keeper_id' => 'required|string',
+        ];
+        $this->validate($request, $rules);
+
+        $team1Players = $tournamentMatch->team1->players()->playing()->pluck('player_id')->toArray();
+        if(! (in_array($request->team1_captain_id, $team1Players) && in_array($request->team1_vice_captain_id, $team1Players) && in_array($request->team1_wicket_keeper_id, $team1Players))) {
+            return $this->errorResponse("Players must be a part of playing eleven players to get selected as a Captain or Vice Captain or Wicket Keeper of team1", 409);
+        }
+
+        $team2Players = $tournamentMatch->team2->players()->playing()->pluck('player_id')->toArray();
+        if(! (in_array($request->team2_captain_id, $team2Players) && in_array($request->team2_vice_captain_id, $team2Players) && in_array($request->team2_wicket_keeper_id, $team2Players))) {
+            return $this->errorResponse("Players must be a part of playing eleven players to get selected as a Captain or Vice Captain or Wicket Keeper of team2", 409);
+        }
+
+        $tournamentMatch->captain1_id = $request->team1_captain_id;
+        $tournamentMatch->captain2_id = $request->team2_captain_id;
+        $tournamentMatch->vice_captain1_id = $request->team1_vice_captain_id;
+        $tournamentMatch->vice_captain2_id = $request->team2_vice_captain_id;
+        $tournamentMatch->wicket_keeper1_id = $request->team1_wicket_keeper_id;
+        $tournamentMatch->wicket_keeper2_id = $request->team2_wicket_keeper_id;
+        $tournamentMatch->save();
+
+        return $this->showMessage("Players have been set to their respective roles");
     }
 
     public function getBattingTeamPlayers(Tournament $tournament, TournamentMatch $tournamentMatch)

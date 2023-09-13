@@ -30,6 +30,8 @@ Route::get('tournaments/{tournament}/tournament_matches/{tournament_match}/team1
 Route::get('tournaments/{tournament}/tournament_matches/{tournament_match}/team2-players',[ TorunamentMatchesController::class, 'getTeam2Players']);
 // Set playing eleven players of both the teams of a match
 Route::put('tournaments/{tournament}/tournament_matches/{tournament_match}/set-playing-eleven-players',[ TorunamentMatchesController::class, 'setPlayingElevenPlayers']);
+// Set players roles of both the teams in a match
+Route::put('tournaments/{tournament}/tournament_matches/{tournament_match}/set-players-roles',[ TorunamentMatchesController::class, 'setPlayersRoles']);
 
 // Get players of currently batting team of a match
 Route::get('tournaments/{tournament}/tournament_matches/{tournament_match}/batting-team-players',[ TorunamentMatchesController::class, 'getBattingTeamPlayers']);
@@ -50,6 +52,10 @@ Route::post('tournaments/{tournament}/tournament_matches/{tournament_match}/matc
 Route::put('tournaments/{tournament}/tournament_matches/{tournament_match}/match_scorecards/{match_scorecard}/change-strike-batsman',[MatchScorecardsController::class, 'changeStrikeBatsman']);
 Route::put('tournaments/{tournament}/tournament_matches/{tournament_match}/match_scorecards/{match_scorecard}/change-non-strike-batsman',[MatchScorecardsController::class, 'changeNonStrikeBatsman']);
 Route::put('tournaments/{tournament}/tournament_matches/{tournament_match}/match_scorecards/{match_scorecard}/change-bowler',[MatchScorecardsController::class, 'changeBowler']);
+
+Route::get('tournaments/{tournament}/tournament_matches/{tournament_match}/match_scorecards/{match_scorecard}/current-over-details',[MatchScorecardsController::class, 'getCurrentOverDetails']);
+Route::put('tournaments/{tournament}/tournament_matches/{tournament_match}/match_scorecards/{match_scorecard}/mark-inning-as-completed',[MatchScorecardsController::class, 'markInningAsCompleted']);
+
 
 // Create a match detail scorecard
 Route::post('tournaments/{tournament}/tournament_matches/{tournament_match}/match_scorecards/{match_scorecard}/match_detail_scorecards',[ MatchDetailScorecardsController::class, 'store']);

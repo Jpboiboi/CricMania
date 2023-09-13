@@ -10,6 +10,9 @@ class TournamentMatch extends Model
 {
     use HasFactory;
 
+    const MATCH_STARTED = "started";
+    const MATCH_ENDED = "ended";
+
     protected $guarded=['id'];
 
     const LIVE="live";

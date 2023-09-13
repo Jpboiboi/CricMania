@@ -15,4 +15,15 @@ class MatchDetailScorecard extends Model
     {
         return $this->belongsTo(MatchScorecard::class, 'match_scorecard_id');
     }
+
+    // SCOPE FUNCTIONS
+    public function scopeCurrentOver($query, $overNumber)
+    {
+        return $query->where('over', $overNumber);
+    }
+
+    public function scopeLegalDeliveries($query)
+    {
+        return $query->where('is_legal_delivery', true);
+    }
 }

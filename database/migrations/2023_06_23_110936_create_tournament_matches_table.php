@@ -22,6 +22,10 @@ return new class extends Migration
             $table->unsignedBigInteger('team2_id');
             $table->unsignedBigInteger('captain1_id')->nullable();
             $table->unsignedBigInteger('captain2_id')->nullable();
+            $table->unsignedBigInteger('vice_captain1_id')->nullable();
+            $table->unsignedBigInteger('vice_captain2_id')->nullable();
+            $table->unsignedBigInteger('wicket_keeper1_id')->nullable();
+            $table->unsignedBigInteger('wicket_keeper2_id')->nullable();
             $table->unsignedBigInteger('tournament_id');
             $table->unsignedBigInteger('toss')->nullable();
             $table->unsignedBigInteger('currently_batting')->nullable();
@@ -44,6 +48,26 @@ return new class extends Migration
             ->onDelete('cascade');
 
             $table->foreign('captain2_id')
+            ->references('id')
+            ->on('player_team')
+            ->onDelete('cascade');
+
+            $table->foreign('vice_captain1_id')
+            ->references('id')
+            ->on('player_team')
+            ->onDelete('cascade');
+
+            $table->foreign('vice_captain2_id')
+            ->references('id')
+            ->on('player_team')
+            ->onDelete('cascade');
+
+            $table->foreign('wicket_keeper1_id')
+            ->references('id')
+            ->on('player_team')
+            ->onDelete('cascade');
+
+            $table->foreign('wicket_keeper2_id')
             ->references('id')
             ->on('player_team')
             ->onDelete('cascade');

@@ -8,6 +8,7 @@ use App\Models\MatchScorecard;
 use App\Models\Player;
 use App\Models\Tournament;
 use App\Models\TournamentMatch;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class MatchScorecardsController extends AjaxController
@@ -48,7 +49,7 @@ class MatchScorecardsController extends AjaxController
             return $this->errorResponse("Bowler can only selected from currently bowling team!!", 409);
         }
 
-        if(!$tournamentMatch->matchScorecards()->where('inning', $request->inning)->first()) {
+        if(!$tournamentMatch->isMatchScorecardCreated($request->inning)) {
             $matchScorecard = $tournamentMatch->matchScorecards()->firstOrCreate([
                 'team_id' => $tournamentMatch->currently_batting,
                 'strike_batsman_id' => $request->strike_batsman_id,
@@ -67,6 +68,12 @@ class MatchScorecardsController extends AjaxController
             $nonStrikerPlayerStat = $nonStriker->playerstats()->ofTournamentType($tournament->tournament_type_id)->first();
             $nonStrikerPlayerStat->no_of_innings++;
             $nonStrikerPlayerStat->save();
+
+            // Updating the match state as the first inning starts
+            if($request->inning == 'first') {
+                $tournamentMatch->match_state = TournamentMatch::MATCH_STARTED;
+                $tournamentMatch->save();
+            }
 
             return $this->showOne($matchScorecard, 201);
         }
@@ -157,6 +164,21 @@ class MatchScorecardsController extends AjaxController
         }
         return $this->errorResponse("Some Error ocurred", 500);
 
+    }
+
+    public function getCurrentOverDetails(Tournament $tournament, TournamentMatch $tournamentMatch, MatchScorecard $matchScorecard)
+    {
+        $data = $matchScorecard->matchDetailScorecards()->currentOver($matchScorecard->over)->get();
+
+        return $this->showAll($data);
+    }
+
+    public function markInningAsCompleted(Request $request, Tournament $tournament, TournamentMatch $tournamentMatch, MatchScorecard $matchScorecard)
+    {
+        $matchScorecard->is_completed = Carbon::now();
+        $matchScorecard->save();
+
+        return $this->showOne($matchScorecard);
     }
 
     private function verifyBatsman(TournamentMatch $tournamentMatch, int $batsmanId):bool

@@ -275,6 +275,14 @@ class TorunamentMatchesController extends AjaxController
         return $this->showMessage("You can select players as playing eleven");
     }
 
+    public function checkPlayersRolesSelectionStatus(Tournament $tournament, TournamentMatch $tournamentMatch)
+    {
+        if($tournamentMatch->isPlayersRolesSelected()) {
+            return $this->errorResponse("Captain, Vice Captain and Wicket Keeper are already selected", 409);
+        }
+        return $this->showMessage("You can select Captain, Vice Captain and Wicket Keeper for both the teams");
+    }
+
     public function checkMatchScorcardStatus(Tournament $tournament, TournamentMatch $tournamentMatch)
     {
         if(request()->has('inning')) {

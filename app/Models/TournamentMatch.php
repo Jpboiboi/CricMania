@@ -105,6 +105,11 @@ class TournamentMatch extends Model
         return $playingElevenTeam1Players == 11 && $playingElevenTeam2Players == 11;
     }
 
+    public function isPlayersRolesSelected():bool
+    {
+        return ($this->captain1_id && $this->captain2_id) && ($this->vice_captain1_id && $this->vice_captain2_id) && ($this->wicket_keeper1_id && $this->wicket_keeper2_id);
+    }
+
     public function isMatchScorecardCreated(string $inning):MatchScorecard | null
     {
         return $this->matchScorecards()->where('inning', $inning)->first();

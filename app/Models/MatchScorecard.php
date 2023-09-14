@@ -57,4 +57,13 @@ class MatchScorecard extends Model
     {
         return $this->matchDetailScorecards()->legalDeliveries()->count();
     }
+
+    public function isBowlerChangedAfterOver()
+    {
+        $lastBall = $this->matchDetailScorecards()->latest()->first();
+        if($this->bowler_id == $lastBall->ball_by) {
+            return false;
+        }
+        return true;
+    }
 }

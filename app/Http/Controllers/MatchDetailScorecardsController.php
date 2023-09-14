@@ -35,6 +35,10 @@ class MatchDetailScorecardsController extends AjaxController
             return $this->errorResponse(ucfirst($matchScorecard->inning) . " inning is completed! you cannot proceed with this request", 422);
         }
 
+        if($matchScorecard->ball_number%6 == 0 && !$matchScorecard->isBowlerChangedAfterOver()) {
+            return $this->errorResponse("Bowler must be changed after an over", 422);
+        }
+
         $data = [];
         $ballNumber = $matchScorecard->ball_number;
         $currentTotalRunsScored = $matchScorecard->total_runs_scored;
@@ -108,6 +112,11 @@ class MatchDetailScorecardsController extends AjaxController
         $matchScorecard->total_runs_scored = $currentTotalRunsScored;
         $matchScorecard->wickets_taken = $currentWicketsTaken;
         if($currentRunsByBat == 1 || $currentRunsByBat == 3 || $currentRunsByBat == 5) {
+            $temp = $matchScorecard->strike_batsman_id;
+            $matchScorecard->strike_batsman_id = $matchScorecard->non_strike_batsman_id;
+            $matchScorecard->non_strike_batsman_id = $temp;
+        }
+        if($ballNumber%6 == 0) {
             $temp = $matchScorecard->strike_batsman_id;
             $matchScorecard->strike_batsman_id = $matchScorecard->non_strike_batsman_id;
             $matchScorecard->non_strike_batsman_id = $temp;

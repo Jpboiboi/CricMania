@@ -135,9 +135,9 @@
                                     </div>
                                 </div>
                                 <div class="card-body row">
-                                    <div class="col-md-3">
-                                        <div id="wide" class="btn btn-outline-warning btn-score text-dark">WD</div>
-                                    </div>
+                                  <div class="col-md-3" id="wdBtn" data-bs-toggle="modal" data-bs-target="#WdDetails">
+                                    <div id="wd" class="btn btn-outline-warning btn-score text-dark">WD</div>
+                                </div>
                                     <div class="col-md-3" id="nbBtn" data-bs-toggle="modal" data-bs-target="#selectNBModal">
                                         <div id="nb" class="btn btn-outline-warning btn-score text-dark">NB</div>
                                     </div>
@@ -380,9 +380,6 @@
                 <div class="modal-body">
                     <h5>Select Yes or No</h5>
                     <div class="card-body row">
-
-
-
                 </div>
 
                 <div class="modal-footer">
@@ -393,6 +390,8 @@
         </form>
     </div>
 </div>
+
+
 
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
@@ -611,7 +610,7 @@
             <div class="modal-body">
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                <label class="form-check-label" for="flexRadioDefault1">
+                <label clas s="form-check-label" for="flexRadioDefault1">
                   Player1
                 </label>
               </div>
@@ -712,3 +711,187 @@
       {{--end of no ball runs details --}}
 
 
+
+{{-- Wide ball details --}}
+<div class="modal fade" id="WdDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="wdDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-center">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="wdDetailsLabel">Wide details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Was there a wicket on wide ball?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-warning"  data-bs-target="#WdWicketDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Yes</button>
+          <button type="button" class="btn btn-secondary" data-bs-target="#WdRunsDetails" data-bs-toggle="modal" data-bs-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{{-- End of wide ball details --}}
+
+{{-- Wide wicket details --}}
+<div class="modal fade" id="WdWicketDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="WdWicketDetailsModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-center">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="WdWicketDetailsLabel">Wicket Type</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Select Wicket Type
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger"  data-bs-target="#WdRunOutDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Run Out</button>
+          <button type="button" class="btn btn-outline-danger" data-bs-target="#WdStumpedDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Stumped</button>
+          <button type="button" class="btn btn-outline-danger" data-bs-target="#WdHitWktDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Hit Wicket</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{-- End of wide wicket details --}}
+
+{{-- Wide Run out details --}}
+<div class="modal fade" id="WdRunOutDetails" aria-hidden="true" aria-labelledby="runOutDetailsLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="runOutDetailsLabel">Who was out?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                <label class="form-check-label" for="exampleRadios1">
+                  Striker
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+                <label class="form-check-label" for="exampleRadios2">
+                  Non-Striker
+                </label>
+              </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-target="#WdWicketDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
+          <button class="btn btn-warning" data-bs-target="#WdRunOutDetails2" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="WdRunOutDetails2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-center">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Who took the wicket?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1">
+                  Player1
+                </label>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-target="#WdRunOutDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
+          <button type="button" class="btn btn-warning" data-bs-target="#WdRunsDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{-- End of Wide Run out details --}}
+
+{{-- Wide stumped details --}}
+<div class="modal fade" id="WdStumpedDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-center">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Stumped!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+             <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">Runs scored</label>
+            <select class="form-select" id="inputGroupSelect01">
+                <option selected>Choose...</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-target="#WdWicketDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
+          <button type="button" class="btn btn-warning">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{-- End of wide stumped details --}}
+
+{{-- Wide hit-wicket details --}}
+<div class="modal fade" id="WdHitWktDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-center">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Hit wicket!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+             <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">Runs scored</label>
+            <select class="form-select" id="inputGroupSelect01">
+                <option selected>Choose...</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-target="#WdWicketDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
+          <button type="button" class="btn btn-warning">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{-- End of wide hit-wicket details --}}
+
+{{-- Wide runs details --}}
+<div class="modal fade" id="WdRunsDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-center">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">How many runs were scored during the wide ball?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+             <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">Options</label>
+            <select class="form-select" id="inputGroupSelect01">
+                <option selected>Choose...</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-target="#WdDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Reset</button>
+          <button type="button" class="btn btn-warning">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{-- End of wide runs details --}}

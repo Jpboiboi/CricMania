@@ -81,7 +81,9 @@ class PlayerStat extends Model
             }
         }
 
-        $this->no_of_balls_faced++;
+        if($request->ball_type != 'wide') {
+            $this->no_of_balls_faced++;
+        }
 
         $this->save();
     }
@@ -111,6 +113,43 @@ class PlayerStat extends Model
             $this->no_of_dots += 1;
         }
 
+    }
+
+    public function undoPlayerBatsmanStatistics(MatchScorecard $matchScorecard, MatchDetailScorecard $lastBallDetailScorecard)
+    {
+        $this->no_of_runs_scored -= $lastBallDetailScorecard->runs_by_bat;
+        if ($lastBallDetailScorecard->was_single) {
+            $this->no_of_singles -= 1;
+        } else if ($lastBallDetailScorecard->was_double) {
+            $this->no_of_doubles -= 1;
+        } else if ($lastBallDetailScorecard->was_triple) {
+            $this->no_of_triples -= 1;
+        } else if ($lastBallDetailScorecard->was_four) {
+            $this->no_of_fours -= 1;
+        } else if ($lastBallDetailScorecard->was_five) {
+            $this->no_of_fives -= 1;
+        } else if ($lastBallDetailScorecard->was_six) {
+            $this->no_of_sixes -= 1;
+        } else if ($lastBallDetailScorecard->was_dot) {
+            $this->no_of_dots -= 1;
+        }
+
+        if($lastBallDetailScorecard->wicket_type) {
+            if($lastBallDetailScorecard->bat_by == $lastBallDetailScorecard->dismissed_batsman) {
+                $this->no_of_dismissals--;
+            } else {
+                $tournament = $matchScorecard->tournamentMatch->tournament;
+                $nonStriker = Batsman::where('player_id', $lastBallDetailScorecard->dismissed_batsman)->player->playerstats()->ofTournamentType($tournament->tournament_type_id)->first();
+                $nonStriker->no_of_dismissals--;
+                $nonStriker->save();
+            }
+        }
+
+        if(!$lastBallDetailScorecard->was_wide) {
+            $this->no_of_balls_faced--;
+        }
+        
+        $this->save();
     }
 
     public function updatePlayerBowlingStatistics(Request $request, MatchScorecard $matchScorecard)
@@ -162,6 +201,8 @@ class PlayerStat extends Model
             $this->wides += 1;
         } else if ($ballType === 'bye') {
             $this->byes += 1;
+        } else if ($ballType === 'leg_bye') {
+            $this->leg_byes += 1;
         }
     }
 
@@ -172,7 +213,7 @@ class PlayerStat extends Model
         if ($wicketType === 'lbw') {
             $this->no_of_lbws += 1;
         } else if ($wicketType === 'catch_out') {
-            $this->no_of_catches += 1;
+            $this->no_of_catch_outs += 1;
         } else if ($wicketType === 'bowled') {
             $this->no_of_bowleds += 1;
         } else if ($wicketType === 'hit_wicket') {
@@ -186,6 +227,55 @@ class PlayerStat extends Model
         if ($this->isHattrick($matchScorecard)) {
             $this->hattricks += 1;
         }
+    }
+
+    public function undoPlayerBowlerStatistics(MatchScorecard $matchScorecard, MatchDetailScorecard $lastBallDetailScorecard)
+    {
+        if($matchScorecard->ball_number%6 === 0) {
+            if($this->isMaidenOver($matchScorecard)) {
+                $this->no_of_maidens -= 1;
+            }
+        }
+
+        $this->no_of_runs_conceeded -= $lastBallDetailScorecard->runs_by_bat;
+
+        $this->no_of_runs_conceeded -= $lastBallDetailScorecard->extra_runs;
+
+        if($lastBallDetailScorecard->was_no_ball) {
+            $this->no_balls -= 1;
+        } else if($lastBallDetailScorecard->was_wide) {
+            $this->wides -= 1;
+        } else if($lastBallDetailScorecard->was_bye) {
+            $this->byes -= 1;
+        } else if($lastBallDetailScorecard->was_leg_bye) {
+            $this->leg_byes -= 1;
+        }
+
+        if($lastBallDetailScorecard->wicket_type && $lastBallDetailScorecard->wicket_type != "run_out") {
+            $this->no_of_wickets_taken -= 1;
+
+            if ($lastBallDetailScorecard->wicket_type === 'lbw') {
+                $this->no_of_lbws -= 1;
+            } else if ($lastBallDetailScorecard->wicket_type === 'catch_out') {
+                $this->no_of_catch_outs -= 1;
+            } else if ($lastBallDetailScorecard->wicket_type === 'bowled') {
+                $this->no_of_bowleds -= 1;
+            } else if ($lastBallDetailScorecard->wicket_type === 'hit_wicket') {
+                $this->no_of_hit_wickets -= 1;
+            } else if ($lastBallDetailScorecard->wicket_type === 'stumping') {
+                $this->no_of_stumpings -= 1;
+            } else if ($lastBallDetailScorecard->wicket_type === 'run_out') {
+                $this->no_of_run_outs -= 1;
+            }
+
+            if ($this->isHattrick($matchScorecard)) {
+                $this->no_of_hattricks -= 1;
+            }
+        }
+
+        $this->no_of_balls_bowled = $this->no_of_balls_bowled - 1;
+
+        $this->save();
     }
 
     private function isMaidenOver(MatchScorecard $matchScorecard) {
@@ -212,9 +302,9 @@ class PlayerStat extends Model
             if($ball->wicket_type) {
                 $wicketCount++;
             }
-            if($wicketCount === 3) {
-                return true;
-            }
+        }
+        if($wicketCount%3 == 0) {
+            return true;
         }
         return false;
     }

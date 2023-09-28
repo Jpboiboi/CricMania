@@ -54,7 +54,13 @@ class Bowler extends Model
         }
 
         $this->no_of_balls_bowled = $this->no_of_balls_bowled + 1;
-        $this->no_of_overs_played = floor($this->no_of_balls_bowled/6) + (($this->no_of_balls_bowled%6)/10);
+        if(!($request->has('extra_runs') && $request->has('ball_type'))) {
+            if($matchScorecard->ball_number%6 === 0) {
+                $this->no_of_overs_played = ceil($this->no_of_overs_played);
+            } else {
+                $this->no_of_overs_played = $this->no_of_overs_played + 0.1;
+            }
+        }
 
         $this->save();
     }
@@ -112,6 +118,78 @@ class Bowler extends Model
         }
     }
 
+    public function undoBowlerStats(MatchScorecard $matchScorecard, MatchDetailScorecard $lastBallDetailScorecard)
+    {
+        if($matchScorecard->ball_number%6 === 0) {
+            if($this->isMaidenOver($matchScorecard)) {
+                $this->no_of_maiden_overs -= 1;
+            }
+        }
+
+        $this->runs_conceeded -= $lastBallDetailScorecard->runs_by_bat;
+
+        $this->runs_conceeded -= $lastBallDetailScorecard->extra_runs;
+
+        if($lastBallDetailScorecard->was_no_ball) {
+            $this->no_of_no_balls -= 1;
+        } else if($lastBallDetailScorecard->was_wide) {
+            $this->no_of_wides -= 1;
+        } else if($lastBallDetailScorecard->was_bye) {
+            $this->no_of_byes -= 1;
+        } else if($lastBallDetailScorecard->was_leg_bye) {
+            $this->no_of_leg_byes -= 1;
+        }
+
+        if($lastBallDetailScorecard->wicket_type && $lastBallDetailScorecard->wicket_type != "run_out") {
+            $this->no_of_wickets_taken -= 1;
+
+            if($this->no_of_wickets_taken == 3) {
+                $tournament = $matchScorecard->tournamentMatch->tournament;
+                $bowlerPlayerStat = $this->player->playerstats()->ofTournamentType($tournament->tournament_type_id)->first();
+                $bowlerPlayerStat->four_wicket_hauls--;
+                $bowlerPlayerStat->save();
+            }
+
+            if($this->no_of_wickets_taken == 4) {
+                $tournament = $matchScorecard->tournamentMatch->tournament;
+                $bowlerPlayerStat = $this->player->playerstats()->ofTournamentType($tournament->tournament_type_id)->first();
+                $bowlerPlayerStat->five_wicket_hauls--;
+                $bowlerPlayerStat->four_wicket_hauls++;
+                $bowlerPlayerStat->save();
+            }
+
+            if ($lastBallDetailScorecard->wicket_type === 'lbw') {
+                $this->no_of_lbws -= 1;
+            } else if ($lastBallDetailScorecard->wicket_type === 'catch_out') {
+                $this->no_of_catch_outs -= 1;
+            } else if ($lastBallDetailScorecard->wicket_type === 'bowled') {
+                $this->no_of_bowleds -= 1;
+            } else if ($lastBallDetailScorecard->wicket_type === 'hit_wicket') {
+                $this->no_of_hit_wickets -= 1;
+            } else if ($lastBallDetailScorecard->wicket_type === 'stumping') {
+                $this->no_of_stumpings -= 1;
+            } else if ($lastBallDetailScorecard->wicket_type === 'run_out') {
+                $this->no_of_run_outs -= 1;
+            }
+
+            if ($this->isHattrick($matchScorecard)) {
+                $this->no_of_hattricks -= 1;
+            }
+        }
+
+        $this->no_of_balls_bowled = $this->no_of_balls_bowled - 1;
+
+        if(!($lastBallDetailScorecard->was_no_ball || $lastBallDetailScorecard->was_wide || $lastBallDetailScorecard->was_bye || $lastBallDetailScorecard->was_leg_bye)) {
+            if($matchScorecard->ball_number%6 === 0) {
+                $this->no_of_overs_played = ceil($this->no_of_overs_played);
+            } else {
+                $this->no_of_overs_played = $this->no_of_overs_played + 0.1;
+            }
+        }
+
+        $this->save();
+    }
+
     private function isMaidenOver(MatchScorecard $matchScorecard) {
         $lastOverBalls = $matchScorecard->matchDetailScorecards()->where('over', $matchScorecard->over)->get();
 
@@ -136,9 +214,9 @@ class Bowler extends Model
             if($ball->wicket_type) {
                 $wicketCount++;
             }
-            if($wicketCount === 3) {
-                return true;
-            }
+        }
+        if($wicketCount%3 == 0) {
+            return true;
         }
         return false;
     }

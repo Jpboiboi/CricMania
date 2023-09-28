@@ -142,8 +142,6 @@ class TorunamentMatchesController extends AjaxController
         $rules = [
             'team1_playing_eleven' => 'required|string',
             'team2_playing_eleven' => 'required|string',
-            'team1_captain_id' => 'required|string',
-            'team2_captain_id' => 'required|string',
         ];
 
         $this->validate($request, $rules);
@@ -160,9 +158,6 @@ class TorunamentMatchesController extends AjaxController
         }
 
         $team1Players = $tournamentMatch->team1->players()->pluck('player_id')->toArray();
-        if(!in_array($request->team1_captain_id, $team1Players)) {
-            return $this->errorResponse("Player must be a part of team to get selected as a Captain", 409);
-        }
         foreach ($team1PlayersId as $playerId) {
             if(!in_array($playerId, $team1Players)) {
                 return $this->errorResponse("Player must be a part of team to get selected as a playing eleven", 409);
@@ -170,9 +165,6 @@ class TorunamentMatchesController extends AjaxController
         }
 
         $team2Players = $tournamentMatch->team2->players()->pluck('player_id')->toArray();
-        if(!in_array($request->team2_captain_id, $team2Players)) {
-            return $this->errorResponse("Player must be a part of team to get selected as a Captain", 409);
-        }
         foreach ($team2PlayersId as $playerId) {
             if(!in_array($playerId, $team2Players)) {
                 return $this->errorResponse("Player must be a part of team to get selected as a playing eleven", 409);
@@ -201,9 +193,6 @@ class TorunamentMatchesController extends AjaxController
                 $playerStat->no_of_matches++;
                 $playerStat->save();
             }
-            $tournamentMatch->captain1_id = $request->team1_captain_id;
-            $tournamentMatch->captain2_id = $request->team2_captain_id;
-            $tournamentMatch->save();
         });
 
         return $this->showMessage("Players are successfully selected as playing eleven");
@@ -221,6 +210,10 @@ class TorunamentMatchesController extends AjaxController
         ];
         $this->validate($request, $rules);
 
+        if(($request->team1_captain_id == $request->team1_vice_captain_id) || ($request->team2_captain_id == $request->team2_vice_captain_id)) {
+            return $this->errorResponse("Captain and Vice captain cannot be same person in Team 1 or Team 2", 422);
+        }
+        
         $team1Players = $tournamentMatch->team1->players()->playing()->pluck('player_id')->toArray();
         if(! (in_array($request->team1_captain_id, $team1Players) && in_array($request->team1_vice_captain_id, $team1Players) && in_array($request->team1_wicket_keeper_id, $team1Players))) {
             return $this->errorResponse("Players must be a part of playing eleven players to get selected as a Captain or Vice Captain or Wicket Keeper of team1", 409);
@@ -254,8 +247,18 @@ class TorunamentMatchesController extends AjaxController
 
     public function getBowlingTeamPlayers(Tournament $tournament, TournamentMatch $tournamentMatch)
     {
-        $bowlingTeamPlayers = $tournamentMatch->currently_bowling_team->players()->with('user')->get();
+        $bowlingTeamPlayers = $tournamentMatch->currently_bowling_team->players()->playing()->with('user')->with('bowler')->get();
 
+        if(request()->has('is_eligible_to_bowl') && request()->is_eligible_to_bowl == true) {
+            $currentMatchScorecard = $tournamentMatch->matchScorecards()->latest()->first();
+            $eligiblePlayers = collect();
+            foreach ($bowlingTeamPlayers as $player) {
+                if($player->id != $currentMatchScorecard->bowler_id && $player->bowler->no_of_overs_played < ($tournamentMatch->no_of_overs/5)) {
+                    $eligiblePlayers[] = $player;
+                }
+            }
+            $bowlingTeamPlayers = $eligiblePlayers;
+        }
         return $this->showAll($bowlingTeamPlayers);
     }
 

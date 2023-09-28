@@ -144,25 +144,27 @@ class MatchScorecardsController extends AjaxController
         ];
         $this->validate($request, $rules);
 
+        if($request->bowler_id == $matchScorecard->bowler_id) {
+            return $this->errorResponse("You cannot select same bowler! Please select other bowler", 409);
+        }
+
         if(!$this->verifyBowler($tournamentMatch, $request->bowler_id)) {
             return $this->errorResponse("Bowler can only selected from currently bowling team!!", 409);
         }
 
         $bowlingTeam = $tournamentMatch->currently_bowling_team;
-        $nextBowler = $bowlingTeam->players()->playing()->where('player_id', $request->bowler_id)->first();
+        $nextBowler = $bowlingTeam->players()->playing()->where('player_id', $request->bowler_id)->with('bowler')->first();
 
         if($nextBowler) {
+            if($nextBowler->bowler->no_of_overs_played >= ($tournamentMatch->no_of_overs/5)) {
+                return $this->errorResponse("Player has already bowled max no of overs in this match! Please select some other bowler", 409);
+            }
             $matchScorecard->bowler_id = $nextBowler->id;
-
-            // Shifting sides after completing an over
-            $temp = $matchScorecard->strike_batsman_id;
-            $matchScorecard->strike_batsman_id = $matchScorecard->non_strike_batsman_id;
-            $matchScorecard->non_strike_batsman_id = $temp;
             $matchScorecard->save();
 
             return $this->showOne($nextBowler);
         }
-        return $this->errorResponse("Some Error ocurred", 500);
+        return $this->errorResponse("Player is not in the playing eleven! please select other bowler", 404);
 
     }
 
@@ -175,8 +177,21 @@ class MatchScorecardsController extends AjaxController
 
     public function markInningAsCompleted(Request $request, Tournament $tournament, TournamentMatch $tournamentMatch, MatchScorecard $matchScorecard)
     {
+        if($matchScorecard->is_completed) {
+            return $this->errorResponse(ucfirst($matchScorecard->inning) . " inning is already marked as completed", 422);
+        }
+
         $matchScorecard->is_completed = Carbon::now();
         $matchScorecard->save();
+
+        if($matchScorecard->inning === MatchScorecard::FIRST_INNING) {
+            if($tournamentMatch->currently_batting == $tournamentMatch->team1_id) {
+                $tournamentMatch->currently_batting = $tournamentMatch->team2_id;
+            } else {
+                $tournamentMatch->currently_batting = $tournamentMatch->team1_id;
+            }
+            $tournamentMatch->save();
+        }
 
         return $this->showOne($matchScorecard);
     }

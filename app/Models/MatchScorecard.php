@@ -61,8 +61,21 @@ class MatchScorecard extends Model
     public function isBowlerChangedAfterOver()
     {
         $lastBall = $this->matchDetailScorecards()->latest()->first();
-        if($this->bowler_id == $lastBall->ball_by) {
-            return false;
+        if($lastBall) {
+            if($this->bowler_id == $lastBall->ball_by) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function isBatsmanChangedAfterWicket()
+    {
+        $lastBall = $this->matchDetailScorecards()->latest()->first();
+        if($lastBall && $lastBall->dismissed_batsman) {
+            if($lastBall->dismissed_batsman == $this->strike_batsman_id || $lastBall->dismissed_batsman == $this->non_strike_batsman_id) {
+                return false;
+            }
         }
         return true;
     }

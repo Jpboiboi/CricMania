@@ -66,3 +66,7 @@ Route::put('tournaments/{tournament}/tournament_matches/{tournament_match}/match
 
 // Create a match detail scorecard
 Route::post('tournaments/{tournament}/tournament_matches/{tournament_match}/match_scorecards/{match_scorecard}/match_detail_scorecards',[MatchDetailScorecardsController::class, 'store']);
+// To get last ball details
+Route::get('tournaments/{tournament}/tournament_matches/{tournament_match}/match_scorecards/{match_scorecard}/match_detail_scorecards/last-ball-details',[MatchDetailScorecardsController::class, 'getLastBallDetails']);
+// To undo last ball
+Route::delete('tournaments/{tournament}/tournament_matches/{tournament_match}/match_scorecards/{match_scorecard}/match_detail_scorecards/{match_detail_scorecard}/undo-last-ball',[MatchDetailScorecardsController::class, 'undoLastBall']);

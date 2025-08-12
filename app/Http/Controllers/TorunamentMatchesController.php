@@ -14,9 +14,10 @@ class TorunamentMatchesController extends AjaxController
 {
     public function index(Tournament $tournament)
     {
-        $teams=$tournament->tournament_matches()->with('team1')->with('team2')->get();
+        $tournamentMatches=$tournament->tournament_matches()->with('team1')->with('team2')->get();
         // dd($tournament->organizer);
-        return view('frontend.tournaments.schedule', compact('teams', 'tournament'));
+        // dd($tournamentMatches);
+        return view('frontend.tournaments.schedule', compact('tournamentMatches', 'tournament'));
 
     }
     public function store(Request $request, Tournament $tournament)
@@ -213,7 +214,7 @@ class TorunamentMatchesController extends AjaxController
         if(($request->team1_captain_id == $request->team1_vice_captain_id) || ($request->team2_captain_id == $request->team2_vice_captain_id)) {
             return $this->errorResponse("Captain and Vice captain cannot be same person in Team 1 or Team 2", 422);
         }
-        
+
         $team1Players = $tournamentMatch->team1->players()->playing()->pluck('player_id')->toArray();
         if(! (in_array($request->team1_captain_id, $team1Players) && in_array($request->team1_vice_captain_id, $team1Players) && in_array($request->team1_wicket_keeper_id, $team1Players))) {
             return $this->errorResponse("Players must be a part of playing eleven players to get selected as a Captain or Vice Captain or Wicket Keeper of team1", 409);

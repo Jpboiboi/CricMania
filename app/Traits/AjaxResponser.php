@@ -13,7 +13,7 @@ trait AjaxResponser
 
     public function errorResponse($message, $code)
     {
-        return response()->json(['error' => $message], $code);
+        return response()->json(['error' => $message, 'status' => $code], $code);
     }
 
     public function showAll(Collection $collection, int $code = 200)

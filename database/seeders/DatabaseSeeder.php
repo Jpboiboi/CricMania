@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
                 Team::factory($tournament->no_of_teams)
                     ->make())->each(function($team) use($tournament){
 
-                        for ($i=1; $i < random_int(12, $tournament->max_players+1); $i++) {
+                        for ($i=1; $i < random_int(13, $tournament->max_players+1); $i++) {
 
                             $player = Player::whereHas('teams', function($teamsQuery) use($tournament) { $playersInThisTournament = DB::table('player_team')->where('tournament_id', '=', $tournament->id)->pluck('player_id')->toArray(); return $teamsQuery->whereNotIn('player_id', $playersInThisTournament); })->orWhereDoesntHave('teams')->get()->random();
 
@@ -142,7 +142,7 @@ class DatabaseSeeder extends Seeder
                 Team::factory($tournament->no_of_teams)
                     ->make())->each(function($team) use($tournament){
 
-                        for ($i=1; $i < random_int(12, $tournament->max_players+1); $i++) {
+                        for ($i=1; $i < random_int(13, $tournament->max_players+1); $i++) {
 
                             $player = Player::whereHas('teams', function($teamsQuery) use($tournament) { $playersInThisTournament = DB::table('player_team')->where('tournament_id', '=', $tournament->id)->pluck('player_id')->toArray(); return $teamsQuery->whereNotIn('player_id', $playersInThisTournament); })->orWhereDoesntHave('teams')->get()->random();
 

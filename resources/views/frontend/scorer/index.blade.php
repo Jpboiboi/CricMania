@@ -9,6 +9,29 @@
 
   <link rel="stylesheet" href="{{asset('assets/css/stepper.css')}}">
   <style>
+   .circle{
+        width: 2.6rem;
+        height: 2.6rem;
+        border-radius:50%;
+        line-height: 2.6rem;
+        font-size: 0.65rem;
+        text-align: center;
+        background: #333;
+        color: #fff;
+        margin-right: 0.5rem;
+    }
+
+    .loading-circle{
+        position: relative;
+        width: 2.6rem;
+        height: 2.6rem;
+        border-radius:50%;
+        line-height: 2.6rem;
+        font-size: 0.65rem;
+        text-align: center;
+        margin-right: 0.5rem;
+    }
+
     .object-fit{
         object-fit: cover;
     }
@@ -23,34 +46,32 @@
 
 @section('main-content')
 <div class="container">
+    <input type="hidden" name="inning" id="inning" value="{{ $inning }}">
     <!-- MultiStep Form -->
     <div class="row d-flex justify-content-center">
         <div class="col-md-9 height">
-            <form id="msform" method="POST">
-                @csrf
+            <div id="mainSection">
                 <fieldset>
                     <div class="row">
                         <div class="col-md-6 d-flex justify-content-start">
-                            <h4>CSK</h4>
-                            {{-- <h2 class="fs-title">CSK</h2> --}}
+                            <h4 id="battingTeamName">CSK</h4>
                         </div>
                         <div id="score" class="col-md-6 d-flex justify-content-end">
-                            <h4>0/0</h4>
-                            <h6 class="ms-2 mt-2">(0/5)</h6>
-
+                            <h4><span id="totalRuns">0</span>/<span id="wicketsDown">0</span></h4>
+                            <h6 class="ms-2 mt-2">( <span id="overNo">0</span>.<span id="ballNo">0</span>/<span id="totalOvers">5</span>)</h6>
                         </div>
                     </div>
-                    <h3 class="fs-subtitle mt-2">Winner won the toss and elected to bat/bowl.</h3>
+
                     <div class="row">
                         <div class="col-md-6 d-flex justify-content-start">
-                            <div class="card mt-1 mb-3" style="width: 100%;">
+                            <div class="card mt-1 mb-1" style="width: 100%;">
                                 <div class="card-body row" name="stricker">
                                     <div class="col-md-10">
-                                        <h5 class="card-title mt-1">Striker</h5>
-                                        <h6>(0.2/5)</h6>
+                                        <h5 class="card-title mt-1" id="strikerName">Stricker</h5>
+                                    <h6><span id="runsScoredByStriker">0.2</span>(<span id="ballsFacedByStriker">5</span>)</h6>
                                     </div>
                                     <div class="col-md-2">
-                                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#changeStrikerModal">
+                                        <button type="button" id="changeStriker" class="btn" data-bs-toggle="modal" data-bs-target="#changeStrikerModal">
                                             <i class="fa fa-ellipsis-v fa-lg" aria-hidden="true"></i>
                                           </button>
                                     </div>
@@ -60,14 +81,14 @@
                             </div>
                         </div>
                         <div class="col-md-6 d-flex justify-content-center">
-                            <div class="card mt-1 mb-3" style="width: 100%;">
+                            <div class="card mt-1 mb-1" style="width: 100%;">
                                 <div class="card-body row" name="nonstricker">
                                     <div class="col-md-10">
-                                        <h5 class="card-title mt-1">Non Striker</h5>
-                                        <h6 >(0.2/5)</h6>
+                                        <h5 class="card-title mt-1" id="nonStrikerName">Non-Stricker</h5>
+                                    <h6><span id="runsScoredByNonStriker">0.2</span>(<span id="ballsFacedByNonStriker">5</span>)</h6>
                                     </div>
                                     <div class="col-md-2">
-                                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#changeNonStrikerModal">
+                                        <button type="button" id="changeNonStriker" class="btn" data-bs-toggle="modal" data-bs-target="#changeNonStrikerModal">
                                             <i class="fa fa-ellipsis-v fa-lg" aria-hidden="true"></i>
                                           </button>
 
@@ -79,24 +100,26 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="card mt-1 mb-3" style="width: 100%;">
+                            <div class="card mt-1 mb-1" style="width: 100%;">
                                 <div class="card-body row " name="bowler">
                                     <div class="col-md-11">
-                                        <h5 class="card-title mt-1 d-flex justify-content-center">Bowler</h5>
+                                        <div class="d-flex">
+                                            <h5 class="card-title mt-1 me-3" id="bowlerName">Bowler</h5>
+                                            <h5 class="mt-1 me-3">
+                                                <span id="noOfRunsConceededByBowler">0.2</span>-
+                                                <span id="noOfWicketsTakenByBowler">5</span>
+                                                (<span id="noOfOversPlayedByBowler">1.1</span>)
+                                            </h5>
+                                        </div>
                                     </div>
                                     <div class="col-md-1">
-                                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#changeBowlerModal">
+                                        <button type="button" id="changeBowler" class="btn" data-bs-toggle="modal" data-bs-target="#changeBowlerModal">
                                             <i class="fa fa-ellipsis-v fa-lg" aria-hidden="true"></i>
                                           </button>
                                     </div>
-                                      <div class="d-flex justify-content-center over-balls">
-                                        <div id="bowl1" class="col-md-1"><h6>0</h6></div>
-                                        <div id="bowl2" class="col-md-1"><h6>0</h6></div>
-                                        <div id="bowl3" class="col-md-1"><h6>0</h6></div>
-                                        <div id="bowl4" class="col-md-1"><h6>0</h6></div>
-                                        <div id="bowl5" class="col-md-1"><h6>0</h6></div>
-                                        <div id="bowl6" class="col-md-1"><h6>0</h6></div>
-                                      </div>
+                                    <div class="d-flex justify-content-left over-balls" id="currentOverDetails">
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -104,17 +127,17 @@
                     <div class="row">
                         <div class="col-md-12 d-flex justify-content-center">
 
-                            <div class="card mt-1 mb-3" style="width: 100%;">
+                            <div class="card mt-1 mb-1" style="width: 100%;">
                                 <div class="card-body row">
 
                                         <div class="col-md-3">
-                                            <div id="0" class="btn btn-outline-dark btn-score">0</div>
+                                            <div id="dot" data-value="0" class="btn btn-outline-dark btn-score">0</div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div id="1" class="btn btn-outline-dark btn-score">1</div>
+                                            <div id="single" data-value="1" class="btn btn-outline-dark btn-score">1</div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div id="2" class="btn btn-score btn-outline-dark">2</div>
+                                            <div id="double" data-value="2" class="btn btn-score btn-outline-dark">2</div>
                                         </div>
                                         <div class="col-md-3">
                                             <div id="undo" class="btn btn-outline-success btn-score">Undo</div>
@@ -122,13 +145,13 @@
                                 </div>
                                 <div class="card-body row">
                                     <div class="col-md-3">
-                                        <div id="3" class="btn btn-outline-dark btn-score">3</div>
+                                        <div id="triple" data-value="3" class="btn btn-outline-dark btn-score">3</div>
                                     </div>
                                     <div class="col-md-3">
-                                        <div id="4" class="btn btn-outline-dark btn-score">4</div>
+                                        <div id="four" data-value="4" class="btn btn-outline-dark btn-score">4</div>
                                     </div>
                                     <div class="col-md-3">
-                                        <div id="6" class="btn btn-outline-dark btn-score">6</div>
+                                        <div id="six" data-value="6" class="btn btn-outline-dark btn-score">6</div>
                                     </div>
                                     <div class="col-md-3" id="outBtn" data-bs-toggle="modal" data-bs-target="#selectOutTypeModal">
                                         <div id="w" class="btn btn-outline-danger btn-score">OUT</div>
@@ -155,7 +178,7 @@
                     <input type="button" name="next" class="next action-button col-md-4" value="Next"/>
                 </fieldset>
 
-            </form>
+            </div>
       </div>
     </div>
 
@@ -206,13 +229,13 @@
                     <div class="card-body row">
                         <div class="col-md-4">
                             {{-- <a href="">0</a> --}}
-                            <div id="0" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Bowled</div>
+                            <div class="btn btn-score" data-bs-dismiss="modal" id="bowled" style="border: solid 1px #d3d3d3; width: 100%;">Bowled</div>
                         </div>
                         <div class="col-md-4">
-                                <div id="0" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;" data-bs-toggle="modal" data-bs-target="#caughtDetails" >Caught</div>
+                                <div class="btn btn-score" id="caught" style="border: solid 1px #d3d3d3; width: 100%;" data-bs-toggle="modal" data-bs-target="#caughtDetails" >Caught</div>
                         </div>
                         <div class="col-md-4">
-                            <div id="2" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Stumped</div>
+                            <div class="btn btn-score" data-bs-dismiss="modal" id="stumped" style="border: solid 1px #d3d3d3; width: 100%;">Stumped</div>
                         </div>
 
                     </div>
@@ -220,28 +243,13 @@
                     <div class="card-body row">
                         <div class="col-md-4">
                             {{-- <a href="">0</a> --}}
-                            <div id="0" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">LBW</div>
+                            <div class="btn btn-score" data-bs-dismiss="modal" id="lbw" style="border: solid 1px #d3d3d3; width: 100%;">LBW</div>
                         </div>
                         <div class="col-md-4">
-                            <div id="1" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Hit Wicket</div>
+                            <div class="btn btn-score" data-bs-dismiss="modal" id="hitWicket" style="border: solid 1px #d3d3d3; width: 100%;">Hit Wicket</div>
                         </div>
                         <div class="col-md-4">
-                            <div id="2" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Retired Out</div>
-                        </div>
-                        {{-- <div class="col-md-3">
-                            <div id="undo" class="btn btn-score" style="border: solid 1px green">Undo</div>
-                        </div> --}}
-                    </div>
-                    <div class="card-body row">
-                        <div class="col-md-4">
-                            <div id="0" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;" data-bs-toggle="modal" data-bs-target="#runOutDetails">Run Out</div>
-
-                        </div>
-                        <div class="col-md-4">
-                            <div id="1" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Mankaded</div>
-                        </div>
-                        <div class="col-md-4">
-                            <div id="filedObstruction" class="btn btn-score" style="border: solid 1px #d3d3d3; width: 100%;">Field Obstruction</div>
+                            <div class="btn btn-score" id="runOut" style="border: solid 1px #d3d3d3; width: 100%;" data-bs-toggle="modal"  data-bs-target="#runOutDetails">Run Out</div>
                         </div>
                         {{-- <div class="col-md-3">
                             <div id="undo" class="btn btn-score" style="border: solid 1px green">Undo</div>
@@ -274,13 +282,13 @@
                     <div class="card-body row">
                         <div class="col-md-4">
                             {{-- <a href="">0</a> --}}
-                            <div id="lby1" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">1</div>
+                            <div id="lby1" data-value="1" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">1</div>
                         </div>
                         <div class="col-md-4">
-                            <div id="lby2" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">2</div>
+                            <div id="lby2" data-value="2" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">2</div>
                         </div>
                         <div class="col-md-4">
-                            <div id="lby3" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">3</div>
+                            <div id="lby3" data-value="3" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">3</div>
                         </div>
 
                     </div>
@@ -288,13 +296,13 @@
                     <div class="card-body row">
                         <div class="col-md-4">
                             {{-- <a href="">0</a> --}}
-                            <div id="lby4" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">4</div>
+                            <div id="lby4" data-value="4" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">4</div>
                         </div>
                         <div class="col-md-4">
-                            <div id="lby5" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">5</div>
+                            <div id="lby5" data-value="5" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">5</div>
                         </div>
                         <div class="col-md-4">
-                            <div id="lby6" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">6</div>
+                            <div id="lby6" data-value="6" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">6</div>
                         </div>
                         {{-- <div class="col-md-3">
                             <div id="undo" class="btn btn-score" style="border: solid 1px green">Undo</div>
@@ -329,13 +337,13 @@
                     <div class="card-body row">
                         <div class="col-md-4">
                             {{-- <a href="">0</a> --}}
-                            <div id="bye1" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">1</div>
+                            <div id="bye1" data-value="1" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">1</div>
                         </div>
                         <div class="col-md-4">
-                            <div id="bye2" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">2</div>
+                            <div id="bye2" data-value="2" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">2</div>
                         </div>
                         <div class="col-md-4">
-                            <div id="bye3" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">3</div>
+                            <div id="bye3" data-value="3" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">3</div>
                         </div>
 
                     </div>
@@ -343,13 +351,13 @@
                     <div class="card-body row">
                         <div class="col-md-4">
                             {{-- <a href="">0</a> --}}
-                            <div id="bye4" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">4</div>
+                            <div id="bye4" data-value="4" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">4</div>
                         </div>
                         <div class="col-md-4">
-                            <div id="bye5" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">5</div>
+                            <div id="bye5" data-value="5" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">5</div>
                         </div>
                         <div class="col-md-4">
-                            <div id="bye6" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">6</div>
+                            <div id="bye6" data-value="6" class="btn btn-score" data-bs-dismiss="modal" style="border: solid 1px #d3d3d3; width: 100%;">6</div>
                         </div>
                         {{-- <div class="col-md-3">
                             <div id="undo" class="btn btn-score" style="border: solid 1px green">Undo</div>
@@ -383,8 +391,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#noBallWicketDetails">Yes</button>
-                    <button class="btn btn-secondary" type="button"  data-bs-toggle="modal" data-bs-target="#noBallRunsDetails">No</button>
+                    <button class="btn btn-warning" id="outOnNB" type="button" data-bs-toggle="modal" data-bs-target="#noBallWicketDetails">Yes</button>
+                    <button class="btn btn-secondary" id="noWicketOnNB" type="button"  data-bs-toggle="modal" data-bs-target="#noBallRunsDetails">No</button>
                 </div>
             </div>
         </form>
@@ -395,7 +403,7 @@
 
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
-
+<script src="{{asset('assets/js/slhttp.js')}}"></script>
 <script src="{{asset('assets/js/scorer.js')}}"></script>
 <script>
     // $('#bowlerBtn').click(function(e) {
@@ -425,10 +433,10 @@
     // })
 
 
-    $('#outBtn').click(function(e) {
-        e.preventDefault();
-        document.getElementById("selectByesForm").setAttribute("action","action");
-    });
+    // $('#outBtn').click(function(e) {
+    //     e.preventDefault();
+    //     document.getElementById("selectByesForm").setAttribute("action","action");
+    // });
 
     // $('#nbBtn').click(function(e) {
     //     e.preventDefault();
@@ -446,23 +454,28 @@
 
   {{-- Caught details Modal --}}
   <div class="modal fade" id="caughtDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-center">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Who took the catch?</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                <label class="form-check-label" for="flexRadioDefault1">
-                  Player1
-                </label>
-              </div>
+            <div class="row" id="fieldingXI">
+                <div class="col-4">
+
+                </div>
+                <div class="col-4">
+
+                </div>
+                <div class="col-4">
+
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-warning">Save changes</button>
+          <button type="button" id="caughtBy" class="btn btn-warning" data-bs-dismiss="modal">Save changes</button>
         </div>
       </div>
     </div>
@@ -478,23 +491,11 @@
           <h5 class="modal-title" id="runOutDetailsLabel">Who was out?</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                <label class="form-check-label" for="exampleRadios1">
-                  Striker
+        <div class="modal-body" id="batsmenOnCrease">
 
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-                <label class="form-check-label" for="exampleRadios2">
-                  Non-Striker
-                </label>
-              </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-warning" data-bs-target="#runOutDetails2" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
+          <button class="btn btn-warning" data-bs-target="#runOutDetails2" data-bs-toggle="modal" data-bs-dismiss="modal" id="runOutNextBtn1">Next</button>
         </div>
       </div>
     </div>
@@ -508,41 +509,51 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <select class="form-select" aria-label="Default select example">
-                <option selected>Runs</option>
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-              </select>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                <select class="form-select" id="totalRunsScoredBeforeRunOut">
+                    <option selected>Choose...</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+            </div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-warning" data-bs-target="#runOutDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-          <button class="btn btn-warning" data-bs-target="#runOutDetails3" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
+          <button class="btn btn-warning" data-bs-target="#runOutDetails3" data-bs-toggle="modal" data-bs-dismiss="modal" id="runOutNextBtn2">Next</button>
         </div>
       </div>
     </div>
   </div>
 
   <div class="modal fade" id="runOutDetails3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-center">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Who took the wicket?</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                <label class="form-check-label" for="flexRadioDefault1">
-                  Player1
-                </label>
-              </div>
+            <div class="row" id="fieldingXI2">
+                <div class="col-4">
+
+                </div>
+                <div class="col-4">
+
+                </div>
+                <div class="col-4">
+
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-warning" data-bs-target="#runOutDetails2" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-          <button type="button" class="btn btn-success">Save changes</button>
+          <button type="button" id="runOutNextBtn3" data-bs-dismiss="modal" class="btn btn-success">Save changes</button>
         </div>
       </div>
     </div>
@@ -551,23 +562,31 @@
 
   {{-- Change Striker Modal --}}
   <div class="modal fade" id="changeStrikerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="changeStrikerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-center">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="changeStrikerModalLabel">Change Striker</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-            <label class="form-check-label" for="flexRadioDefault1">
-              Player1
-            </label>
-          </div>
+            <div class="row">
+                <div class="col-4">
+                    <h4>Batsmen</h4>
+                    <div id="strikerBattersInXI"></div>
+                </div>
+                <div class="col-4">
+                    <h4>Ballers</h4>
+                    <div id="strikerBallersInXI"></div>
+                </div>
+                <div class="col-4">
+                    <h4>Allrounders</h4>
+                    <div id="strikerAllroundersInXI"></div>
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-warning">Submit</button>
+          <button type="button" class="btn btn-warning" data-bs-dismiss="modal" id="updateStriker">Submit</button>
         </div>
       </div>
     </div>
@@ -576,55 +595,71 @@
 
   {{-- Change Non-Striker Modal --}}
   <div class="modal fade" id="changeNonStrikerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="changeNonStrikerModalLabel" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-center">
+    <div class="modal-dialog  modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="changeNonStrikerModalLabel">Change Non Striker</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-            <label class="form-check-label" for="flexRadioDefault1">
-              Player1
-            </label>
-          </div>
+            <div class="row">
+                <div class="col-4">
+                    <h4>Batsmen</h4>
+                    <div id="nonStrikerBattersInXI"></div>
+                </div>
+                <div class="col-4">
+                    <h4>Ballers</h4>
+                    <div id="nonStrikerBallersInXI"></div>
+                </div>
+                <div class="col-4">
+                    <h4>Allrounders</h4>
+                    <div id="nonStrikerAllroundersInXI"></div>
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-warning">Submit</button>
+          <button type="button" class="btn btn-warning" data-bs-dismiss="modal" id="updateNonStriker">Submit</button>
         </div>
       </div>
     </div>
   </div>
   {{-- End of Change Non-Striker Modal --}}
 
-    {{-- Change Bowler Modal --}}
+{{-- Change Bowler Modal --}}
     <div class="modal fade" id="changeBowlerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="changeBowlerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-center">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="changeBowlerModalLabel">Change Bowler</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                <label clas s="form-check-label" for="flexRadioDefault1">
-                  Player1
-                </label>
-              </div>
+                <div class="row">
+                    <div class="col-4">
+                        <h4>Batsmen</h4>
+                        <div id="battersInXI"></div>
+                    </div>
+                    <div class="col-4">
+                        <h4>Ballers</h4>
+                        <div id="ballersInXI"></div>
+                    </div>
+                    <div class="col-4">
+                        <h4>Allrounders</h4>
+                        <div id="allroundersInXI"></div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-warning">Submit</button>
+              <button type="button" class="btn btn-warning" data-bs-dismiss="modal" id="updateBowler">Submit</button>
             </div>
           </div>
         </div>
       </div>
-      {{-- End of Change Non-Striker Modal --}}
+{{-- End of Change Non-Striker Modal --}}
 
-      {{-- no ball wicket details modal --}}
+{{-- no ball wicket details modal --}}
       <div class="modal fade" id="noBallWicketDetails" aria-hidden="true" aria-labelledby="runOutDetailsLabel" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
@@ -632,22 +667,11 @@
               <h5 class="modal-title" id="runOutDetailsLabel">Who was out?</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                    <label class="form-check-label" for="exampleRadios1">
-                      Striker
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-                    <label class="form-check-label" for="exampleRadios2">
-                      Non-Striker
-                    </label>
-                  </div>
+            <div class="modal-body" id="currentBatsmenOnCrease">
+
             </div>
             <div class="modal-footer">
-              <button class="btn btn-warning" data-bs-target="#noBallWicketDetails2" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
+              <button class="btn btn-warning" id="noBallNextBtn1" data-bs-target="#noBallWicketDetails2" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
             </div>
           </div>
         </div>
@@ -655,30 +679,35 @@
 
 
       <div class="modal fade" id="noBallWicketDetails2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-center">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Who took the wicket?</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                    <label class="form-check-label" for="flexRadioDefault1">
-                      Player1
-                    </label>
-                  </div>
+                <div class="row" id="currentBallingTeam">
+                    <div class="col-4">
+
+                    </div>
+                    <div class="col-4">
+
+                    </div>
+                    <div class="col-4">
+
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
               <button class="btn btn-warning" data-bs-target="#noBallWicketDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-              <button type="button" class="btn btn-warning" data-bs-target="#noBallRunsDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
+              <button type="button" class="btn btn-warning" id="noBallNextBtn2" data-bs-target="#noBallRunsDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
             </div>
           </div>
         </div>
       </div>
-      {{-- end of no ball wicket details modal --}}
+{{-- end of no ball wicket details modal --}}
 
-      {{-- no ball runs details --}}
+{{-- no ball runs details --}}
       <div class="modal fade" id="noBallRunsDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-center">
           <div class="modal-content">
@@ -687,9 +716,9 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                 <div class="input-group mb-3">
+                <div class="input-group mb-3">
                 <label class="input-group-text" for="inputGroupSelect01">Options</label>
-                <select class="form-select" id="inputGroupSelect01">
+                <select class="form-select" id="noBallRuns">
                     <option selected>Choose...</option>
                     <option value="0">0</option>
                     <option value="1">1</option>
@@ -703,12 +732,12 @@
             </div>
             <div class="modal-footer">
               <button class="btn btn-warning" data-bs-target="#selectNBModal" data-bs-toggle="modal" data-bs-dismiss="modal">Reset</button>
-              <button type="button" class="btn btn-success">Submit</button>
+              <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="noBallRunsBtn">Submit</button>
             </div>
           </div>
         </div>
       </div>
-      {{--end of no ball runs details --}}
+{{--end of no ball runs details --}}
 
 
 
@@ -724,8 +753,8 @@
           Was there a wicket on wide ball?
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-warning"  data-bs-target="#WdWicketDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Yes</button>
-          <button type="button" class="btn btn-secondary" data-bs-target="#WdRunsDetails" data-bs-toggle="modal" data-bs-dismiss="modal">No</button>
+          <button type="button" id="outOnWD" class="btn btn-warning"  data-bs-target="#WdWicketDetails" data-value="true" data-bs-toggle="modal" data-bs-dismiss="modal">Yes</button>
+          <button type="button" id="noWicketOnWD" class="btn btn-secondary" data-bs-target="#WdRunsDetails" data-value="false" data-bs-toggle="modal" data-bs-dismiss="modal">No</button>
         </div>
       </div>
     </div>
@@ -745,9 +774,9 @@
           Select Wicket Type
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-danger"  data-bs-target="#WdRunOutDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Run Out</button>
-          <button type="button" class="btn btn-outline-danger" data-bs-target="#WdStumpedDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Stumped</button>
-          <button type="button" class="btn btn-outline-danger" data-bs-target="#WdHitWktDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Hit Wicket</button>
+          <button type="button" class="btn btn-outline-danger" id="runOutOnWD"  data-bs-target="#WdRunOutDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Run Out</button>
+          <button type="button" class="btn btn-outline-danger" id="stumpedOnWD" data-value="stumping" data-bs-dismiss="modal">Stumped</button>
+          <button type="button" data-value="hit_wicket" class="btn btn-outline-danger" id="hitWicketOnWD" data-bs-dismiss="modal">Hit Wicket</button>
         </div>
       </div>
     </div>
@@ -762,23 +791,12 @@
           <h5 class="modal-title" id="runOutDetailsLabel">Who was out?</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                <label class="form-check-label" for="exampleRadios1">
-                  Striker
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-                <label class="form-check-label" for="exampleRadios2">
-                  Non-Striker
-                </label>
-              </div>
+        <div class="modal-body" id="currentBatsmenOnCreaseWD">
+
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" data-bs-target="#WdWicketDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-          <button class="btn btn-warning" data-bs-target="#WdRunOutDetails2" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
+          <button class="btn btn-warning" id="wideBallNextBtn1" data-bs-target="#WdRunOutDetails2" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
         </div>
       </div>
     </div>
@@ -786,110 +804,60 @@
 
 
   <div class="modal fade" id="WdRunOutDetails2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-center">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Who took the wicket?</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                <label class="form-check-label" for="flexRadioDefault1">
-                  Player1
-                </label>
-              </div>
+            <div class="row" id="currentBallingTeamWD">
+                <div class="col-4">
+
+                </div>
+                <div class="col-4">
+
+                </div>
+                <div class="col-4">
+
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-bs-target="#WdRunOutDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-          <button type="button" class="btn btn-warning" data-bs-target="#WdRunsDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
+          <button type="button" class="btn btn-warning" id="wideBallNextBtn2" data-bs-target="#WdRunsDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
         </div>
       </div>
     </div>
   </div>
 {{-- End of Wide Run out details --}}
 
-{{-- Wide stumped details --}}
-<div class="modal fade" id="WdStumpedDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-center">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Stumped!</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-             <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01">Runs scored</label>
-            <select class="form-select" id="inputGroupSelect01">
-                <option selected>Choose...</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-            </select>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-target="#WdWicketDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-          <button type="button" class="btn btn-warning">Submit</button>
-        </div>
-      </div>
-    </div>
-  </div>
-{{-- End of wide stumped details --}}
-
-{{-- Wide hit-wicket details --}}
-<div class="modal fade" id="WdHitWktDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-center">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Hit wicket!</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-             <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01">Runs scored</label>
-            <select class="form-select" id="inputGroupSelect01">
-                <option selected>Choose...</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-            </select>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-target="#WdWicketDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-          <button type="button" class="btn btn-warning">Submit</button>
-        </div>
-      </div>
-    </div>
-  </div>
-{{-- End of wide hit-wicket details --}}
-
 {{-- Wide runs details --}}
 <div class="modal fade" id="WdRunsDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-center">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">How many runs were scored during the wide ball?</h5>
+          <h5 class="modal-title" id="exampleModalLabel">How many runs were scored ?</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
              <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01">Options</label>
-            <select class="form-select" id="inputGroupSelect01">
-                <option selected>Choose...</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-            </select>
+                <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                <select class="form-select" id="wideBallRuns">
+                    <option selected>Choose...</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
             </div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-bs-target="#WdDetails" data-bs-toggle="modal" data-bs-dismiss="modal">Reset</button>
-          <button type="button" class="btn btn-warning">Submit</button>
+          <button type="button" data-bs-dismiss="modal" id="wideBallRunsBtn" class="btn btn-warning">Submit</button>
         </div>
       </div>
     </div>

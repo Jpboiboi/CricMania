@@ -36,7 +36,7 @@ class MatchDetailScorecardsController extends AjaxController
          *
          */
 
-        if($matchScorecard->legal_deliveries_count == $tournamentMatch->no_of_overs*6 || $matchScorecard->wickets_taken == 10 || $matchScorecard->is_completed) {
+        if($matchScorecard->legal_deliveries_count == $tournamentMatch->no_of_overs*6 || $matchScorecard->wickets_taken == 10) {
             return $this->errorResponse(ucfirst($matchScorecard->inning) . " inning is completed! you cannot proceed with this request", 422);
         }
 
@@ -189,11 +189,19 @@ class MatchDetailScorecardsController extends AjaxController
 
             $matchScorecard->runs_by_bat -= $lastBallDetailScorecard->runs_by_bat;
             $matchScorecard->extra_runs -= $lastBallDetailScorecard->extra_runs;
-            $matchScorecard->total_runs_scored = $secondLastBallDetailScorecard->total_runs_scored;
-            $matchScorecard->wickets_taken = $secondLastBallDetailScorecard->wickets_taken;
-            $matchScorecard->ball_number = $secondLastBallDetailScorecard->ball_number;
-            $matchScorecard->over = $secondLastBallDetailScorecard->over;
-            $matchScorecard->bowler_id = $secondLastBallDetailScorecard->ball_by;
+
+            if($secondLastBallDetailScorecard) {
+                $matchScorecard->total_runs_scored = $secondLastBallDetailScorecard->total_runs_scored;
+                $matchScorecard->wickets_taken = $secondLastBallDetailScorecard->wickets_taken;
+                $matchScorecard->ball_number = $secondLastBallDetailScorecard->ball_number;
+                $matchScorecard->over = $secondLastBallDetailScorecard->over;
+                $matchScorecard->bowler_id = $secondLastBallDetailScorecard->ball_by;
+            } else {
+                $matchScorecard->total_runs_scored = 0;
+                $matchScorecard->wickets_taken = 0;
+                $matchScorecard->ball_number = 0;
+                $matchScorecard->over = 0;
+            }
 
             if($lastBallDetailScorecard->runs_by_bat == 1 || $lastBallDetailScorecard->runs_by_bat == 3 || $lastBallDetailScorecard->runs_by_bat == 5) {
                 $temp = $matchScorecard->strike_batsman_id;

@@ -26,7 +26,7 @@ class TournamentFactory extends Factory
             'organizer_id' => User::all()->random()->id,
             'tournament_type_id' => TournamentType::all()->random()->id,
             'no_of_teams' => $no_of_teams[random_int(0, 3)],
-            'max_players' => random_int(11, 25),
+            'max_players' => random_int(13, 25),
             'no_of_overs' => $no_of_overs[random_int(0, 4)],
             'start_date' => Carbon::now()
         ];

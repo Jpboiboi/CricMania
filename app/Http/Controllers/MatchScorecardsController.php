@@ -71,7 +71,7 @@ class MatchScorecardsController extends AjaxController
 
             // Updating the match state as the first inning starts
             if($request->inning == 'first') {
-                $tournamentMatch->match_state = TournamentMatch::MATCH_STARTED;
+                $tournamentMatch->match_state = Carbon::now();
                 $tournamentMatch->save();
             }
 

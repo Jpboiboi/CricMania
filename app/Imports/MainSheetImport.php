@@ -59,7 +59,7 @@ class MainSheetImport implements ToCollection, WithHeadingRow, SkipsEmptyRows, W
                     'user_id' => $user->id
                 ]);
 
-                Notification::route('mail',$row['email'])->notify(new ImportUser($row['email'], $password));
+                // Notification::route('mail',$row['email'])->notify(new ImportUser($row['email'], $password));
             }
         });
 

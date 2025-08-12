@@ -20,7 +20,7 @@ a{
     width: 50px;
 }
 
-/* #msform{
+/* #mainSection{
     ;
 } */
 
@@ -52,7 +52,7 @@ body {
     min-height: 550px;
 }
 /*form styles*/
-#msform {
+#mainSection {
     text-align: center;
     position: relative;
     /* margin-left: 50px; */
@@ -63,7 +63,7 @@ body {
 #filedObstruction {
     padding: 0px;
 }
-#msform fieldset {
+#mainSection fieldset {
     background: white;
     border: 0 none;
     border-radius: 0px;
@@ -78,12 +78,12 @@ body {
 }
 
 /*Hide all except first fieldset*/
-#msform fieldset:not(:first-of-type) {
+#mainSection fieldset:not(:first-of-type) {
     display: none;
 }
 
 /*inputs*/
-#msform input, #msform textarea {
+#mainSection input, #mainSection textarea {
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 0px;
@@ -95,7 +95,7 @@ body {
     font-size: 13px;
 }
 
-#msform input:focus, #msform textarea:focus {
+#mainSection input:focus, #mainSection textarea:focus {
     -moz-box-shadow: none !important;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
@@ -108,7 +108,7 @@ body {
 }
 
 /*buttons*/
-#msform .action-button {
+#mainSection .action-button {
     width: 100px;
     background: #ffc107;
     font-weight: bold;
@@ -120,11 +120,11 @@ body {
     margin: 10px 5px;
 }
 
-#msform .action-button:hover, #msform .action-button:focus {
+#mainSection .action-button:hover, #mainSection .action-button:focus {
     box-shadow: 0 0 0 2px white, 0 0 0 3px #ffc107;
 }
 
-#msform .action-button-previous {
+#mainSection .action-button-previous {
     width: 100px;
     background: #C5C5F1;
     font-weight: bold;
@@ -136,7 +136,7 @@ body {
     margin: 10px 5px;
 }
 
-#msform .action-button-previous:hover, #msform .action-button-previous:focus {
+#mainSection .action-button-previous:hover, #mainSection .action-button-previous:focus {
     box-shadow: 0 0 0 2px white, 0 0 0 3px #C5C5F1;
 }
 
@@ -175,7 +175,7 @@ body {
     color: white;
     text-transform: uppercase;
     font-size: 9px;
-    width: 33.33%;
+    width: 25%;
     float: left;
     position: relative;
     letter-spacing: 1px;
@@ -240,3 +240,55 @@ body {
     background: #C5C5F1;
     text-decoration: none;
 }
+
+
+/* loader of stepper form done by DA */
+#loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 48px;
+    height: 48px;
+    border: 5px solid #ffc107;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+#over-stats-loader {
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    width: 24px;
+    height: 24px;
+    border: 3px solid #ffc107;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+
+    line-height: 2.6rem;
+    font-size: 0.65rem;
+    text-align: center;
+    margin-right: 0.5rem;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.screens {
+    position:relative;
+}
+
+/* #currentOverDetails {
+    position:relative;
+    height: 2.6rem;
+} */

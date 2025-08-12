@@ -74,7 +74,7 @@ Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('f
 Route::resource('players',PlayersController::class)->except('index', 'show');
 Route::get('tournaments/{tournament}/teams/{team}/add-players/invite-via-email', [AddPlayersController::class, 'inviteViaEmail'])->name('players.invite-via-email');
 Route::post('tournaments/{tournament}/teams/{team}/add-players/players', [AddPlayersController::class, 'sendInvite'])->name('add-player.sendInvite');
-Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
+// Route::post('/players/ajax', [PlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
 Route::post('/add-players/ajax', [AddPlayersAjaxController::class, 'getData'])->name('frontend.players.add-player');
 
 // Register user using 'register as player' btn
@@ -102,8 +102,10 @@ Route::get('tournaments/{tournament}/schedule',[TorunamentMatchesController::cla
 Route::post('tournaments/{tournament}/schedule',[TorunamentMatchesController::class,'store'])->name('tournaments.schedule.store');
 
 
-Route::resource('scorer', ScorersController::class);
-// Route::resource('scorer/matches/matchid', ScorersController::class);
+//route for returning scorers view
+Route::get('tournaments/{tournament}/tournament_matches/{tournament_match}/scoring',[ScorersController::class,'scoring'])->name('scoring');
+Route::get('tournaments/{tournament}/tournament_matches/{tournament_match}/start-scoring',[ScorersController::class,'startScoring'])->name('start-scoring');
+Route::get('tournaments/{tournament}/tournament_matches/{tournament_match}/live-scoring',[ScorersController::class,'liveScoring'])->name('live-scoring');
 
 Route::get('users/verify/{token}',[UsersController::class,'verify'])->name('verify');
 Route::get('users/{user}/resend-verification',[Userscontroller::class,'resendVerification'])->name('resend-verification');
